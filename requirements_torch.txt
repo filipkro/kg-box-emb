@@ -1,0 +1,9 @@
+#torch==2.3.0
+
+#captum @ git+https://github.com/filipkro/captum.git
+
+pyg_lib @ git+https://github.com/pyg-team/pyg-lib.git@8f819642680295057ecab9e8b516eaf29942782a
+
+#torch-geometric @ git+https://github.com/pyg-team/pytorch_geometric.git@5034fef0567f7a095b973a58b508ea2d59d3b5ce
+
+#torch_scatter==2.1.2

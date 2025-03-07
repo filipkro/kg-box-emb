@@ -1,0 +1,4875 @@
+@prefix kg: <http://sgd-kg.project-genesis.io#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+kg:HHFX rdfs:subClassOf kg:CPX-1101,
+        kg:CPX-1610,
+        kg:CPX-1611,
+        kg:CPX-1612,
+        kg:CPX-1613,
+        kg:CPX-1614,
+        kg:CPX-2566 .
+
+kg:HHTX rdfs:subClassOf kg:CPX-1101,
+        kg:CPX-1610,
+        kg:CPX-1611,
+        kg:CPX-1612,
+        kg:CPX-1613,
+        kg:CPX-1614,
+        kg:CPX-2566 .
+
+kg:Q0045 rdfs:subClassOf kg:CPLX3O-10890,
+        kg:CPLX3O-117 .
+
+kg:Q0080 rdfs:subClassOf kg:CPLX3O-10569 .
+
+kg:Q0085 rdfs:subClassOf kg:CPLX3O-10569 .
+
+kg:Q0105 rdfs:subClassOf kg:CPLX3O-105 .
+
+kg:Q0115 rdfs:subClassOf kg:CPLX3O-10917 .
+
+kg:Q0120 rdfs:subClassOf kg:CPLX3O-10914 .
+
+kg:Q0130 rdfs:subClassOf kg:CPLX3O-10569 .
+
+kg:Q0140 rdfs:subClassOf kg:CPX-1603 .
+
+kg:Q0250 rdfs:subClassOf kg:CPLX3O-10890,
+        kg:CPLX3O-117 .
+
+kg:Q0275 rdfs:subClassOf kg:CPLX3O-10890,
+        kg:CPLX3O-117 .
+
+kg:TEFX rdfs:subClassOf kg:CPX-2854,
+        kg:CPX-425 .
+
+kg:TIFX rdfs:subClassOf kg:CPX-430,
+        kg:CPX-431 .
+
+kg:YAL001C rdfs:subClassOf kg:CPX-1656 .
+
+kg:YAL002W rdfs:subClassOf kg:CPX-1626 .
+
+kg:YAL003W rdfs:subClassOf kg:CPX-2854,
+        kg:CPX-425 .
+
+kg:YAL005C rdfs:subClassOf kg:CPX-1276,
+        kg:CPX-1882 .
+
+kg:YAL007C rdfs:subClassOf kg:CPX-1698 .
+
+kg:YAL009W rdfs:subClassOf kg:CPLX3O-10909 .
+
+kg:YAL010C rdfs:subClassOf kg:CPX-3196 .
+
+kg:YAL011W rdfs:subClassOf kg:CPX-2122 .
+
+kg:YAL012W rdfs:subClassOf kg:CPLX-568 .
+
+kg:YAL013W rdfs:subClassOf kg:CPX-1852 .
+
+kg:YAL016W rdfs:subClassOf kg:CPX-1856,
+        kg:CPX-1857,
+        kg:CPX-1858,
+        kg:CPX-1859 .
+
+kg:YAL019W rdfs:subClassOf kg:CPX-3297 .
+
+kg:YAL021C rdfs:subClassOf kg:CPX-1800 .
+
+kg:YAL023C rdfs:subClassOf kg:CPLX-9256,
+        kg:CPX-3038 .
+
+kg:YAL026C rdfs:subClassOf kg:CPX-1018 .
+
+kg:YAL027W rdfs:subClassOf kg:CPX-1363 .
+
+kg:YAL029C rdfs:subClassOf kg:CPX-1501 .
+
+kg:YAL032C rdfs:subClassOf kg:CPX-1651 .
+
+kg:YAL033W rdfs:subClassOf kg:CPLX3O-10556,
+        kg:CPX-1873 .
+
+kg:YAL034W-A rdfs:subClassOf kg:CPX-1156,
+        kg:CPX-1186 .
+
+kg:YAL040C rdfs:subClassOf kg:CPX-1700 .
+
+kg:YAL041W rdfs:subClassOf kg:CPX-3462,
+        kg:CPX-977 .
+
+kg:YAL042W rdfs:subClassOf kg:CPX-1045 .
+
+kg:YAL043C rdfs:subClassOf kg:CPX-1053 .
+
+kg:YAL044C rdfs:subClassOf kg:CPLX3O-213 .
+
+kg:YAL048C rdfs:subClassOf kg:CPX-3196 .
+
+kg:YAL051W rdfs:subClassOf kg:CPX-1038 .
+
+kg:YAL060W rdfs:subClassOf kg:CPLX3O-79 .
+
+kg:YAL062W rdfs:subClassOf kg:CPLX-6842 .
+
+kg:YAR002C-A rdfs:subClassOf kg:CPX-1698 .
+
+kg:YAR002W rdfs:subClassOf kg:CPX-824 .
+
+kg:YAR003W rdfs:subClassOf kg:CPX-1039 .
+
+kg:YAR007C rdfs:subClassOf kg:CPX-21 .
+
+kg:YAR008W rdfs:subClassOf kg:CPLX-8216 .
+
+kg:YAR014C rdfs:subClassOf kg:CPX-1705,
+        kg:CPX-36 .
+
+kg:YAR033W rdfs:subClassOf kg:CPX-1303 .
+
+kg:YBL002W rdfs:subClassOf kg:CPX-1610,
+        kg:CPX-1614,
+        kg:CPX-2122,
+        kg:CPX-2566 .
+
+kg:YBL003C rdfs:subClassOf kg:CPX-1610,
+        kg:CPX-1611 .
+
+kg:YBL004W rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YBL006C rdfs:subClassOf kg:CPLX3O-10552 .
+
+kg:YBL007C rdfs:subClassOf kg:CPX-1344,
+        kg:CPX-426 .
+
+kg:YBL008W rdfs:subClassOf kg:CPX-124 .
+
+kg:YBL014C rdfs:subClassOf kg:CPX-1836 .
+
+kg:YBL018C rdfs:subClassOf kg:CPLX3O-10556,
+        kg:CPX-1873 .
+
+kg:YBL021C rdfs:subClassOf kg:CPX-1830 .
+
+kg:YBL023C rdfs:subClassOf kg:CPX-2944 .
+
+kg:YBL025W rdfs:subClassOf kg:CPX-1101 .
+
+kg:YBL026W rdfs:subClassOf kg:CPX-25,
+        kg:CPX-44,
+        kg:CPX-45,
+        kg:CPX-46 .
+
+kg:YBL035C rdfs:subClassOf kg:CPLX3O-10582 .
+
+kg:YBL037W rdfs:subClassOf kg:CPX-534 .
+
+kg:YBL038W rdfs:subClassOf kg:CPX-1602 .
+
+kg:YBL041W rdfs:subClassOf kg:CPLX3O-10558 .
+
+kg:YBL045C rdfs:subClassOf kg:CPLX3O-105 .
+
+kg:YBL046W rdfs:subClassOf kg:CPX-1846 .
+
+kg:YBL052C rdfs:subClassOf kg:CPX-1810 .
+
+kg:YBL068W rdfs:subClassOf kg:CPLX3O-10565,
+        kg:CPLX3O-10567 .
+
+kg:YBL071W-A rdfs:subClassOf kg:CPLX-8046 .
+
+kg:YBL072C rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YBL074C rdfs:subClassOf kg:CPX-30 .
+
+kg:YBL079W rdfs:subClassOf kg:CPX-824 .
+
+kg:YBL080C rdfs:subClassOf kg:CPX-416 .
+
+kg:YBL084C rdfs:subClassOf kg:CPX-756,
+        kg:CPX-760,
+        kg:CPX-761,
+        kg:CPX-762 .
+
+kg:YBL087C rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YBL090W rdfs:subClassOf kg:CPX-1603 .
+
+kg:YBL092W rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YBL093C rdfs:subClassOf kg:CPX-3226 .
+
+kg:YBL097W rdfs:subClassOf kg:CPX-1869 .
+
+kg:YBL099W rdfs:subClassOf kg:CPLX3O-10573 .
+
+kg:YBL103C rdfs:subClassOf kg:CPX-828 .
+
+kg:YBL104C rdfs:subClassOf kg:CPX-3231 .
+
+kg:YBR002C rdfs:subClassOf kg:CPX-162 .
+
+kg:YBR003W rdfs:subClassOf kg:CPLX-7572 .
+
+kg:YBR004C rdfs:subClassOf kg:CPX-1269 .
+
+kg:YBR020W rdfs:subClassOf kg:CPX-1043 .
+
+kg:YBR026C rdfs:subClassOf kg:CPLX-8758 .
+
+kg:YBR031W rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YBR035C rdfs:subClassOf kg:CPLX-8695 .
+
+kg:YBR036C rdfs:subClassOf kg:CPLX-8575,
+        kg:CPLX3O-383 .
+
+kg:YBR039W rdfs:subClassOf kg:CPLX3O-10573 .
+
+kg:YBR041W rdfs:subClassOf kg:CPLX3O-10926,
+        kg:CPLX3O-10927 .
+
+kg:YBR050C rdfs:subClassOf kg:CPX-1267 .
+
+kg:YBR055C rdfs:subClassOf kg:CPX-25,
+        kg:CPX-29 .
+
+kg:YBR057C rdfs:subClassOf kg:CPX-3211 .
+
+kg:YBR058C-A rdfs:subClassOf kg:CPX-3158 .
+
+kg:YBR060C rdfs:subClassOf kg:CPX-768 .
+
+kg:YBR065C rdfs:subClassOf kg:CPX-1651 .
+
+kg:YBR070C rdfs:subClassOf kg:CPLX3O-24 .
+
+kg:YBR077C rdfs:subClassOf kg:CPX-3172 .
+
+kg:YBR079C rdfs:subClassOf kg:CPX-1831 .
+
+kg:YBR081C rdfs:subClassOf kg:CPX-656,
+        kg:CPX-675 .
+
+kg:YBR083W rdfs:subClassOf kg:CPX-576 .
+
+kg:YBR084C-A rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YBR087W rdfs:subClassOf kg:CPX-1731,
+        kg:CPX-1807,
+        kg:CPX-422,
+        kg:CPX-545 .
+
+kg:YBR088C rdfs:subClassOf kg:CPX-544 .
+
+kg:YBR091C rdfs:subClassOf kg:CPX-2950 .
+
+kg:YBR095C rdfs:subClassOf kg:CPX-1852 .
+
+kg:YBR097W rdfs:subClassOf kg:CPX-1677,
+        kg:CPX-1881 .
+
+kg:YBR098W rdfs:subClassOf kg:CPX-1670 .
+
+kg:YBR102C rdfs:subClassOf kg:CPX-1890 .
+
+kg:YBR103W rdfs:subClassOf kg:CPX-1342 .
+
+kg:YBR105C rdfs:subClassOf kg:CPX-301 .
+
+kg:YBR107C rdfs:subClassOf kg:CPX-1156 .
+
+kg:YBR109C rdfs:subClassOf kg:CPX-1419,
+        kg:CPX-1470,
+        kg:CPX-1500,
+        kg:CPX-1501,
+        kg:CPX-2225 .
+
+kg:YBR111W-A rdfs:subClassOf kg:CPX-1686,
+        kg:CPX-656 .
+
+kg:YBR112C rdfs:subClassOf kg:CPX-1663 .
+
+kg:YBR114W rdfs:subClassOf kg:CPX-1191,
+        kg:CPX-1709 .
+
+kg:YBR119W rdfs:subClassOf kg:CPX-23 .
+
+kg:YBR120C rdfs:subClassOf kg:CPX-384 .
+
+kg:YBR122C rdfs:subClassOf kg:CPX-1602 .
+
+kg:YBR123C rdfs:subClassOf kg:CPX-1656 .
+
+kg:YBR126C rdfs:subClassOf kg:CPX-582,
+        kg:CPX-583 .
+
+kg:YBR127C rdfs:subClassOf kg:CPLX3O-10576,
+        kg:CPX-1192 .
+
+kg:YBR128C rdfs:subClassOf kg:CPX-1881 .
+
+kg:YBR131W rdfs:subClassOf kg:CPX-1674 .
+
+kg:YBR135W rdfs:subClassOf kg:CPX-1699,
+        kg:CPX-1700,
+        kg:CPX-342 .
+
+kg:YBR136W rdfs:subClassOf kg:CPX-3621 .
+
+kg:YBR137W rdfs:subClassOf kg:CPX-1861 .
+
+kg:YBR143C rdfs:subClassOf kg:CPX-435 .
+
+kg:YBR145W rdfs:subClassOf kg:CPLX-8693 .
+
+kg:YBR146W rdfs:subClassOf kg:CPX-1603 .
+
+kg:YBR149W rdfs:subClassOf kg:CPLX3O-20 .
+
+kg:YBR152W rdfs:subClassOf kg:CPX-25 .
+
+kg:YBR154C rdfs:subClassOf kg:CPLX3O-10583,
+        kg:CPLX3O-10585,
+        kg:CPLX3O-10587 .
+
+kg:YBR156C rdfs:subClassOf kg:CPX-1900 .
+
+kg:YBR159W rdfs:subClassOf kg:CPLX3O-10931,
+        kg:CPLX3O-10932 .
+
+kg:YBR160W rdfs:subClassOf kg:CPX-1699,
+        kg:CPX-1700,
+        kg:CPX-1701,
+        kg:CPX-1702,
+        kg:CPX-335,
+        kg:CPX-336,
+        kg:CPX-337,
+        kg:CPX-339,
+        kg:CPX-342 .
+
+kg:YBR161W rdfs:subClassOf kg:CPLX-8575 .
+
+kg:YBR164C rdfs:subClassOf kg:CPX-1028 .
+
+kg:YBR167C rdfs:subClassOf kg:CPLX3O-10556,
+        kg:CPX-1873 .
+
+kg:YBR170C rdfs:subClassOf kg:CPX-2946,
+        kg:CPX-3069,
+        kg:CPX-3265 .
+
+kg:YBR171W rdfs:subClassOf kg:CPX-3056 .
+
+kg:YBR175W rdfs:subClassOf kg:CPX-1039 .
+
+kg:YBR179C rdfs:subClassOf kg:CPX-161 .
+
+kg:YBR188C rdfs:subClassOf kg:CPX-1885 .
+
+kg:YBR191W rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YBR193C rdfs:subClassOf kg:CPX-3226 .
+
+kg:YBR195C rdfs:subClassOf kg:CPX-568 .
+
+kg:YBR196C rdfs:subClassOf kg:CPLX-4261 .
+
+kg:YBR198C rdfs:subClassOf kg:CPX-1642,
+        kg:CPX-656,
+        kg:CPX-675 .
+
+kg:YBR200W rdfs:subClassOf kg:CPX-3462 .
+
+kg:YBR201W rdfs:subClassOf kg:CPX-3070 .
+
+kg:YBR202W rdfs:subClassOf kg:CPX-2944 .
+
+kg:YBR207W rdfs:subClassOf kg:CPX-869 .
+
+kg:YBR211C rdfs:subClassOf kg:CPX-1187 .
+
+kg:YBR213W rdfs:subClassOf kg:CPLX-8673 .
+
+kg:YBR215W rdfs:subClassOf kg:CPX-124 .
+
+kg:YBR217W rdfs:subClassOf kg:CPX-1848 .
+
+kg:YBR221C rdfs:subClassOf kg:CPLX3O-10512 .
+
+kg:YBR228W rdfs:subClassOf kg:CPX-3159 .
+
+kg:YBR229C rdfs:subClassOf kg:CPLX-9252 .
+
+kg:YBR231C rdfs:subClassOf kg:CPX-2122 .
+
+kg:YBR233W-A rdfs:subClassOf kg:CPX-1041 .
+
+kg:YBR234C rdfs:subClassOf kg:CPX-607 .
+
+kg:YBR237W rdfs:subClassOf kg:CPLX3O-10918 .
+
+kg:YBR245C rdfs:subClassOf kg:CPX-636,
+        kg:CPX-637 .
+
+kg:YBR246W rdfs:subClassOf kg:CPLX3O-14 .
+
+kg:YBR247C rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YBR251W rdfs:subClassOf kg:CPX-1603 .
+
+kg:YBR253W rdfs:subClassOf kg:CPX-3226 .
+
+kg:YBR254C rdfs:subClassOf kg:CPX-1383,
+        kg:CPX-1939,
+        kg:CPX-1940 .
+
+kg:YBR256C rdfs:subClassOf kg:CPLX-7782 .
+
+kg:YBR257W rdfs:subClassOf kg:CPLX3O-10556,
+        kg:CPX-1873 .
+
+kg:YBR258C rdfs:subClassOf kg:CPX-1039 .
+
+kg:YBR262C rdfs:subClassOf kg:CPX-140 .
+
+kg:YBR268W rdfs:subClassOf kg:CPX-1602 .
+
+kg:YBR275C rdfs:subClassOf kg:CPLX3O-10891 .
+
+kg:YBR278W rdfs:subClassOf kg:CPLX3O-10578 .
+
+kg:YBR279W rdfs:subClassOf kg:CPX-1726 .
+
+kg:YBR280C rdfs:subClassOf kg:CPX-3254 .
+
+kg:YBR281C rdfs:subClassOf kg:CPLX-8921 .
+
+kg:YBR282W rdfs:subClassOf kg:CPX-1602 .
+
+kg:YBR283C rdfs:subClassOf kg:CPX-1834 .
+
+kg:YBR288C rdfs:subClassOf kg:CPX-535 .
+
+kg:YBR289W rdfs:subClassOf kg:CPX-1150 .
+
+kg:YCL005W rdfs:subClassOf kg:CPX-3342 .
+
+kg:YCL005W-A rdfs:subClassOf kg:CPLX3O-10575,
+        kg:CPX-1192 .
+
+kg:YCL008C rdfs:subClassOf kg:CPX-940 .
+
+kg:YCL009C rdfs:subClassOf kg:CPLX3O-30 .
+
+kg:YCL010C rdfs:subClassOf kg:CPX-656 .
+
+kg:YCL016C rdfs:subClassOf kg:CPX-1731 .
+
+kg:YCL017C rdfs:subClassOf kg:CPX-392 .
+
+kg:YCL018W rdfs:subClassOf kg:CPLX-8763 .
+
+kg:YCL031C rdfs:subClassOf kg:CPX-771,
+        kg:CPX-772,
+        kg:CPX-773,
+        kg:CPX-774,
+        kg:CPX-775,
+        kg:CPX-776 .
+
+kg:YCL037C rdfs:subClassOf kg:CPX-1276,
+        kg:CPX-1882,
+        kg:CPX-1883 .
+
+kg:YCL039W rdfs:subClassOf kg:CPX-301 .
+
+kg:YCL043C rdfs:subClassOf kg:CPX-1283 .
+
+kg:YCL044C rdfs:subClassOf kg:CPX-1655 .
+
+kg:YCL045C rdfs:subClassOf kg:CPX-307 .
+
+kg:YCL052C rdfs:subClassOf kg:CPX-1270 .
+
+kg:YCL057C-A rdfs:subClassOf kg:CPX-140 .
+
+kg:YCL059C rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YCL063W rdfs:subClassOf kg:CPX-1304 .
+
+kg:YCR002C rdfs:subClassOf kg:CPX-1675,
+        kg:CPX-1712 .
+
+kg:YCR003W rdfs:subClassOf kg:CPX-1602 .
+
+kg:YCR009C rdfs:subClassOf kg:CPX-1335 .
+
+kg:YCR020C-A rdfs:subClassOf kg:CPLX3O-10537 .
+
+kg:YCR020W-B rdfs:subClassOf kg:CPLX3O-10552 .
+
+kg:YCR030C rdfs:subClassOf kg:CPX-2146 .
+
+kg:YCR031C rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YCR033W rdfs:subClassOf kg:CPX-1342 .
+
+kg:YCR034W rdfs:subClassOf kg:CPLX3O-10931 .
+
+kg:YCR035C rdfs:subClassOf kg:CPX-599,
+        kg:CPX-603 .
+
+kg:YCR039C rdfs:subClassOf kg:CPX-684,
+        kg:CPX-692 .
+
+kg:YCR040W rdfs:subClassOf kg:CPX-693 .
+
+kg:YCR042C rdfs:subClassOf kg:CPX-1642 .
+
+kg:YCR046C rdfs:subClassOf kg:CPX-1602 .
+
+kg:YCR047C rdfs:subClassOf kg:CPLX3O-10543 .
+
+kg:YCR052W rdfs:subClassOf kg:CPX-1888,
+        kg:CPX-1889 .
+
+kg:YCR057C rdfs:subClassOf kg:CPLX3O-10905 .
+
+kg:YCR060W rdfs:subClassOf kg:CPX-1814 .
+
+kg:YCR063W rdfs:subClassOf kg:CPX-1651 .
+
+kg:YCR066W rdfs:subClassOf kg:CPX-2902 .
+
+kg:YCR071C rdfs:subClassOf kg:CPX-1602 .
+
+kg:YCR075W-A rdfs:subClassOf kg:CPX-3172 .
+
+kg:YCR077C rdfs:subClassOf kg:CPX-112 .
+
+kg:YCR081W rdfs:subClassOf kg:CPX-1853 .
+
+kg:YCR084C rdfs:subClassOf kg:CPX-1663 .
+
+kg:YCR086W rdfs:subClassOf kg:CPX-1681 .
+
+kg:YCR092C rdfs:subClassOf kg:CPX-1036 .
+
+kg:YCR093W rdfs:subClassOf kg:CPX-1800 .
+
+kg:YCR094W rdfs:subClassOf kg:CPX-1018 .
+
+kg:YCR097W rdfs:subClassOf kg:CPX-684 .
+
+kg:YDL002C rdfs:subClassOf kg:CPX-863 .
+
+kg:YDL003W rdfs:subClassOf kg:CPX-1867 .
+
+kg:YDL004W rdfs:subClassOf kg:CPLX3O-10573 .
+
+kg:YDL005C rdfs:subClassOf kg:CPX-3226 .
+
+kg:YDL007W rdfs:subClassOf kg:CPLX3O-10560 .
+
+kg:YDL008W rdfs:subClassOf kg:CPX-756,
+        kg:CPX-760,
+        kg:CPX-761,
+        kg:CPX-762 .
+
+kg:YDL013W rdfs:subClassOf kg:CPX-3179 .
+
+kg:YDL014W rdfs:subClassOf kg:CPLX3O-10912,
+        kg:CPX-729 .
+
+kg:YDL015C rdfs:subClassOf kg:CPLX3O-10931,
+        kg:CPLX3O-10932 .
+
+kg:YDL017W rdfs:subClassOf kg:CPX-867 .
+
+kg:YDL022W rdfs:subClassOf kg:CPLX-8755 .
+
+kg:YDL029W rdfs:subClassOf kg:CPX-607 .
+
+kg:YDL030W rdfs:subClassOf kg:CPX-1648,
+        kg:CPX-1651 .
+
+kg:YDL040C rdfs:subClassOf kg:CPLX3O-10535 .
+
+kg:YDL042C rdfs:subClassOf kg:CPX-1669,
+        kg:CPX-1811 .
+
+kg:YDL043C rdfs:subClassOf kg:CPX-1648,
+        kg:CPX-1651 .
+
+kg:YDL045W-A rdfs:subClassOf kg:CPX-1603 .
+
+kg:YDL047W rdfs:subClassOf kg:CPX-1863,
+        kg:CPX-1864,
+        kg:CPX-1865,
+        kg:CPX-1866 .
+
+kg:YDL056W rdfs:subClassOf kg:CPX-950 .
+
+kg:YDL067C rdfs:subClassOf kg:CPLX3O-10890,
+        kg:CPLX3O-117 .
+
+kg:YDL074C rdfs:subClassOf kg:CPX-2910,
+        kg:CPX-2911 .
+
+kg:YDL075W rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YDL076C rdfs:subClassOf kg:CPX-1852 .
+
+kg:YDL077C rdfs:subClassOf kg:CPX-1625 .
+
+kg:YDL078C rdfs:subClassOf kg:CPLX3O-83 .
+
+kg:YDL080C rdfs:subClassOf kg:CPLX3O-110 .
+
+kg:YDL081C rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YDL082W rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YDL084W rdfs:subClassOf kg:CPX-1793 .
+
+kg:YDL087C rdfs:subClassOf kg:CPX-23 .
+
+kg:YDL088C rdfs:subClassOf kg:CPX-824 .
+
+kg:YDL090C rdfs:subClassOf kg:CPX-1634 .
+
+kg:YDL091C rdfs:subClassOf kg:CPX-1190 .
+
+kg:YDL092W rdfs:subClassOf kg:CPX-609 .
+
+kg:YDL093W rdfs:subClassOf kg:CPLX3O-10893,
+        kg:CPX-3038 .
+
+kg:YDL095W rdfs:subClassOf kg:CPLX-9256,
+        kg:CPX-3037 .
+
+kg:YDL097C rdfs:subClassOf kg:CPLX3O-10559 .
+
+kg:YDL098C rdfs:subClassOf kg:CPX-25 .
+
+kg:YDL099W rdfs:subClassOf kg:CPX-1125 .
+
+kg:YDL100C rdfs:subClassOf kg:CPX-956 .
+
+kg:YDL102W rdfs:subClassOf kg:CPX-2101 .
+
+kg:YDL105W rdfs:subClassOf kg:CPX-1364 .
+
+kg:YDL108W rdfs:subClassOf kg:CPX-1660 .
+
+kg:YDL111C rdfs:subClassOf kg:CPX-599,
+        kg:CPX-603 .
+
+kg:YDL113C rdfs:subClassOf kg:CPX-1377 .
+
+kg:YDL116W rdfs:subClassOf kg:CPX-824 .
+
+kg:YDL117W rdfs:subClassOf kg:CPX-1140 .
+
+kg:YDL126C rdfs:subClassOf kg:CPX-1323,
+        kg:CPX-2946,
+        kg:CPX-3069,
+        kg:CPX-3265 .
+
+kg:YDL127W rdfs:subClassOf kg:CPX-1694 .
+
+kg:YDL132W rdfs:subClassOf kg:CPX-3234,
+        kg:CPX-3241,
+        kg:CPX-3242,
+        kg:CPX-3243,
+        kg:CPX-3244,
+        kg:CPX-3249,
+        kg:CPX-3250,
+        kg:CPX-3253,
+        kg:CPX-3254,
+        kg:CPX-3255,
+        kg:CPX-3681 .
+
+kg:YDL134C rdfs:subClassOf kg:CPX-1380,
+        kg:CPX-1856,
+        kg:CPX-1857 .
+
+kg:YDL140C rdfs:subClassOf kg:CPLX3O-10587 .
+
+kg:YDL143W rdfs:subClassOf kg:CPX-2156 .
+
+kg:YDL145C rdfs:subClassOf kg:CPLX3O-10539 .
+
+kg:YDL147W rdfs:subClassOf kg:CPLX3O-10554,
+        kg:CPLX3O-10559 .
+
+kg:YDL148C rdfs:subClassOf kg:CPX-1735 .
+
+kg:YDL150W rdfs:subClassOf kg:CPLX3O-10585 .
+
+kg:YDL153C rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YDL154W rdfs:subClassOf kg:CPX-1704 .
+
+kg:YDL155W rdfs:subClassOf kg:CPX-336 .
+
+kg:YDL165W rdfs:subClassOf kg:CPX-1800 .
+
+kg:YDL168W rdfs:subClassOf kg:CPLX-7009 .
+
+kg:YDL171C rdfs:subClassOf kg:CPLX-7379 .
+
+kg:YDL175C rdfs:subClassOf kg:CPX-1679 .
+
+kg:YDL179W rdfs:subClassOf kg:CPX-1697 .
+
+kg:YDL184C rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YDL185W rdfs:subClassOf kg:CPLX3O-10576,
+        kg:CPX-1192 .
+
+kg:YDL188C rdfs:subClassOf kg:CPX-1382,
+        kg:CPX-1858,
+        kg:CPX-1859 .
+
+kg:YDL190C rdfs:subClassOf kg:CPX-1323 .
+
+kg:YDL191W rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YDL192W rdfs:subClassOf kg:CPX-1652 .
+
+kg:YDL193W rdfs:subClassOf kg:CPX-162,
+        kg:CPX-166 .
+
+kg:YDL195W rdfs:subClassOf kg:CPX-2523 .
+
+kg:YDL201W rdfs:subClassOf kg:CPX-1632 .
+
+kg:YDL202W rdfs:subClassOf kg:CPX-1602 .
+
+kg:YDL207W rdfs:subClassOf kg:CPX-824 .
+
+kg:YDL208W rdfs:subClassOf kg:CPX-737 .
+
+kg:YDL209C rdfs:subClassOf kg:CPX-1651 .
+
+kg:YDL213C rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YDL216C rdfs:subClassOf kg:CPX-1894 .
+
+kg:YDL217C rdfs:subClassOf kg:CPX-1629 .
+
+kg:YDL220C rdfs:subClassOf kg:CPX-15 .
+
+kg:YDL225W rdfs:subClassOf kg:CPX-1675,
+        kg:CPX-1712 .
+
+kg:YDL232W rdfs:subClassOf kg:CPLX3O-10527,
+        kg:CPLX3O-10889 .
+
+kg:YDR001C rdfs:subClassOf kg:CPLX-8436 .
+
+kg:YDR004W rdfs:subClassOf kg:CPX-3139 .
+
+kg:YDR009W rdfs:subClassOf kg:CPX-1042 .
+
+kg:YDR013W rdfs:subClassOf kg:CPX-1641 .
+
+kg:YDR016C rdfs:subClassOf kg:CPX-1041 .
+
+kg:YDR019C rdfs:subClassOf kg:CPLX3O-213 .
+
+kg:YDR021W rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YDR022C rdfs:subClassOf kg:CPX-397 .
+
+kg:YDR025W rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YDR027C rdfs:subClassOf kg:CPX-1718 .
+
+kg:YDR028C rdfs:subClassOf kg:CPX-1266 .
+
+kg:YDR036C rdfs:subClassOf kg:CPX-1603 .
+
+kg:YDR041W rdfs:subClassOf kg:CPX-1603 .
+
+kg:YDR045C rdfs:subClassOf kg:CPLX3O-10585 .
+
+kg:YDR049W rdfs:subClassOf kg:CPX-3069 .
+
+kg:YDR052C rdfs:subClassOf kg:CPX-867 .
+
+kg:YDR054C rdfs:subClassOf kg:CPX-3234,
+        kg:CPX-3241,
+        kg:CPX-3242,
+        kg:CPX-3243,
+        kg:CPX-3244,
+        kg:CPX-3249,
+        kg:CPX-3250,
+        kg:CPX-3253,
+        kg:CPX-3254,
+        kg:CPX-3255,
+        kg:CPX-3681 .
+
+kg:YDR057W rdfs:subClassOf kg:CPX-1280,
+        kg:CPX-3070 .
+
+kg:YDR060W rdfs:subClassOf kg:CPX-1733 .
+
+kg:YDR062W rdfs:subClassOf kg:CPLX-8571 .
+
+kg:YDR064W rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YDR069C rdfs:subClassOf kg:CPLX3O-10554 .
+
+kg:YDR073W rdfs:subClassOf kg:CPX-1150 .
+
+kg:YDR074W rdfs:subClassOf kg:CPX-582,
+        kg:CPX-583 .
+
+kg:YDR075W rdfs:subClassOf kg:CPX-1846 .
+
+kg:YDR076W rdfs:subClassOf kg:CPX-3139 .
+
+kg:YDR078C rdfs:subClassOf kg:CPX-3087 .
+
+kg:YDR079C-A rdfs:subClassOf kg:CPX-1659 .
+
+kg:YDR080W rdfs:subClassOf kg:CPX-1625 .
+
+kg:YDR082W rdfs:subClassOf kg:CPX-15 .
+
+kg:YDR086C rdfs:subClassOf kg:CPX-1833,
+        kg:CPX-1834 .
+
+kg:YDR088C rdfs:subClassOf kg:CPX-1651 .
+
+kg:YDR092W rdfs:subClassOf kg:CPX-2541 .
+
+kg:YDR093W rdfs:subClassOf kg:CPX-1022 .
+
+kg:YDR097C rdfs:subClassOf kg:CPX-1037 .
+
+kg:YDR106W rdfs:subClassOf kg:CPX-1805 .
+
+kg:YDR108W rdfs:subClassOf kg:CPX-1383 .
+
+kg:YDR113C rdfs:subClassOf kg:CPX-1340 .
+
+kg:YDR115W rdfs:subClassOf kg:CPX-1602 .
+
+kg:YDR116C rdfs:subClassOf kg:CPX-1602 .
+
+kg:YDR118W rdfs:subClassOf kg:CPX-756,
+        kg:CPX-760,
+        kg:CPX-761,
+        kg:CPX-762 .
+
+kg:YDR119W-A rdfs:subClassOf kg:CPLX3O-10890,
+        kg:CPLX3O-117 .
+
+kg:YDR121W rdfs:subClassOf kg:CPLX3O-10578,
+        kg:CPX-728 .
+
+kg:YDR123C rdfs:subClassOf kg:CPX-1277 .
+
+kg:YDR128W rdfs:subClassOf kg:CPX-3231 .
+
+kg:YDR131C rdfs:subClassOf kg:CPX-3681 .
+
+kg:YDR137W rdfs:subClassOf kg:CPX-3078 .
+
+kg:YDR138W rdfs:subClassOf kg:CPX-1792 .
+
+kg:YDR140W rdfs:subClassOf kg:CPLX3O-10542 .
+
+kg:YDR141C rdfs:subClassOf kg:CPX-1028 .
+
+kg:YDR142C rdfs:subClassOf kg:CPX-1905,
+        kg:CPX-1906 .
+
+kg:YDR145W rdfs:subClassOf kg:CPX-1642,
+        kg:CPX-656,
+        kg:CPX-675 .
+
+kg:YDR148C rdfs:subClassOf kg:CPLX3O-16 .
+
+kg:YDR155C rdfs:subClassOf kg:CPX-1342 .
+
+kg:YDR156W rdfs:subClassOf kg:CPLX3O-10583 .
+
+kg:YDR159W rdfs:subClassOf kg:CPX-1686,
+        kg:CPX-1687 .
+
+kg:YDR163W rdfs:subClassOf kg:CPX-1651 .
+
+kg:YDR165W rdfs:subClassOf kg:CPX-1632 .
+
+kg:YDR166C rdfs:subClassOf kg:CPX-1890 .
+
+kg:YDR167W rdfs:subClassOf kg:CPX-1642,
+        kg:CPX-656,
+        kg:CPX-675 .
+
+kg:YDR172W rdfs:subClassOf kg:CPX-435 .
+
+kg:YDR173C rdfs:subClassOf kg:CPX-1152 .
+
+kg:YDR175C rdfs:subClassOf kg:CPX-1603 .
+
+kg:YDR176W rdfs:subClassOf kg:CPX-608,
+        kg:CPX-656,
+        kg:CPX-675 .
+
+kg:YDR178W rdfs:subClassOf kg:CPLX3O-34 .
+
+kg:YDR179C rdfs:subClassOf kg:CPX-1894 .
+
+kg:YDR180W rdfs:subClassOf kg:CPX-1868 .
+
+kg:YDR181C rdfs:subClassOf kg:CPX-777 .
+
+kg:YDR188W rdfs:subClassOf kg:CPX-2156 .
+
+kg:YDR190C rdfs:subClassOf kg:CPX-1814,
+        kg:CPX-2122,
+        kg:CPX-863 .
+
+kg:YDR192C rdfs:subClassOf kg:CPX-824 .
+
+kg:YDR195W rdfs:subClassOf kg:CPX-1053 .
+
+kg:YDR196C rdfs:subClassOf kg:CPX-396 .
+
+kg:YDR200C rdfs:subClassOf kg:CPX-1197 .
+
+kg:YDR201W rdfs:subClassOf kg:CPX-1041 .
+
+kg:YDR202C rdfs:subClassOf kg:CPX-1627 .
+
+kg:YDR204W rdfs:subClassOf kg:CPX-1155 .
+
+kg:YDR205W rdfs:subClassOf kg:CPLX3O-10928 .
+
+kg:YDR207C rdfs:subClassOf kg:CPX-1415 .
+
+kg:YDR211W rdfs:subClassOf kg:CPX-429 .
+
+kg:YDR212W rdfs:subClassOf kg:CPX-2156 .
+
+kg:YDR221W rdfs:subClassOf kg:CPLX-9252 .
+
+kg:YDR224C rdfs:subClassOf kg:CPX-1611,
+        kg:CPX-1612,
+        kg:CPX-1613 .
+
+kg:YDR225W rdfs:subClassOf kg:CPX-1612,
+        kg:CPX-2566 .
+
+kg:YDR227W rdfs:subClassOf kg:CPX-1811 .
+
+kg:YDR228C rdfs:subClassOf kg:CPX-1895,
+        kg:CPX-1896 .
+
+kg:YDR235W rdfs:subClassOf kg:CPX-23 .
+
+kg:YDR237W rdfs:subClassOf kg:CPX-1602 .
+
+kg:YDR238C rdfs:subClassOf kg:CPLX3O-10540 .
+
+kg:YDR240C rdfs:subClassOf kg:CPX-23 .
+
+kg:YDR243C rdfs:subClassOf kg:CPX-25,
+        kg:CPX-29 .
+
+kg:YDR245W rdfs:subClassOf kg:CPX-1839 .
+
+kg:YDR246W rdfs:subClassOf kg:CPX-1383,
+        kg:CPX-1939,
+        kg:CPX-1940 .
+
+kg:YDR252W rdfs:subClassOf kg:CPX-1307 .
+
+kg:YDR253C rdfs:subClassOf kg:CPX-1015 .
+
+kg:YDR254W rdfs:subClassOf kg:CPX-1156 .
+
+kg:YDR255C rdfs:subClassOf kg:CPX-301 .
+
+kg:YDR260C rdfs:subClassOf kg:CPX-756,
+        kg:CPX-760,
+        kg:CPX-761,
+        kg:CPX-762 .
+
+kg:YDR265W rdfs:subClassOf kg:CPX-1903 .
+
+kg:YDR279W rdfs:subClassOf kg:CPX-1720 .
+
+kg:YDR280W rdfs:subClassOf kg:CPX-599,
+        kg:CPX-603 .
+
+kg:YDR285W rdfs:subClassOf kg:CPX-1387 .
+
+kg:YDR288W rdfs:subClassOf kg:CPX-1364 .
+
+kg:YDR292C rdfs:subClassOf kg:CPX-780 .
+
+kg:YDR295C rdfs:subClassOf kg:CPX-1884 .
+
+kg:YDR296W rdfs:subClassOf kg:CPX-1602 .
+
+kg:YDR298C rdfs:subClassOf kg:CPLX3O-10574 .
+
+kg:YDR301W rdfs:subClassOf kg:CPX-1053 .
+
+kg:YDR303C rdfs:subClassOf kg:CPLX3O-10552 .
+
+kg:YDR308C rdfs:subClassOf kg:CPX-3226 .
+
+kg:YDR310C rdfs:subClassOf kg:CPX-1384 .
+
+kg:YDR311W rdfs:subClassOf kg:CPX-1659 .
+
+kg:YDR318W rdfs:subClassOf kg:CPX-1187 .
+
+kg:YDR320C-A rdfs:subClassOf kg:CPX-1041 .
+
+kg:YDR322C-A rdfs:subClassOf kg:CPLX3O-10572 .
+
+kg:YDR322W rdfs:subClassOf kg:CPX-1602 .
+
+kg:YDR324C rdfs:subClassOf kg:CPX-1409 .
+
+kg:YDR325W rdfs:subClassOf kg:CPX-1869 .
+
+kg:YDR328C rdfs:subClassOf kg:CPX-1627,
+        kg:CPX-1898,
+        kg:CPX-3234,
+        kg:CPX-3241,
+        kg:CPX-3242,
+        kg:CPX-3243,
+        kg:CPX-3244,
+        kg:CPX-3249,
+        kg:CPX-3250,
+        kg:CPX-3253,
+        kg:CPX-3254,
+        kg:CPX-3255,
+        kg:CPX-3681 .
+
+kg:YDR331W rdfs:subClassOf kg:CPX-1275 .
+
+kg:YDR333C rdfs:subClassOf kg:CPX-3265 .
+
+kg:YDR334W rdfs:subClassOf kg:CPX-2122 .
+
+kg:YDR337W rdfs:subClassOf kg:CPX-1603 .
+
+kg:YDR339C rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YDR347W rdfs:subClassOf kg:CPX-1603 .
+
+kg:YDR356W rdfs:subClassOf kg:CPX-1419 .
+
+kg:YDR357C rdfs:subClassOf kg:CPX-1153 .
+
+kg:YDR359C rdfs:subClassOf kg:CPX-3155 .
+
+kg:YDR362C rdfs:subClassOf kg:CPX-1656 .
+
+kg:YDR363W rdfs:subClassOf kg:CPX-1166 .
+
+kg:YDR363W-A rdfs:subClassOf kg:CPLX3O-10559 .
+
+kg:YDR364C rdfs:subClassOf kg:CPX-1651 .
+
+kg:YDR365C rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YDR367W rdfs:subClassOf kg:CPLX-8573 .
+
+kg:YDR369C rdfs:subClassOf kg:CPX-1872 .
+
+kg:YDR377W rdfs:subClassOf kg:CPLX3O-10569 .
+
+kg:YDR378C rdfs:subClassOf kg:CPX-25,
+        kg:CPX-44,
+        kg:CPX-45,
+        kg:CPX-46 .
+
+kg:YDR380W rdfs:subClassOf kg:CPLX3O-71 .
+
+kg:YDR381W rdfs:subClassOf kg:CPX-1793 .
+
+kg:YDR383C rdfs:subClassOf kg:CPX-1156 .
+
+kg:YDR386W rdfs:subClassOf kg:CPX-1670 .
+
+kg:YDR388W rdfs:subClassOf kg:CPX-1335 .
+
+kg:YDR390C rdfs:subClassOf kg:CPX-3238 .
+
+kg:YDR392W rdfs:subClassOf kg:CPX-656,
+        kg:CPX-675 .
+
+kg:YDR394W rdfs:subClassOf kg:CPLX3O-10560 .
+
+kg:YDR397C rdfs:subClassOf kg:CPX-1662 .
+
+kg:YDR398W rdfs:subClassOf kg:CPX-1409 .
+
+kg:YDR399W rdfs:subClassOf kg:CPLX-8140 .
+
+kg:YDR404C rdfs:subClassOf kg:CPLX3O-10586 .
+
+kg:YDR405W rdfs:subClassOf kg:CPX-1602 .
+
+kg:YDR407C rdfs:subClassOf kg:CPX-1939 .
+
+kg:YDR416W rdfs:subClassOf kg:CPX-1885 .
+
+kg:YDR422C rdfs:subClassOf kg:CPX-232 .
+
+kg:YDR424C rdfs:subClassOf kg:CPX-1178 .
+
+kg:YDR425W rdfs:subClassOf kg:CPX-1378 .
+
+kg:YDR427W rdfs:subClassOf kg:CPLX3O-10559 .
+
+kg:YDR429C rdfs:subClassOf kg:CPX-1831 .
+
+kg:YDR434W rdfs:subClassOf kg:CPX-1275 .
+
+kg:YDR437W rdfs:subClassOf kg:CPX-1274 .
+
+kg:YDR439W rdfs:subClassOf kg:CPX-1681 .
+
+kg:YDR443C rdfs:subClassOf kg:CPX-1853 .
+
+kg:YDR446W rdfs:subClassOf kg:CPX-1387,
+        kg:CPX-1407 .
+
+kg:YDR448W rdfs:subClassOf kg:CPX-608,
+        kg:CPX-656,
+        kg:CPX-675 .
+
+kg:YDR449C rdfs:subClassOf kg:CPLX3O-10905 .
+
+kg:YDR450W rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YDR460W rdfs:subClassOf kg:CPX-1660 .
+
+kg:YDR462W rdfs:subClassOf kg:CPX-1602 .
+
+kg:YDR469W rdfs:subClassOf kg:CPX-1039 .
+
+kg:YDR470C rdfs:subClassOf kg:CPX-161 .
+
+kg:YDR472W rdfs:subClassOf kg:CPX-1383,
+        kg:CPX-1939,
+        kg:CPX-1940 .
+
+kg:YDR473C rdfs:subClassOf kg:CPX-31 .
+
+kg:YDR477W rdfs:subClassOf kg:CPX-231,
+        kg:CPX-232,
+        kg:CPX-2800 .
+
+kg:YDR478W rdfs:subClassOf kg:CPLX3O-10556 .
+
+kg:YDR480W rdfs:subClassOf kg:CPX-575 .
+
+kg:YDR482C rdfs:subClassOf kg:CPX-1651 .
+
+kg:YDR484W rdfs:subClassOf kg:CPX-1718 .
+
+kg:YDR485C rdfs:subClassOf kg:CPX-2122 .
+
+kg:YDR488C rdfs:subClassOf kg:CPX-1178 .
+
+kg:YDR489W rdfs:subClassOf kg:CPX-1641 .
+
+kg:YDR494W rdfs:subClassOf kg:CPX-1603 .
+
+kg:YDR495C rdfs:subClassOf kg:CPX-1626 .
+
+kg:YDR499W rdfs:subClassOf kg:CPX-3621 .
+
+kg:YDR502C rdfs:subClassOf kg:CPLX-602 .
+
+kg:YDR507C rdfs:subClassOf kg:CPX-1712 .
+
+kg:YDR517W rdfs:subClassOf kg:CPX-1125 .
+
+kg:YDR529C rdfs:subClassOf kg:CPLX3O-105 .
+
+kg:YDR532C rdfs:subClassOf kg:CPX-1899 .
+
+kg:YDR533C rdfs:subClassOf kg:CPLX3O-10934 .
+
+kg:YEL002C rdfs:subClassOf kg:CPLX3O-10527,
+        kg:CPLX3O-10889 .
+
+kg:YEL003W rdfs:subClassOf kg:CPX-1671 .
+
+kg:YEL005C rdfs:subClassOf kg:CPX-1153 .
+
+kg:YEL013W rdfs:subClassOf kg:CPX-1304,
+        kg:CPX-1381 .
+
+kg:YEL018W rdfs:subClassOf kg:CPX-3184 .
+
+kg:YEL019C rdfs:subClassOf kg:CPX-1364 .
+
+kg:YEL020W-A rdfs:subClassOf kg:CPX-2268 .
+
+kg:YEL024W rdfs:subClassOf kg:CPLX3O-105 .
+
+kg:YEL026W rdfs:subClassOf kg:CPLX3O-10912,
+        kg:CPX-31,
+        kg:CPX-729 .
+
+kg:YEL027W rdfs:subClassOf kg:CPLX3O-10575,
+        kg:CPX-1192 .
+
+kg:YEL029C rdfs:subClassOf kg:CPLX3O-38 .
+
+kg:YEL032W rdfs:subClassOf kg:CPX-2944 .
+
+kg:YEL036C rdfs:subClassOf kg:CPX-1839 .
+
+kg:YEL037C rdfs:subClassOf kg:CPLX3O-10554,
+        kg:CPX-1320,
+        kg:CPX-1323,
+        kg:CPX-1640 .
+
+kg:YEL041W rdfs:subClassOf kg:CPLX-8676 .
+
+kg:YEL044W rdfs:subClassOf kg:CPX-863 .
+
+kg:YEL046C rdfs:subClassOf kg:CPLX-7266 .
+
+kg:YEL048C rdfs:subClassOf kg:CPX-1939 .
+
+kg:YEL050C rdfs:subClassOf kg:CPX-1602 .
+
+kg:YEL051W rdfs:subClassOf kg:CPLX3O-10576,
+        kg:CPX-1192 .
+
+kg:YEL053C rdfs:subClassOf kg:CPLX3O-10537 .
+
+kg:YEL054C rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YEL055C rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YEL056W rdfs:subClassOf kg:CPX-1682 .
+
+kg:YEL059C-A rdfs:subClassOf kg:CPX-1892 .
+
+kg:YEL061C rdfs:subClassOf kg:CPLX3O-10937 .
+
+kg:YEL062W rdfs:subClassOf kg:CPX-3231 .
+
+kg:YER008C rdfs:subClassOf kg:CPX-1890 .
+
+kg:YER012W rdfs:subClassOf kg:CPLX3O-10558 .
+
+kg:YER013W rdfs:subClassOf kg:CPX-1651 .
+
+kg:YER017C rdfs:subClassOf kg:CPLX3O-10546 .
+
+kg:YER018C rdfs:subClassOf kg:CPX-548 .
+
+kg:YER019C-A rdfs:subClassOf kg:CPX-1834 .
+
+kg:YER021W rdfs:subClassOf kg:CPLX3O-10559 .
+
+kg:YER022W rdfs:subClassOf kg:CPX-3226 .
+
+kg:YER023W rdfs:subClassOf kg:CPLX-6891 .
+
+kg:YER025W rdfs:subClassOf kg:CPX-427 .
+
+kg:YER027C rdfs:subClassOf kg:CPX-231 .
+
+kg:YER029C rdfs:subClassOf kg:CPX-1651,
+        kg:CPX-23,
+        kg:CPX-29,
+        kg:CPX-30,
+        kg:CPX-31,
+        kg:CPX-43 .
+
+kg:YER038C rdfs:subClassOf kg:CPX-1364 .
+
+kg:YER044C rdfs:subClassOf kg:CPLX3O-272 .
+
+kg:YER044C-A rdfs:subClassOf kg:CPX-1809 .
+
+kg:YER048W-A rdfs:subClassOf kg:CPX-392 .
+
+kg:YER050C rdfs:subClassOf kg:CPX-1603 .
+
+kg:YER056C-A rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YER059W rdfs:subClassOf kg:CPX-1689 .
+
+kg:YER068W rdfs:subClassOf kg:CPX-1800 .
+
+kg:YER069W rdfs:subClassOf kg:CPLX3O-10901 .
+
+kg:YER070W rdfs:subClassOf kg:CPLX3O-10513,
+        kg:CPLX3O-10516 .
+
+kg:YER071C rdfs:subClassOf kg:CPX-3541 .
+
+kg:YER072W rdfs:subClassOf kg:CPX-784 .
+
+kg:YER074W rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YER082C rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YER083C rdfs:subClassOf kg:CPX-956 .
+
+kg:YER087C-B rdfs:subClassOf kg:CPX-1833 .
+
+kg:YER090W rdfs:subClassOf kg:CPLX3O-31 .
+
+kg:YER092W rdfs:subClassOf kg:CPX-863 .
+
+kg:YER093C rdfs:subClassOf kg:CPLX3O-10895 .
+
+kg:YER094C rdfs:subClassOf kg:CPLX3O-10558 .
+
+kg:YER099C rdfs:subClassOf kg:CPLX3O-10563,
+        kg:CPLX3O-10566 .
+
+kg:YER105C rdfs:subClassOf kg:CPX-824 .
+
+kg:YER106W rdfs:subClassOf kg:CPX-1681 .
+
+kg:YER107C rdfs:subClassOf kg:CPX-824 .
+
+kg:YER111C rdfs:subClassOf kg:CPX-946 .
+
+kg:YER112W rdfs:subClassOf kg:CPX-25,
+        kg:CPX-44,
+        kg:CPX-45,
+        kg:CPX-46 .
+
+kg:YER116C rdfs:subClassOf kg:CPX-3179 .
+
+kg:YER118C rdfs:subClassOf kg:CPX-1140 .
+
+kg:YER125W rdfs:subClassOf kg:CPX-2921,
+        kg:CPX-2923 .
+
+kg:YER127W rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YER133W rdfs:subClassOf kg:CPX-1053,
+        kg:CPX-1230,
+        kg:CPX-1231,
+        kg:CPX-1249,
+        kg:CPX-1260,
+        kg:CPX-1266,
+        kg:CPX-1267,
+        kg:CPX-1705 .
+
+kg:YER145C rdfs:subClassOf kg:CPX-868 .
+
+kg:YER146W rdfs:subClassOf kg:CPX-25,
+        kg:CPX-44,
+        kg:CPX-45,
+        kg:CPX-46 .
+
+kg:YER147C rdfs:subClassOf kg:CPX-1868 .
+
+kg:YER148W rdfs:subClassOf kg:CPX-1141,
+        kg:CPX-1143,
+        kg:CPX-1642 .
+
+kg:YER149C rdfs:subClassOf kg:CPX-3188 .
+
+kg:YER151C rdfs:subClassOf kg:CPX-1412 .
+
+kg:YER157W rdfs:subClassOf kg:CPX-1840 .
+
+kg:YER159C rdfs:subClassOf kg:CPX-1662 .
+
+kg:YER162C rdfs:subClassOf kg:CPX-1640 .
+
+kg:YER164W rdfs:subClassOf kg:CPLX3O-10551,
+        kg:CPX-656,
+        kg:CPX-675 .
+
+kg:YER166W rdfs:subClassOf kg:CPX-1021 .
+
+kg:YER171W rdfs:subClassOf kg:CPX-1659 .
+
+kg:YER172C rdfs:subClassOf kg:CPX-1651,
+        kg:CPX-25,
+        kg:CPX-29 .
+
+kg:YER173W rdfs:subClassOf kg:CPX-1807 .
+
+kg:YER178W rdfs:subClassOf kg:CPLX3O-10512 .
+
+kg:YFL003C rdfs:subClassOf kg:CPX-1704 .
+
+kg:YFL004W rdfs:subClassOf kg:CPX-784 .
+
+kg:YFL008W rdfs:subClassOf kg:CPX-1408,
+        kg:CPX-1867 .
+
+kg:YFL009W rdfs:subClassOf kg:CPX-3234 .
+
+kg:YFL013C rdfs:subClassOf kg:CPX-863 .
+
+kg:YFL017C rdfs:subClassOf kg:CPLX-7401 .
+
+kg:YFL017W-A rdfs:subClassOf kg:CPX-23,
+        kg:CPX-29,
+        kg:CPX-30,
+        kg:CPX-31,
+        kg:CPX-43 .
+
+kg:YFL018C rdfs:subClassOf kg:CPLX3O-10921,
+        kg:CPLX3O-213,
+        kg:CPLX3O-33 .
+
+kg:YFL022C rdfs:subClassOf kg:CPX-1738 .
+
+kg:YFL024C rdfs:subClassOf kg:CPX-3155,
+        kg:CPX-3185 .
+
+kg:YFL030W rdfs:subClassOf kg:CPLX-7560 .
+
+kg:YFL034C-B rdfs:subClassOf kg:CPX-1684 .
+
+kg:YFL036W rdfs:subClassOf kg:CPLX3O-10584 .
+
+kg:YFL037W rdfs:subClassOf kg:CPX-1424,
+        kg:CPX-1425 .
+
+kg:YFL039C rdfs:subClassOf kg:CPX-2122,
+        kg:CPX-3155,
+        kg:CPX-863 .
+
+kg:YFL041W rdfs:subClassOf kg:CPX-869 .
+
+kg:YFL049W rdfs:subClassOf kg:CPX-1150 .
+
+kg:YFL058W rdfs:subClassOf kg:CPLX-8694 .
+
+kg:YFL059W rdfs:subClassOf kg:CPLX3O-10925 .
+
+kg:YFL060C rdfs:subClassOf kg:MONOMER3O-300584 .
+
+kg:YFR002W rdfs:subClassOf kg:CPX-824 .
+
+kg:YFR003C rdfs:subClassOf kg:CPX-1260 .
+
+kg:YFR004W rdfs:subClassOf kg:CPLX3O-10559 .
+
+kg:YFR005C rdfs:subClassOf kg:CPX-25 .
+
+kg:YFR008W rdfs:subClassOf kg:CPX-1197 .
+
+kg:YFR009W rdfs:subClassOf kg:CPX-1808 .
+
+kg:YFR010W rdfs:subClassOf kg:CPLX3O-10554 .
+
+kg:YFR011C rdfs:subClassOf kg:CPX-140 .
+
+kg:YFR013W rdfs:subClassOf kg:CPX-637 .
+
+kg:YFR019W rdfs:subClassOf kg:CPLX-7938,
+        kg:CPX-3088 .
+
+kg:YFR021W rdfs:subClassOf kg:CPX-3088,
+        kg:CPX-361 .
+
+kg:YFR028C rdfs:subClassOf kg:CPX-1669 .
+
+kg:YFR030W rdfs:subClassOf kg:CPLX3O-23 .
+
+kg:YFR031C rdfs:subClassOf kg:CPX-1869 .
+
+kg:YFR031C-A rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YFR032C-A rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YFR033C rdfs:subClassOf kg:CPLX3O-105 .
+
+kg:YFR036W rdfs:subClassOf kg:CPX-756,
+        kg:CPX-760,
+        kg:CPX-761,
+        kg:CPX-762 .
+
+kg:YFR037C rdfs:subClassOf kg:CPX-1888,
+        kg:CPX-1889 .
+
+kg:YFR040W rdfs:subClassOf kg:CPX-1864 .
+
+kg:YFR044C rdfs:subClassOf kg:CPLX3O-5 .
+
+kg:YFR049W rdfs:subClassOf kg:CPLX3O-33 .
+
+kg:YFR050C rdfs:subClassOf kg:CPLX3O-10558 .
+
+kg:YFR051C rdfs:subClassOf kg:CPLX3O-10540 .
+
+kg:YFR052W rdfs:subClassOf kg:CPLX3O-10559 .
+
+kg:YFR055W rdfs:subClassOf kg:CPLX-9296 .
+
+kg:YGL001C rdfs:subClassOf kg:CPLX3O-272 .
+
+kg:YGL003C rdfs:subClassOf kg:CPX-761 .
+
+kg:YGL005C rdfs:subClassOf kg:CPX-1840 .
+
+kg:YGL011C rdfs:subClassOf kg:CPLX3O-10558 .
+
+kg:YGL019W rdfs:subClassOf kg:CPX-581,
+        kg:CPX-769,
+        kg:CPX-770,
+        kg:CPX-771,
+        kg:CPX-773 .
+
+kg:YGL020C rdfs:subClassOf kg:CPX-956 .
+
+kg:YGL022W rdfs:subClassOf kg:CPLX3O-10527,
+        kg:CPLX3O-10889 .
+
+kg:YGL025C rdfs:subClassOf kg:CPX-3226 .
+
+kg:YGL030W rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YGL031C rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YGL032C rdfs:subClassOf kg:CPX-1838 .
+
+kg:YGL033W rdfs:subClassOf kg:CPX-1644 .
+
+kg:YGL037C rdfs:subClassOf kg:CPLX-9064 .
+
+kg:YGL044C rdfs:subClassOf kg:CPX-1895,
+        kg:CPX-1896 .
+
+kg:YGL047W rdfs:subClassOf kg:CPLX3O-24 .
+
+kg:YGL048C rdfs:subClassOf kg:CPLX3O-10560 .
+
+kg:YGL049C rdfs:subClassOf kg:CPX-431 .
+
+kg:YGL051W rdfs:subClassOf kg:CPX-1303 .
+
+kg:YGL058W rdfs:subClassOf kg:CPX-2902,
+        kg:CPX-2910,
+        kg:CPX-2918,
+        kg:CPX-2935 .
+
+kg:YGL061C rdfs:subClassOf kg:CPX-1041 .
+
+kg:YGL066W rdfs:subClassOf kg:CPX-656,
+        kg:CPX-675 .
+
+kg:YGL068W rdfs:subClassOf kg:CPX-1602 .
+
+kg:YGL070C rdfs:subClassOf kg:CPLX3O-10587 .
+
+kg:YGL075C rdfs:subClassOf kg:CPX-1287 .
+
+kg:YGL076C rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YGL079W rdfs:subClassOf kg:CPX-1153 .
+
+kg:YGL080W rdfs:subClassOf kg:CPX-302,
+        kg:CPX-303 .
+
+kg:YGL086W rdfs:subClassOf kg:CPX-961 .
+
+kg:YGL087C rdfs:subClassOf kg:CPX-2541 .
+
+kg:YGL090W rdfs:subClassOf kg:CPX-1665 .
+
+kg:YGL091C rdfs:subClassOf kg:CPX-385 .
+
+kg:YGL092W rdfs:subClassOf kg:CPX-824 .
+
+kg:YGL093W rdfs:subClassOf kg:CPX-1899 .
+
+kg:YGL094C rdfs:subClassOf kg:CPX-3294 .
+
+kg:YGL100W rdfs:subClassOf kg:CPX-3231,
+        kg:CPX-824 .
+
+kg:YGL103W rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YGL105W rdfs:subClassOf kg:CPX-1947 .
+
+kg:YGL106W rdfs:subClassOf kg:CPX-1426,
+        kg:CPX-1501,
+        kg:CPX-2225,
+        kg:CPX-3503 .
+
+kg:YGL112C rdfs:subClassOf kg:CPX-1642,
+        kg:CPX-656,
+        kg:CPX-675 .
+
+kg:YGL113W rdfs:subClassOf kg:CPX-1188 .
+
+kg:YGL115W rdfs:subClassOf kg:CPX-231,
+        kg:CPX-232,
+        kg:CPX-2800 .
+
+kg:YGL116W rdfs:subClassOf kg:CPX-760,
+        kg:CPX-962,
+        kg:CPX-963 .
+
+kg:YGL120C rdfs:subClassOf kg:CPLX3O-10912,
+        kg:CPX-1886 .
+
+kg:YGL123W rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YGL124C rdfs:subClassOf kg:CPX-1674 .
+
+kg:YGL127C rdfs:subClassOf kg:CPX-3226 .
+
+kg:YGL128C rdfs:subClassOf kg:CPX-1651 .
+
+kg:YGL129C rdfs:subClassOf kg:CPX-1603 .
+
+kg:YGL130W rdfs:subClassOf kg:CPLX-8752 .
+
+kg:YGL131C rdfs:subClassOf kg:CPX-1372 .
+
+kg:YGL133W rdfs:subClassOf kg:CPX-728,
+        kg:CPX-734 .
+
+kg:YGL134W rdfs:subClassOf kg:CPX-1692 .
+
+kg:YGL137W rdfs:subClassOf kg:CPLX3O-10539 .
+
+kg:YGL141W rdfs:subClassOf kg:CPLX3O-10554 .
+
+kg:YGL145W rdfs:subClassOf kg:CPX-1786 .
+
+kg:YGL147C rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YGL150C rdfs:subClassOf kg:CPX-863 .
+
+kg:YGL151W rdfs:subClassOf kg:CPX-3226 .
+
+kg:YGL153W rdfs:subClassOf kg:CPX-1904 .
+
+kg:YGL155W rdfs:subClassOf kg:CPX-1635 .
+
+kg:YGL171W rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YGL172W rdfs:subClassOf kg:CPX-824 .
+
+kg:YGL174W rdfs:subClassOf kg:CPX-1649,
+        kg:CPX-1651 .
+
+kg:YGL180W rdfs:subClassOf kg:CPX-1676 .
+
+kg:YGL183C rdfs:subClassOf kg:CPX-1644 .
+
+kg:YGL187C rdfs:subClassOf kg:CPLX3O-10890,
+        kg:CPLX3O-117 .
+
+kg:YGL189C rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YGL190C rdfs:subClassOf kg:CPX-1856,
+        kg:CPX-1859 .
+
+kg:YGL191W rdfs:subClassOf kg:CPLX3O-10890,
+        kg:CPLX3O-117 .
+
+kg:YGL192W rdfs:subClassOf kg:CPX-3211 .
+
+kg:YGL194C rdfs:subClassOf kg:CPX-1342 .
+
+kg:YGL195W rdfs:subClassOf kg:CPX-1808 .
+
+kg:YGL200C rdfs:subClassOf kg:CPX-1698 .
+
+kg:YGL201C rdfs:subClassOf kg:CPX-2944 .
+
+kg:YGL202W rdfs:subClassOf kg:CPLX-9342 .
+
+kg:YGL206C rdfs:subClassOf kg:CPX-1616 .
+
+kg:YGL207W rdfs:subClassOf kg:CPX-3215 .
+
+kg:YGL208W rdfs:subClassOf kg:CPX-2800 .
+
+kg:YGL212W rdfs:subClassOf kg:CPX-1887 .
+
+kg:YGL213C rdfs:subClassOf kg:CPX-1040 .
+
+kg:YGL215W rdfs:subClassOf kg:CPX-1693 .
+
+kg:YGL219C rdfs:subClassOf kg:CPX-3196 .
+
+kg:YGL223C rdfs:subClassOf kg:CPX-1840 .
+
+kg:YGL226C-A rdfs:subClassOf kg:CPLX3O-10527,
+        kg:CPLX3O-10889 .
+
+kg:YGL227W rdfs:subClassOf kg:CPX-301 .
+
+kg:YGL231C rdfs:subClassOf kg:CPX-307 .
+
+kg:YGL233W rdfs:subClassOf kg:CPX-1890 .
+
+kg:YGL234W rdfs:subClassOf kg:CPLX-8639 .
+
+kg:YGL236C rdfs:subClassOf kg:CPLX3O-10528 .
+
+kg:YGL237C rdfs:subClassOf kg:CPX-1830 .
+
+kg:YGL240W rdfs:subClassOf kg:CPX-756,
+        kg:CPX-760,
+        kg:CPX-761,
+        kg:CPX-762 .
+
+kg:YGL244W rdfs:subClassOf kg:CPX-1726 .
+
+kg:YGL245W rdfs:subClassOf kg:CPX-1947 .
+
+kg:YGL246C rdfs:subClassOf kg:CPLX3O-10906 .
+
+kg:YGL249W rdfs:subClassOf kg:CPX-1386 .
+
+kg:YGL252C rdfs:subClassOf kg:CPX-675 .
+
+kg:YGL256W rdfs:subClassOf kg:CPLX-8690 .
+
+kg:YGR002C rdfs:subClassOf kg:CPX-2122,
+        kg:CPX-3155 .
+
+kg:YGR003W rdfs:subClassOf kg:CPX-1191,
+        kg:CPX-1837 .
+
+kg:YGR005C rdfs:subClassOf kg:CPX-1149 .
+
+kg:YGR009C rdfs:subClassOf kg:CPX-1365,
+        kg:CPX-1369 .
+
+kg:YGR013W rdfs:subClassOf kg:CPX-23 .
+
+kg:YGR014W rdfs:subClassOf kg:CPX-1302 .
+
+kg:YGR019W rdfs:subClassOf kg:CPLX-8091 .
+
+kg:YGR020C rdfs:subClassOf kg:CPLX3O-10576,
+        kg:CPX-1192 .
+
+kg:YGR024C rdfs:subClassOf kg:CPLX-8310 .
+
+kg:YGR027C rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YGR030C rdfs:subClassOf kg:CPLX3O-10556,
+        kg:CPX-1873 .
+
+kg:YGR032W rdfs:subClassOf kg:CPX-1813 .
+
+kg:YGR033C rdfs:subClassOf kg:CPX-539 .
+
+kg:YGR038W rdfs:subClassOf kg:CPX-3158 .
+
+kg:YGR047C rdfs:subClassOf kg:CPX-1656 .
+
+kg:YGR048W rdfs:subClassOf kg:CPX-2946,
+        kg:CPX-3265 .
+
+kg:YGR056W rdfs:subClassOf kg:CPX-1889 .
+
+kg:YGR060W rdfs:subClassOf kg:CPLX3O-272 .
+
+kg:YGR063C rdfs:subClassOf kg:CPX-1661 .
+
+kg:YGR072W rdfs:subClassOf kg:CPX-1315 .
+
+kg:YGR074W rdfs:subClassOf kg:CPX-1651,
+        kg:CPX-23,
+        kg:CPX-29,
+        kg:CPX-30,
+        kg:CPX-31,
+        kg:CPX-43 .
+
+kg:YGR075C rdfs:subClassOf kg:CPX-25 .
+
+kg:YGR076C rdfs:subClassOf kg:CPX-1602 .
+
+kg:YGR078C rdfs:subClassOf kg:CPX-1671 .
+
+kg:YGR081C rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YGR082W rdfs:subClassOf kg:CPX-474 .
+
+kg:YGR083C rdfs:subClassOf kg:CPX-429 .
+
+kg:YGR084C rdfs:subClassOf kg:CPX-1603 .
+
+kg:YGR087C rdfs:subClassOf kg:CPLX3O-58 .
+
+kg:YGR090W rdfs:subClassOf kg:CPX-771,
+        kg:CPX-772,
+        kg:CPX-773,
+        kg:CPX-774,
+        kg:CPX-775,
+        kg:CPX-776 .
+
+kg:YGR091W rdfs:subClassOf kg:CPX-25 .
+
+kg:YGR092W rdfs:subClassOf kg:CPX-1683 .
+
+kg:YGR095C rdfs:subClassOf kg:CPX-599,
+        kg:CPX-603 .
+
+kg:YGR098C rdfs:subClassOf kg:CPX-1340 .
+
+kg:YGR099W rdfs:subClassOf kg:CPX-1422 .
+
+kg:YGR102C rdfs:subClassOf kg:CPX-416 .
+
+kg:YGR103W rdfs:subClassOf kg:CPX-1862 .
+
+kg:YGR104C rdfs:subClassOf kg:CPX-3226 .
+
+kg:YGR108W rdfs:subClassOf kg:CPX-335 .
+
+kg:YGR109C rdfs:subClassOf kg:CPX-339 .
+
+kg:YGR113W rdfs:subClassOf kg:CPX-1041 .
+
+kg:YGR118W rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YGR119C rdfs:subClassOf kg:CPX-824 .
+
+kg:YGR120C rdfs:subClassOf kg:CPX-1840 .
+
+kg:YGR128C rdfs:subClassOf kg:CPX-1409 .
+
+kg:YGR129W rdfs:subClassOf kg:CPX-1885 .
+
+kg:YGR132C rdfs:subClassOf kg:CPX-1703 .
+
+kg:YGR134W rdfs:subClassOf kg:CPX-1800 .
+
+kg:YGR135W rdfs:subClassOf kg:CPLX3O-10558 .
+
+kg:YGR140W rdfs:subClassOf kg:CPX-1898 .
+
+kg:YGR144W rdfs:subClassOf kg:CPLX3O-155 .
+
+kg:YGR155W rdfs:subClassOf kg:CPLX-567 .
+
+kg:YGR156W rdfs:subClassOf kg:CPX-1053 .
+
+kg:YGR158C rdfs:subClassOf kg:CPX-599,
+        kg:CPX-603 .
+
+kg:YGR159C rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YGR162W rdfs:subClassOf kg:CPX-430 .
+
+kg:YGR163W rdfs:subClassOf kg:CPX-3172 .
+
+kg:YGR165W rdfs:subClassOf kg:CPX-1603 .
+
+kg:YGR166W rdfs:subClassOf kg:CPX-1939 .
+
+kg:YGR167W rdfs:subClassOf kg:CPX-1616 .
+
+kg:YGR170W rdfs:subClassOf kg:CPX-1319 .
+
+kg:YGR178C rdfs:subClassOf kg:CPX-1295 .
+
+kg:YGR179C rdfs:subClassOf kg:CPX-1187 .
+
+kg:YGR180C rdfs:subClassOf kg:CPLX3O-10514 .
+
+kg:YGR181W rdfs:subClassOf kg:CPX-2371 .
+
+kg:YGR183C rdfs:subClassOf kg:CPLX3O-105 .
+
+kg:YGR184C rdfs:subClassOf kg:CPX-2918 .
+
+kg:YGR186W rdfs:subClassOf kg:CPX-1149 .
+
+kg:YGR188C rdfs:subClassOf kg:CPX-154 .
+
+kg:YGR193C rdfs:subClassOf kg:CPLX3O-10921 .
+
+kg:YGR195W rdfs:subClassOf kg:CPX-599,
+        kg:CPX-603 .
+
+kg:YGR200C rdfs:subClassOf kg:CPLX-85417 .
+
+kg:YGR206W rdfs:subClassOf kg:CPX-940 .
+
+kg:YGR209C rdfs:subClassOf kg:CPX-1279 .
+
+kg:YGR214W rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YGR215W rdfs:subClassOf kg:CPX-1603 .
+
+kg:YGR216C rdfs:subClassOf kg:CPX-1274 .
+
+kg:YGR220C rdfs:subClassOf kg:CPX-1602 .
+
+kg:YGR225W rdfs:subClassOf kg:CPX-762 .
+
+kg:YGR231C rdfs:subClassOf kg:CPX-1703 .
+
+kg:YGR235C rdfs:subClassOf kg:CPX-140 .
+
+kg:YGR238C rdfs:subClassOf kg:CPX-36 .
+
+kg:YGR239C rdfs:subClassOf kg:CPX-1906 .
+
+kg:YGR240C rdfs:subClassOf kg:CPLX3O-77 .
+
+kg:YGR243W rdfs:subClassOf kg:CPX-303 .
+
+kg:YGR244C rdfs:subClassOf kg:CPLX3O-690 .
+
+kg:YGR246C rdfs:subClassOf kg:CPX-1143 .
+
+kg:YGR251W rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YGR252W rdfs:subClassOf kg:CPX-608,
+        kg:CPX-656,
+        kg:CPX-675 .
+
+kg:YGR253C rdfs:subClassOf kg:CPLX3O-10558 .
+
+kg:YGR255C rdfs:subClassOf kg:CPX-1155 .
+
+kg:YGR261C rdfs:subClassOf kg:CPX-535 .
+
+kg:YGR262C rdfs:subClassOf kg:CPX-995 .
+
+kg:YGR264C rdfs:subClassOf kg:CPX-1947 .
+
+kg:YGR274C rdfs:subClassOf kg:CPX-1642 .
+
+kg:YGR275W rdfs:subClassOf kg:CPX-1150,
+        kg:CPX-1888,
+        kg:CPX-1889 .
+
+kg:YGR277C rdfs:subClassOf kg:CPX-396 .
+
+kg:YGR278W rdfs:subClassOf kg:CPX-1651 .
+
+kg:YGR280C rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YGR285C rdfs:subClassOf kg:CPX-1743 .
+
+kg:YHL002W rdfs:subClassOf kg:CPX-1622 .
+
+kg:YHL003C rdfs:subClassOf kg:CPLX-9392 .
+
+kg:YHL004W rdfs:subClassOf kg:CPX-1603 .
+
+kg:YHL006C rdfs:subClassOf kg:CPX-3087 .
+
+kg:YHL011C rdfs:subClassOf kg:CPLX3O-10564 .
+
+kg:YHL015W rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YHL019C rdfs:subClassOf kg:CPX-533 .
+
+kg:YHL023C rdfs:subClassOf kg:CPX-3231 .
+
+kg:YHL025W rdfs:subClassOf kg:CPX-1150 .
+
+kg:YHL030W rdfs:subClassOf kg:CPLX3O-10554 .
+
+kg:YHL031C rdfs:subClassOf kg:CPX-1855 .
+
+kg:YHL033C rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YHR001W-A rdfs:subClassOf kg:CPLX3O-105 .
+
+kg:YHR004C rdfs:subClassOf kg:CPLX3O-10909 .
+
+kg:YHR005C rdfs:subClassOf kg:CPX-1646 .
+
+kg:YHR005C-A rdfs:subClassOf kg:CPX-2268 .
+
+kg:YHR010W rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YHR012W rdfs:subClassOf kg:CPX-1653 .
+
+kg:YHR013C rdfs:subClassOf kg:CPLX3O-10535 .
+
+kg:YHR023W rdfs:subClassOf kg:CPX-1426 .
+
+kg:YHR024C rdfs:subClassOf kg:CPLX-8307 .
+
+kg:YHR026W rdfs:subClassOf kg:CPLX3O-10575,
+        kg:CPX-1192 .
+
+kg:YHR027C rdfs:subClassOf kg:CPLX3O-10560 .
+
+kg:YHR034C rdfs:subClassOf kg:CPX-1814 .
+
+kg:YHR039C-A rdfs:subClassOf kg:CPLX3O-10576,
+        kg:CPX-1192 .
+
+kg:YHR041C rdfs:subClassOf kg:CPX-3226 .
+
+kg:YHR051W rdfs:subClassOf kg:CPLX3O-10890,
+        kg:CPLX3O-117 .
+
+kg:YHR056C rdfs:subClassOf kg:CPLX3O-10552 .
+
+kg:YHR058C rdfs:subClassOf kg:CPX-3226 .
+
+kg:YHR059W rdfs:subClassOf kg:CPX-1603 .
+
+kg:YHR062C rdfs:subClassOf kg:CPLX3O-10556,
+        kg:CPX-1873 .
+
+kg:YHR064C rdfs:subClassOf kg:CPX-1743 .
+
+kg:YHR065C rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YHR069C rdfs:subClassOf kg:CPX-599,
+        kg:CPX-603 .
+
+kg:YHR071W rdfs:subClassOf kg:CPX-1696 .
+
+kg:YHR072W-A rdfs:subClassOf kg:CPX-737 .
+
+kg:YHR077C rdfs:subClassOf kg:CPX-1315 .
+
+kg:YHR079C rdfs:subClassOf kg:CPX-2147 .
+
+kg:YHR079C-A rdfs:subClassOf kg:CPX-1288 .
+
+kg:YHR083W rdfs:subClassOf kg:CPX-1744 .
+
+kg:YHR084W rdfs:subClassOf kg:CPX-575,
+        kg:CPX-576 .
+
+kg:YHR085W rdfs:subClassOf kg:CPX-1711 .
+
+kg:YHR086W rdfs:subClassOf kg:CPX-23 .
+
+kg:YHR089C rdfs:subClassOf kg:CPX-737 .
+
+kg:YHR090C rdfs:subClassOf kg:CPX-3155,
+        kg:CPX-3185 .
+
+kg:YHR098C rdfs:subClassOf kg:CPX-1341 .
+
+kg:YHR099W rdfs:subClassOf kg:CPX-3155,
+        kg:CPX-656,
+        kg:CPX-675 .
+
+kg:YHR107C rdfs:subClassOf kg:CPX-1675,
+        kg:CPX-1712 .
+
+kg:YHR113W rdfs:subClassOf kg:CPLX3O-10910 .
+
+kg:YHR118C rdfs:subClassOf kg:CPX-768 .
+
+kg:YHR119W rdfs:subClassOf kg:CPX-1039 .
+
+kg:YHR129C rdfs:subClassOf kg:CPX-1805 .
+
+kg:YHR143W-A rdfs:subClassOf kg:CPLX3O-10583,
+        kg:CPLX3O-10585,
+        kg:CPLX3O-10587 .
+
+kg:YHR147C rdfs:subClassOf kg:CPX-1602 .
+
+kg:YHR148W rdfs:subClassOf kg:CPX-1893 .
+
+kg:YHR153C rdfs:subClassOf kg:CPX-1386 .
+
+kg:YHR154W rdfs:subClassOf kg:CPX-1157,
+        kg:CPX-1355 .
+
+kg:YHR156C rdfs:subClassOf kg:CPX-29 .
+
+kg:YHR157W rdfs:subClassOf kg:CPX-1292 .
+
+kg:YHR158C rdfs:subClassOf kg:CPX-36 .
+
+kg:YHR160C rdfs:subClassOf kg:CPX-1905 .
+
+kg:YHR162W rdfs:subClassOf kg:CPX-302 .
+
+kg:YHR165C rdfs:subClassOf kg:CPX-1651,
+        kg:CPX-25,
+        kg:CPX-29,
+        kg:CPX-30 .
+
+kg:YHR166C rdfs:subClassOf kg:CPX-756,
+        kg:CPX-760,
+        kg:CPX-761,
+        kg:CPX-762 .
+
+kg:YHR167W rdfs:subClassOf kg:CPX-1792 .
+
+kg:YHR169W rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YHR172W rdfs:subClassOf kg:CPX-1198 .
+
+kg:YHR186C rdfs:subClassOf kg:CPLX3O-10896,
+        kg:CPLX3O-10897 .
+
+kg:YHR187W rdfs:subClassOf kg:CPLX-85418 .
+
+kg:YHR188C rdfs:subClassOf kg:CPX-1275 .
+
+kg:YHR191C rdfs:subClassOf kg:CPX-1731 .
+
+kg:YHR193C rdfs:subClassOf kg:CPX-1306,
+        kg:CPX-1307 .
+
+kg:YHR195W rdfs:subClassOf kg:CPX-1381 .
+
+kg:YHR196W rdfs:subClassOf kg:CPX-1409 .
+
+kg:YHR197W rdfs:subClassOf kg:CPX-1711 .
+
+kg:YHR199C-A rdfs:subClassOf kg:CPX-1900 .
+
+kg:YHR200W rdfs:subClassOf kg:CPLX3O-10554,
+        kg:CPLX3O-10560 .
+
+kg:YHR204W rdfs:subClassOf kg:CPX-1283 .
+
+kg:YHR208W rdfs:subClassOf kg:CPLX-6954 .
+
+kg:YIL003W rdfs:subClassOf kg:CPX-385 .
+
+kg:YIL009C-A rdfs:subClassOf kg:CPX-3298 .
+
+kg:YIL017C rdfs:subClassOf kg:CPX-301 .
+
+kg:YIL021W rdfs:subClassOf kg:CPLX3O-10587 .
+
+kg:YIL022W rdfs:subClassOf kg:CPX-539 .
+
+kg:YIL026C rdfs:subClassOf kg:CPX-1408,
+        kg:CPX-1867 .
+
+kg:YIL027C rdfs:subClassOf kg:CPX-307 .
+
+kg:YIL030C rdfs:subClassOf kg:CPX-3074 .
+
+kg:YIL033C rdfs:subClassOf kg:CPX-536,
+        kg:CPX-537,
+        kg:CPX-571,
+        kg:CPX-572,
+        kg:CPX-573,
+        kg:CPX-574 .
+
+kg:YIL034C rdfs:subClassOf kg:CPX-1637 .
+
+kg:YIL035C rdfs:subClassOf kg:CPX-581,
+        kg:CPX-769,
+        kg:CPX-771 .
+
+kg:YIL038C rdfs:subClassOf kg:CPX-1800 .
+
+kg:YIL046W rdfs:subClassOf kg:CPX-3249 .
+
+kg:YIL048W rdfs:subClassOf kg:CPX-1028 .
+
+kg:YIL050W rdfs:subClassOf kg:CPX-1690 .
+
+kg:YIL061C rdfs:subClassOf kg:CPX-23 .
+
+kg:YIL062C rdfs:subClassOf kg:CPX-607 .
+
+kg:YIL066C rdfs:subClassOf kg:CPLX3O-10516 .
+
+kg:YIL068C rdfs:subClassOf kg:CPX-1890 .
+
+kg:YIL071C rdfs:subClassOf kg:CPX-1894 .
+
+kg:YIL072W rdfs:subClassOf kg:CPX-1387 .
+
+kg:YIL073C rdfs:subClassOf kg:CPX-1386 .
+
+kg:YIL075C rdfs:subClassOf kg:CPLX3O-10560 .
+
+kg:YIL076W rdfs:subClassOf kg:CPLX3O-10539 .
+
+kg:YIL079C rdfs:subClassOf kg:CPX-1678,
+        kg:CPX-1680 .
+
+kg:YIL083C rdfs:subClassOf kg:CPX-396 .
+
+kg:YIL084C rdfs:subClassOf kg:CPX-1852 .
+
+kg:YIL091C rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YIL093C rdfs:subClassOf kg:CPX-1603 .
+
+kg:YIL097W rdfs:subClassOf kg:CPX-301 .
+
+kg:YIL099W rdfs:subClassOf kg:CPLX-7567 .
+
+kg:YIL103W rdfs:subClassOf kg:CPLX-8046 .
+
+kg:YIL106W rdfs:subClassOf kg:CPX-1683 .
+
+kg:YIL109C rdfs:subClassOf kg:CPX-2523 .
+
+kg:YIL111W rdfs:subClassOf kg:CPLX3O-10890 .
+
+kg:YIL112W rdfs:subClassOf kg:CPX-1342 .
+
+kg:YIL115C rdfs:subClassOf kg:CPX-824 .
+
+kg:YIL125W rdfs:subClassOf kg:CPLX3O-12 .
+
+kg:YIL126W rdfs:subClassOf kg:CPX-1888,
+        kg:CPX-1889 .
+
+kg:YIL132C rdfs:subClassOf kg:CPX-3087 .
+
+kg:YIL133C rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YIL139C rdfs:subClassOf kg:CPX-1091 .
+
+kg:YIL142W rdfs:subClassOf kg:CPX-2156 .
+
+kg:YIL143C rdfs:subClassOf kg:CPX-1659 .
+
+kg:YIL144W rdfs:subClassOf kg:CPX-548 .
+
+kg:YIL148W rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YIL153W rdfs:subClassOf kg:CPX-1863 .
+
+kg:YIL154C rdfs:subClassOf kg:CPX-1892 .
+
+kg:YIL160C rdfs:subClassOf kg:CPLX-8705 .
+
+kg:YIR003W rdfs:subClassOf kg:CPX-3541 .
+
+kg:YIR005W rdfs:subClassOf kg:CPX-1649,
+        kg:CPX-1651 .
+
+kg:YIR006C rdfs:subClassOf kg:CPX-426 .
+
+kg:YIR008C rdfs:subClassOf kg:CPLX3O-10581 .
+
+kg:YIR009W rdfs:subClassOf kg:CPX-1651,
+        kg:CPX-26 .
+
+kg:YIR010W rdfs:subClassOf kg:CPX-1186 .
+
+kg:YIR015W rdfs:subClassOf kg:CPX-1873 .
+
+kg:YIR017C rdfs:subClassOf kg:CPX-1015,
+        kg:CPX-1016,
+        kg:CPX-999 .
+
+kg:YIR021W rdfs:subClassOf kg:CPLX3O-10917 .
+
+kg:YIR022W rdfs:subClassOf kg:CPX-1835 .
+
+kg:YIR024C rdfs:subClassOf kg:CPX-3279 .
+
+kg:YIR025W rdfs:subClassOf kg:CPX-756,
+        kg:CPX-760,
+        kg:CPX-761,
+        kg:CPX-762 .
+
+kg:YIR029W rdfs:subClassOf kg:ALLANTOICASE-TRIMER .
+
+kg:YIR031C rdfs:subClassOf kg:CPLX-8686 .
+
+kg:YJL001W rdfs:subClassOf kg:CPLX3O-10558 .
+
+kg:YJL002C rdfs:subClassOf kg:CPLX3O-10527,
+        kg:CPLX3O-10889 .
+
+kg:YJL005W rdfs:subClassOf kg:CPX-695 .
+
+kg:YJL006C rdfs:subClassOf kg:CPX-1710 .
+
+kg:YJL008C rdfs:subClassOf kg:CPX-2156 .
+
+kg:YJL010C rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YJL011C rdfs:subClassOf kg:CPLX3O-10585 .
+
+kg:YJL012C rdfs:subClassOf kg:CPX-784 .
+
+kg:YJL013C rdfs:subClassOf kg:CPX-963 .
+
+kg:YJL014W rdfs:subClassOf kg:CPX-2156 .
+
+kg:YJL024C rdfs:subClassOf kg:CPX-535 .
+
+kg:YJL025W rdfs:subClassOf kg:CPX-1836 .
+
+kg:YJL026W rdfs:subClassOf kg:CPLX3O-10514 .
+
+kg:YJL029C rdfs:subClassOf kg:CPX-1718 .
+
+kg:YJL030W rdfs:subClassOf kg:CPX-961,
+        kg:CPX-962,
+        kg:CPX-963 .
+
+kg:YJL031C rdfs:subClassOf kg:CPX-1636 .
+
+kg:YJL033W rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YJL034W rdfs:subClassOf kg:CPX-1280 .
+
+kg:YJL035C rdfs:subClassOf kg:CPX-1742 .
+
+kg:YJL036W rdfs:subClassOf kg:CPX-1377,
+        kg:CPX-1378 .
+
+kg:YJL039C rdfs:subClassOf kg:CPX-824 .
+
+kg:YJL041W rdfs:subClassOf kg:CPX-824 .
+
+kg:YJL045W rdfs:subClassOf kg:CPLX3O-35 .
+
+kg:YJL047C rdfs:subClassOf kg:CPX-1157,
+        kg:CPX-1165,
+        kg:CPX-1166,
+        kg:CPX-1167 .
+
+kg:YJL050W rdfs:subClassOf kg:CPX-1678,
+        kg:CPX-1679,
+        kg:CPX-1680 .
+
+kg:YJL053W rdfs:subClassOf kg:CPX-1653 .
+
+kg:YJL054W rdfs:subClassOf kg:CPX-1629 .
+
+kg:YJL058C rdfs:subClassOf kg:CPLX3O-10895 .
+
+kg:YJL061W rdfs:subClassOf kg:CPX-824 .
+
+kg:YJL062W-A rdfs:subClassOf kg:CPX-1423 .
+
+kg:YJL063C rdfs:subClassOf kg:CPX-1602 .
+
+kg:YJL065C rdfs:subClassOf kg:CPX-728 .
+
+kg:YJL069C rdfs:subClassOf kg:CPLX3O-10905 .
+
+kg:YJL071W rdfs:subClassOf kg:CPLX3O-10901 .
+
+kg:YJL072C rdfs:subClassOf kg:CPX-1641 .
+
+kg:YJL074C rdfs:subClassOf kg:CPX-1408,
+        kg:CPX-1867 .
+
+kg:YJL076W rdfs:subClassOf kg:CPX-1669 .
+
+kg:YJL081C rdfs:subClassOf kg:CPX-2122,
+        kg:CPX-3155,
+        kg:CPX-863 .
+
+kg:YJL085W rdfs:subClassOf kg:CPX-1890 .
+
+kg:YJL088W rdfs:subClassOf kg:CPLX3O-10887 .
+
+kg:YJL090C rdfs:subClassOf kg:CPX-1188 .
+
+kg:YJL096W rdfs:subClassOf kg:CPX-1602 .
+
+kg:YJL097W rdfs:subClassOf kg:CPLX3O-10931,
+        kg:CPLX3O-10932 .
+
+kg:YJL098W rdfs:subClassOf kg:CPX-1865 .
+
+kg:YJL099W rdfs:subClassOf kg:CPX-1719 .
+
+kg:YJL104W rdfs:subClassOf kg:CPX-539 .
+
+kg:YJL109C rdfs:subClassOf kg:CPX-1409 .
+
+kg:YJL111W rdfs:subClassOf kg:CPX-2156 .
+
+kg:YJL115W rdfs:subClassOf kg:CPX-1322 .
+
+kg:YJL124C rdfs:subClassOf kg:CPX-45 .
+
+kg:YJL125C rdfs:subClassOf kg:CPLX-8309 .
+
+kg:YJL140W rdfs:subClassOf kg:CPLX3O-10586 .
+
+kg:YJL143W rdfs:subClassOf kg:CPX-539 .
+
+kg:YJL148W rdfs:subClassOf kg:CPLX3O-10583 .
+
+kg:YJL149W rdfs:subClassOf kg:CPX-3244 .
+
+kg:YJL153C rdfs:subClassOf kg:CPLX3O-29 .
+
+kg:YJL154C rdfs:subClassOf kg:CPX-1653 .
+
+kg:YJL157C rdfs:subClassOf kg:CPX-977 .
+
+kg:YJL164C rdfs:subClassOf kg:CPX-536,
+        kg:CPX-572,
+        kg:CPX-573 .
+
+kg:YJL166W rdfs:subClassOf kg:CPLX3O-105 .
+
+kg:YJL167W rdfs:subClassOf kg:CPLX-710 .
+
+kg:YJL173C rdfs:subClassOf kg:CPX-21 .
+
+kg:YJL176C rdfs:subClassOf kg:CPX-1150 .
+
+kg:YJL179W rdfs:subClassOf kg:CPX-1671 .
+
+kg:YJL183W rdfs:subClassOf kg:CPX-1839 .
+
+kg:YJL184W rdfs:subClassOf kg:CPX-995 .
+
+kg:YJL189W rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YJL190C rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YJL203W rdfs:subClassOf kg:CPX-1648,
+        kg:CPX-1651 .
+
+kg:YJL210W rdfs:subClassOf kg:CPX-1903 .
+
+kg:YJR002W rdfs:subClassOf kg:CPX-1893 .
+
+kg:YJR005W rdfs:subClassOf kg:CPX-534 .
+
+kg:YJR006W rdfs:subClassOf kg:CPX-2101 .
+
+kg:YJR007W rdfs:subClassOf kg:CPX-427 .
+
+kg:YJR010C-A rdfs:subClassOf kg:CPX-1835 .
+
+kg:YJR010W rdfs:subClassOf kg:CPLX-545 .
+
+kg:YJR013W rdfs:subClassOf kg:CPX-1270 .
+
+kg:YJR021C rdfs:subClassOf kg:CPX-1809 .
+
+kg:YJR022W rdfs:subClassOf kg:CPX-25,
+        kg:CPX-44 .
+
+kg:YJR025C rdfs:subClassOf kg:CPLX-7479 .
+
+kg:YJR033C rdfs:subClassOf kg:CPX-1627 .
+
+kg:YJR035W rdfs:subClassOf kg:CPX-1189 .
+
+kg:YJR036C rdfs:subClassOf kg:CPX-1678,
+        kg:CPX-1679 .
+
+kg:YJR041C rdfs:subClassOf kg:CPX-1421 .
+
+kg:YJR042W rdfs:subClassOf kg:CPX-824 .
+
+kg:YJR043C rdfs:subClassOf kg:CPX-2101 .
+
+kg:YJR044C rdfs:subClassOf kg:CPX-1413 .
+
+kg:YJR045C rdfs:subClassOf kg:CPX-1423,
+        kg:CPX-539 .
+
+kg:YJR049C rdfs:subClassOf kg:CPLX-8675 .
+
+kg:YJR050W rdfs:subClassOf kg:CPX-1885 .
+
+kg:YJR052W rdfs:subClassOf kg:CPX-1191,
+        kg:CPX-1709 .
+
+kg:YJR053W rdfs:subClassOf kg:CPX-964 .
+
+kg:YJR057W rdfs:subClassOf kg:CPLX-8629 .
+
+kg:YJR058C rdfs:subClassOf kg:CPX-534 .
+
+kg:YJR060W rdfs:subClassOf kg:CPX-1016 .
+
+kg:YJR063W rdfs:subClassOf kg:CPLX3O-10583 .
+
+kg:YJR064W rdfs:subClassOf kg:CPX-2156 .
+
+kg:YJR065C rdfs:subClassOf kg:CPX-607 .
+
+kg:YJR066W rdfs:subClassOf kg:CPLX3O-10896 .
+
+kg:YJR068W rdfs:subClassOf kg:CPX-1731,
+        kg:CPX-1807,
+        kg:CPX-422,
+        kg:CPX-545 .
+
+kg:YJR075W rdfs:subClassOf kg:CPX-1839 .
+
+kg:YJR076C rdfs:subClassOf kg:CPX-1675,
+        kg:CPX-1712 .
+
+kg:YJR082C rdfs:subClassOf kg:CPX-1810,
+        kg:CPX-3155 .
+
+kg:YJR084W rdfs:subClassOf kg:CPX-1894 .
+
+kg:YJR086W rdfs:subClassOf kg:CPX-1645,
+        kg:CPX-1646,
+        kg:CPX-977 .
+
+kg:YJR088C rdfs:subClassOf kg:CPX-307 .
+
+kg:YJR089W rdfs:subClassOf kg:CPX-1900 .
+
+kg:YJR090C rdfs:subClassOf kg:CPX-3241 .
+
+kg:YJR093C rdfs:subClassOf kg:CPX-1053 .
+
+kg:YJR094C rdfs:subClassOf kg:CPX-1415 .
+
+kg:YJR101W rdfs:subClassOf kg:CPX-1603 .
+
+kg:YJR102C rdfs:subClassOf kg:CPX-1623 .
+
+kg:YJR104C rdfs:subClassOf kg:CPX-2267,
+        kg:CPX-2896 .
+
+kg:YJR109C rdfs:subClassOf kg:CPX-579 .
+
+kg:YJR112W rdfs:subClassOf kg:CPX-1186 .
+
+kg:YJR113C rdfs:subClassOf kg:CPX-1603 .
+
+kg:YJR121W rdfs:subClassOf kg:CPLX3O-10573 .
+
+kg:YJR123W rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YJR135C rdfs:subClassOf kg:CPX-1156 .
+
+kg:YJR135W-A rdfs:subClassOf kg:CPX-2371 .
+
+kg:YJR136C rdfs:subClassOf kg:CPX-1422 .
+
+kg:YJR137C rdfs:subClassOf kg:CPLX3O-23 .
+
+kg:YJR138W rdfs:subClassOf kg:CPX-3231 .
+
+kg:YJR140C rdfs:subClassOf kg:CPX-124 .
+
+kg:YJR143C rdfs:subClassOf kg:CPLX3O-10892 .
+
+kg:YJR145C rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YKL001C rdfs:subClassOf kg:CPLX-563 .
+
+kg:YKL002W rdfs:subClassOf kg:CPX-1624 .
+
+kg:YKL003C rdfs:subClassOf kg:CPX-1603 .
+
+kg:YKL004W rdfs:subClassOf kg:CPLX-8573 .
+
+kg:YKL006W rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YKL007W rdfs:subClassOf kg:CPX-1637 .
+
+kg:YKL008C rdfs:subClassOf kg:CPLX3O-78 .
+
+kg:YKL009W rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YKL012W rdfs:subClassOf kg:CPX-23 .
+
+kg:YKL013C rdfs:subClassOf kg:CPX-607 .
+
+kg:YKL014C rdfs:subClassOf kg:CPX-1421 .
+
+kg:YKL016C rdfs:subClassOf kg:CPLX3O-10574 .
+
+kg:YKL018W rdfs:subClassOf kg:CPX-1039,
+        kg:CPX-1053 .
+
+kg:YKL019W rdfs:subClassOf kg:CPX-1634,
+        kg:CPX-1635 .
+
+kg:YKL022C rdfs:subClassOf kg:CPX-756,
+        kg:CPX-760,
+        kg:CPX-761,
+        kg:CPX-762 .
+
+kg:YKL025C rdfs:subClassOf kg:CPX-3294 .
+
+kg:YKL028W rdfs:subClassOf kg:CPX-1658 .
+
+kg:YKL033W rdfs:subClassOf kg:CPX-1422 .
+
+kg:YKL034W rdfs:subClassOf kg:CPX-1190 .
+
+kg:YKL035W rdfs:subClassOf kg:CPLX-8434 .
+
+kg:YKL041W rdfs:subClassOf kg:CPX-1624 .
+
+kg:YKL042W rdfs:subClassOf kg:CPX-1419,
+        kg:CPX-1420 .
+
+kg:YKL045W rdfs:subClassOf kg:CPLX3O-10581 .
+
+kg:YKL052C rdfs:subClassOf kg:CPX-1041 .
+
+kg:YKL053C-A rdfs:subClassOf kg:CPLX3O-10929,
+        kg:CPLX3O-10930 .
+
+kg:YKL054C rdfs:subClassOf kg:CPX-1189 .
+
+kg:YKL057C rdfs:subClassOf kg:CPX-824 .
+
+kg:YKL058W rdfs:subClassOf kg:CPX-1633 .
+
+kg:YKL059C rdfs:subClassOf kg:CPX-1053 .
+
+kg:YKL061W rdfs:subClassOf kg:CPX-1153 .
+
+kg:YKL067W rdfs:subClassOf kg:CPLX-8628 .
+
+kg:YKL068W rdfs:subClassOf kg:CPX-824 .
+
+kg:YKL074C rdfs:subClassOf kg:CPX-1417 .
+
+kg:YKL078W rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YKL080W rdfs:subClassOf kg:CPLX3O-10576,
+        kg:CPX-1192 .
+
+kg:YKL081W rdfs:subClassOf kg:CPX-425 .
+
+kg:YKL085W rdfs:subClassOf kg:CPLX3O-85 .
+
+kg:YKL088W rdfs:subClassOf kg:CPLX-8646,
+        kg:CPX-396 .
+
+kg:YKL095W rdfs:subClassOf kg:CPX-1651 .
+
+kg:YKL099C rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YKL106W rdfs:subClassOf kg:CPLX3O-10922 .
+
+kg:YKL108W rdfs:subClassOf kg:CPX-1188 .
+
+kg:YKL109W rdfs:subClassOf kg:CPX-1830 .
+
+kg:YKL112W rdfs:subClassOf kg:CPX-1709 .
+
+kg:YKL122C rdfs:subClassOf kg:CPX-609 .
+
+kg:YKL129C rdfs:subClassOf kg:CPX-1500 .
+
+kg:YKL135C rdfs:subClassOf kg:CPX-532,
+        kg:CPX-533 .
+
+kg:YKL138C rdfs:subClassOf kg:CPX-1602 .
+
+kg:YKL138C-A rdfs:subClassOf kg:CPX-1041 .
+
+kg:YKL139W rdfs:subClassOf kg:CPX-1710 .
+
+kg:YKL141W rdfs:subClassOf kg:CPLX3O-34 .
+
+kg:YKL143W rdfs:subClassOf kg:CPLX3O-10912,
+        kg:CPX-3233 .
+
+kg:YKL144C rdfs:subClassOf kg:CPLX3O-10585 .
+
+kg:YKL145W rdfs:subClassOf kg:CPLX3O-10560 .
+
+kg:YKL148C rdfs:subClassOf kg:CPLX3O-32 .
+
+kg:YKL152C rdfs:subClassOf kg:CPLX3O-10526 .
+
+kg:YKL154W rdfs:subClassOf kg:CPX-780 .
+
+kg:YKL156W rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YKL166C rdfs:subClassOf kg:CPX-571,
+        kg:CPX-573,
+        kg:CPX-574 .
+
+kg:YKL167C rdfs:subClassOf kg:CPX-1602 .
+
+kg:YKL170W rdfs:subClassOf kg:CPX-1602 .
+
+kg:YKL173W rdfs:subClassOf kg:CPX-1651,
+        kg:CPX-25,
+        kg:CPX-29,
+        kg:CPX-30 .
+
+kg:YKL180W rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YKL181W rdfs:subClassOf kg:CPLX3O-10563,
+        kg:CPLX3O-10564,
+        kg:CPLX3O-10565 .
+
+kg:YKL182W rdfs:subClassOf kg:CPLX-7627 .
+
+kg:YKL186C rdfs:subClassOf kg:CPX-1142 .
+
+kg:YKL188C rdfs:subClassOf kg:CPX-1730 .
+
+kg:YKL190W rdfs:subClassOf kg:CPX-588,
+        kg:CPX-590 .
+
+kg:YKL191W rdfs:subClassOf kg:CPLX-8046 .
+
+kg:YKL193C rdfs:subClassOf kg:CPX-1249,
+        kg:CPX-1260 .
+
+kg:YKL196C rdfs:subClassOf kg:CPX-1855 .
+
+kg:YKL197C rdfs:subClassOf kg:CPX-1902 .
+
+kg:YKL201C rdfs:subClassOf kg:CPLX-9678 .
+
+kg:YKL203C rdfs:subClassOf kg:CPLX3O-10895,
+        kg:CPLX3O-10897 .
+
+kg:YKL207W rdfs:subClassOf kg:CPX-307 .
+
+kg:YKL211C rdfs:subClassOf kg:CPLX3O-31 .
+
+kg:YKL212W rdfs:subClassOf kg:CPX-3158 .
+
+kg:YKL215C rdfs:subClassOf kg:CPLX3O-10538 .
+
+kg:YKL216W rdfs:subClassOf kg:CPLX-7727 .
+
+kg:YKR002W rdfs:subClassOf kg:CPX-1053 .
+
+kg:YKR006C rdfs:subClassOf kg:CPX-1602 .
+
+kg:YKR007W rdfs:subClassOf kg:CPX-3172 .
+
+kg:YKR008W rdfs:subClassOf kg:CPX-1888,
+        kg:CPX-1889 .
+
+kg:YKR009C rdfs:subClassOf kg:CPLX-8704 .
+
+kg:YKR016W rdfs:subClassOf kg:CPX-140 .
+
+kg:YKR020W rdfs:subClassOf kg:CPX-1718 .
+
+kg:YKR022C rdfs:subClassOf kg:CPX-1886 .
+
+kg:YKR025W rdfs:subClassOf kg:CPLX3O-10585 .
+
+kg:YKR026C rdfs:subClassOf kg:CPX-429 .
+
+kg:YKR027W rdfs:subClassOf kg:CPX-1719 .
+
+kg:YKR028W rdfs:subClassOf kg:CPX-1866 .
+
+kg:YKR029C rdfs:subClassOf kg:CPX-1342 .
+
+kg:YKR037C rdfs:subClassOf kg:CPX-1041 .
+
+kg:YKR038C rdfs:subClassOf kg:CPX-995 .
+
+kg:YKR048C rdfs:subClassOf kg:CPX-1712 .
+
+kg:YKR054C rdfs:subClassOf kg:CPX-1178 .
+
+kg:YKR057W rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YKR060W rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YKR062W rdfs:subClassOf kg:CPX-1658 .
+
+kg:YKR063C rdfs:subClassOf kg:CPLX3O-10919 .
+
+kg:YKR068C rdfs:subClassOf kg:CPX-1383,
+        kg:CPX-1939,
+        kg:CPX-1940 .
+
+kg:YKR071C rdfs:subClassOf kg:CPX-386 .
+
+kg:YKR072C rdfs:subClassOf kg:CPLX-8646 .
+
+kg:YKR080W rdfs:subClassOf kg:CPLX3O-317 .
+
+kg:YKR082W rdfs:subClassOf kg:CPX-824 .
+
+kg:YKR083C rdfs:subClassOf kg:CPX-1041 .
+
+kg:YKR084C rdfs:subClassOf kg:CPX-465 .
+
+kg:YKR085C rdfs:subClassOf kg:CPX-1602 .
+
+kg:YKR095W-A rdfs:subClassOf kg:CPX-995 .
+
+kg:YLL002W rdfs:subClassOf kg:CPX-1333 .
+
+kg:YLL004W rdfs:subClassOf kg:CPX-768 .
+
+kg:YLL006W rdfs:subClassOf kg:CPX-3196 .
+
+kg:YLL010C rdfs:subClassOf kg:CPX-1317 .
+
+kg:YLL011W rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YLL014W rdfs:subClassOf kg:CPX-307 .
+
+kg:YLL021W rdfs:subClassOf kg:CPX-3188 .
+
+kg:YLL022C rdfs:subClassOf kg:CPX-1682 .
+
+kg:YLL024C rdfs:subClassOf kg:CPX-1276,
+        kg:CPX-1883 .
+
+kg:YLL026W rdfs:subClassOf kg:CPX-1861 .
+
+kg:YLL035W rdfs:subClassOf kg:CPLX3O-10919 .
+
+kg:YLL036C rdfs:subClassOf kg:CPX-1885 .
+
+kg:YLL041C rdfs:subClassOf kg:CPLX3O-32,
+        kg:CPLX3O-35 .
+
+kg:YLL043W rdfs:subClassOf kg:CPLX3O-10933 .
+
+kg:YLL049W rdfs:subClassOf kg:CPX-1805 .
+
+kg:YLR002C rdfs:subClassOf kg:CPX-1734 .
+
+kg:YLR005W rdfs:subClassOf kg:CPX-1659 .
+
+kg:YLR007W rdfs:subClassOf kg:CPX-1364 .
+
+kg:YLR008C rdfs:subClassOf kg:CPX-539 .
+
+kg:YLR010C rdfs:subClassOf kg:CPX-15 .
+
+kg:YLR015W rdfs:subClassOf kg:CPX-1039 .
+
+kg:YLR016C rdfs:subClassOf kg:CPX-1649 .
+
+kg:YLR018C rdfs:subClassOf kg:CPX-824 .
+
+kg:YLR019W rdfs:subClassOf kg:CPX-1318 .
+
+kg:YLR024C rdfs:subClassOf kg:CPX-2935 .
+
+kg:YLR025W rdfs:subClassOf kg:CPX-1624 .
+
+kg:YLR026C rdfs:subClassOf kg:CPX-1854,
+        kg:CPX-1855 .
+
+kg:YLR027C rdfs:subClassOf kg:CPLX-7316 .
+
+kg:YLR028C rdfs:subClassOf kg:CPLX-8638 .
+
+kg:YLR029C rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YLR033W rdfs:subClassOf kg:CPX-1888,
+        kg:CPX-1889 .
+
+kg:YLR035C rdfs:subClassOf kg:CPX-1667 .
+
+kg:YLR038C rdfs:subClassOf kg:CPLX3O-10890,
+        kg:CPLX3O-117 .
+
+kg:YLR039C rdfs:subClassOf kg:CPX-3078 .
+
+kg:YLR043C rdfs:subClassOf kg:CPX-1278 .
+
+kg:YLR044C rdfs:subClassOf kg:CPLX3O-118 .
+
+kg:YLR052W rdfs:subClassOf kg:CPX-863 .
+
+kg:YLR055C rdfs:subClassOf kg:CPX-656 .
+
+kg:YLR060W rdfs:subClassOf kg:CPX-1738 .
+
+kg:YLR061W rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YLR066W rdfs:subClassOf kg:CPX-1835 .
+
+kg:YLR068W rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YLR071C rdfs:subClassOf kg:CPX-3226 .
+
+kg:YLR075W rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YLR078C rdfs:subClassOf kg:CPX-1854 .
+
+kg:YLR085C rdfs:subClassOf kg:CPX-2122 .
+
+kg:YLR086W rdfs:subClassOf kg:CPX-1869 .
+
+kg:YLR088W rdfs:subClassOf kg:CPX-1275 .
+
+kg:YLR095C rdfs:subClassOf kg:CPX-636 .
+
+kg:YLR097C rdfs:subClassOf kg:CPX-3255 .
+
+kg:YLR100W rdfs:subClassOf kg:CPLX3O-272 .
+
+kg:YLR102C rdfs:subClassOf kg:CPX-756,
+        kg:CPX-760,
+        kg:CPX-761,
+        kg:CPX-762 .
+
+kg:YLR103C rdfs:subClassOf kg:CPX-297 .
+
+kg:YLR105C rdfs:subClassOf kg:CPLX-8216 .
+
+kg:YLR115W rdfs:subClassOf kg:CPX-1053 .
+
+kg:YLR116W rdfs:subClassOf kg:CPX-1417 .
+
+kg:YLR117C rdfs:subClassOf kg:CPX-1885 .
+
+kg:YLR119W rdfs:subClassOf kg:CPX-940 .
+
+kg:YLR127C rdfs:subClassOf kg:CPX-756,
+        kg:CPX-760,
+        kg:CPX-761,
+        kg:CPX-762 .
+
+kg:YLR129W rdfs:subClassOf kg:CPLX3O-10905 .
+
+kg:YLR134W rdfs:subClassOf kg:CPLX3O-67 .
+
+kg:YLR135W rdfs:subClassOf kg:CPX-1362,
+        kg:CPX-3159 .
+
+kg:YLR141W rdfs:subClassOf kg:CPX-1101 .
+
+kg:YLR145W rdfs:subClassOf kg:CPLX3O-10556 .
+
+kg:YLR147C rdfs:subClassOf kg:CPX-1651,
+        kg:CPX-23,
+        kg:CPX-29,
+        kg:CPX-30,
+        kg:CPX-31,
+        kg:CPX-43 .
+
+kg:YLR148W rdfs:subClassOf kg:CPX-1625,
+        kg:CPX-1626 .
+
+kg:YLR154C rdfs:subClassOf kg:CPX-1720 .
+
+kg:YLR163C rdfs:subClassOf kg:CPLX-8307 .
+
+kg:YLR166C rdfs:subClassOf kg:CPX-1890 .
+
+kg:YLR167W rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YLR168C rdfs:subClassOf kg:CPLX3O-10930 .
+
+kg:YLR170C rdfs:subClassOf kg:CPX-532,
+        kg:CPX-533 .
+
+kg:YLR174W rdfs:subClassOf kg:CPLX-8684 .
+
+kg:YLR175W rdfs:subClassOf kg:CPX-737 .
+
+kg:YLR180W rdfs:subClassOf kg:CPLX-582 .
+
+kg:YLR182W rdfs:subClassOf kg:CPX-946,
+        kg:CPX-950 .
+
+kg:YLR185W rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YLR186W rdfs:subClassOf kg:CPLX-9700,
+        kg:CPLX3O-10912 .
+
+kg:YLR191W rdfs:subClassOf kg:CPX-1904 .
+
+kg:YLR193C rdfs:subClassOf kg:CPLX3O-10929 .
+
+kg:YLR197W rdfs:subClassOf kg:CPLX3O-10912,
+        kg:CPX-729 .
+
+kg:YLR200W rdfs:subClassOf kg:CPX-1671 .
+
+kg:YLR201C rdfs:subClassOf kg:CPX-1155 .
+
+kg:YLR203C rdfs:subClassOf kg:CPX-1423 .
+
+kg:YLR204W rdfs:subClassOf kg:CPX-1603 .
+
+kg:YLR207W rdfs:subClassOf kg:CPX-1280,
+        kg:CPX-3070 .
+
+kg:YLR208W rdfs:subClassOf kg:CPX-2523,
+        kg:CPX-3231 .
+
+kg:YLR210W rdfs:subClassOf kg:CPX-337 .
+
+kg:YLR211C rdfs:subClassOf kg:CPX-1881 .
+
+kg:YLR212C rdfs:subClassOf kg:CPX-1198 .
+
+kg:YLR221C rdfs:subClassOf kg:CPX-1421 .
+
+kg:YLR222C rdfs:subClassOf kg:CPLX3O-10905 .
+
+kg:YLR223C rdfs:subClassOf kg:CPX-774,
+        kg:CPX-775,
+        kg:CPX-776 .
+
+kg:YLR226W rdfs:subClassOf kg:CPX-1685 .
+
+kg:YLR233C rdfs:subClassOf kg:CPX-3298 .
+
+kg:YLR234W rdfs:subClassOf kg:CPX-1071 .
+
+kg:YLR238W rdfs:subClassOf kg:CPX-1197 .
+
+kg:YLR240W rdfs:subClassOf kg:CPX-1677,
+        kg:CPX-1881 .
+
+kg:YLR245C rdfs:subClassOf kg:CPLX-8623 .
+
+kg:YLR246W rdfs:subClassOf kg:CPX-813 .
+
+kg:YLR256W rdfs:subClassOf kg:CPX-1276,
+        kg:CPX-1882,
+        kg:CPX-1883 .
+
+kg:YLR263W rdfs:subClassOf kg:CPX-1387 .
+
+kg:YLR268W rdfs:subClassOf kg:CPX-1854 .
+
+kg:YLR270W rdfs:subClassOf kg:CPX-1179,
+        kg:CPX-1185 .
+
+kg:YLR272C rdfs:subClassOf kg:CPX-1869 .
+
+kg:YLR274W rdfs:subClassOf kg:CPX-2944 .
+
+kg:YLR275W rdfs:subClassOf kg:CPX-1651,
+        kg:CPX-23,
+        kg:CPX-29,
+        kg:CPX-30,
+        kg:CPX-31,
+        kg:CPX-43 .
+
+kg:YLR277C rdfs:subClassOf kg:CPX-1053 .
+
+kg:YLR284C rdfs:subClassOf kg:CPLX-8706 .
+
+kg:YLR287C-A rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YLR288C rdfs:subClassOf kg:CPX-1806 .
+
+kg:YLR291C rdfs:subClassOf kg:CPX-429 .
+
+kg:YLR292C rdfs:subClassOf kg:CPX-3056 .
+
+kg:YLR295C rdfs:subClassOf kg:CPLX3O-10574 .
+
+kg:YLR298C rdfs:subClassOf kg:CPX-23 .
+
+kg:YLR303W rdfs:subClassOf kg:CPLX-566 .
+
+kg:YLR312W-A rdfs:subClassOf kg:CPX-1602 .
+
+kg:YLR314C rdfs:subClassOf kg:CPX-1675,
+        kg:CPX-1712 .
+
+kg:YLR315W rdfs:subClassOf kg:CPX-1156 .
+
+kg:YLR316C rdfs:subClassOf kg:CPX-1742 .
+
+kg:YLR318W rdfs:subClassOf kg:CPX-3298 .
+
+kg:YLR319C rdfs:subClassOf kg:CPX-3188 .
+
+kg:YLR320W rdfs:subClassOf kg:CPX-1157,
+        kg:CPX-1165 .
+
+kg:YLR321C rdfs:subClassOf kg:CPX-1888,
+        kg:CPX-1889 .
+
+kg:YLR323C rdfs:subClassOf kg:CPX-1651 .
+
+kg:YLR325C rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YLR328W rdfs:subClassOf kg:CPLX-7559 .
+
+kg:YLR329W rdfs:subClassOf kg:CPX-1292 .
+
+kg:YLR330W rdfs:subClassOf kg:CPX-1719 .
+
+kg:YLR335W rdfs:subClassOf kg:CPX-824 .
+
+kg:YLR336C rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YLR340W rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YLR342W rdfs:subClassOf kg:CPX-1812 .
+
+kg:YLR344W rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YLR347C rdfs:subClassOf kg:CPX-1068 .
+
+kg:YLR350W rdfs:subClassOf kg:CPX-3158 .
+
+kg:YLR352W rdfs:subClassOf kg:CPX-3253 .
+
+kg:YLR357W rdfs:subClassOf kg:CPX-1888 .
+
+kg:YLR359W rdfs:subClassOf kg:CPLX-645 .
+
+kg:YLR360W rdfs:subClassOf kg:CPX-1677 .
+
+kg:YLR368W rdfs:subClassOf kg:CPX-3242 .
+
+kg:YLR370C rdfs:subClassOf kg:CPX-607 .
+
+kg:YLR372W rdfs:subClassOf kg:CPLX3O-10932 .
+
+kg:YLR376C rdfs:subClassOf kg:CPX-3087 .
+
+kg:YLR378C rdfs:subClassOf kg:CPX-1833 .
+
+kg:YLR381W rdfs:subClassOf kg:CPX-1156 .
+
+kg:YLR382C rdfs:subClassOf kg:CPLX3O-10914 .
+
+kg:YLR383W rdfs:subClassOf kg:CPX-1364 .
+
+kg:YLR384C rdfs:subClassOf kg:CPLX-85417 .
+
+kg:YLR385C rdfs:subClassOf kg:CPX-2122 .
+
+kg:YLR386W rdfs:subClassOf kg:CPLX-7938,
+        kg:CPX-3088 .
+
+kg:YLR388W rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YLR394W rdfs:subClassOf kg:CPX-1386 .
+
+kg:YLR395C rdfs:subClassOf kg:CPLX3O-10890,
+        kg:CPLX3O-117 .
+
+kg:YLR396C rdfs:subClassOf kg:CPX-1625,
+        kg:CPX-1626 .
+
+kg:YLR398C rdfs:subClassOf kg:CPX-1040 .
+
+kg:YLR399C rdfs:subClassOf kg:CPX-2122 .
+
+kg:YLR404W rdfs:subClassOf kg:CPX-3342 .
+
+kg:YLR408C rdfs:subClassOf kg:CPX-1153 .
+
+kg:YLR409C rdfs:subClassOf kg:CPLX3O-10905 .
+
+kg:YLR411W rdfs:subClassOf kg:CPLX3O-10923 .
+
+kg:YLR417W rdfs:subClassOf kg:CPX-1623 .
+
+kg:YLR418C rdfs:subClassOf kg:CPX-1726 .
+
+kg:YLR421C rdfs:subClassOf kg:CPLX3O-10560 .
+
+kg:YLR423C rdfs:subClassOf kg:CPX-397 .
+
+kg:YLR424W rdfs:subClassOf kg:CPX-1886 .
+
+kg:YLR430W rdfs:subClassOf kg:CPLX3O-10912,
+        kg:CPX-1316 .
+
+kg:YLR433C rdfs:subClassOf kg:CPX-588 .
+
+kg:YLR438C-A rdfs:subClassOf kg:CPX-25,
+        kg:CPX-44,
+        kg:CPX-45,
+        kg:CPX-46 .
+
+kg:YLR439W rdfs:subClassOf kg:CPX-1602 .
+
+kg:YLR440C rdfs:subClassOf kg:CPX-1786 .
+
+kg:YLR441C rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YLR442C rdfs:subClassOf kg:CPX-1811 .
+
+kg:YLR445W rdfs:subClassOf kg:CPX-1387,
+        kg:CPX-1407 .
+
+kg:YLR447C rdfs:subClassOf kg:CPLX3O-10575,
+        kg:CPX-1192 .
+
+kg:YLR450W rdfs:subClassOf kg:CPLX3O-10554 .
+
+kg:YLR453C rdfs:subClassOf kg:CPLX3O-10891 .
+
+kg:YLR459W rdfs:subClassOf kg:CPX-1275 .
+
+kg:YML008C rdfs:subClassOf kg:CPLX-7686 .
+
+kg:YML009C rdfs:subClassOf kg:CPX-1602 .
+
+kg:YML010W rdfs:subClassOf kg:CPX-1661 .
+
+kg:YML012W rdfs:subClassOf kg:CPX-1698 .
+
+kg:YML013W rdfs:subClassOf kg:CPX-3070,
+        kg:CPX-3074 .
+
+kg:YML014W rdfs:subClassOf kg:CPX-1052 .
+
+kg:YML015C rdfs:subClassOf kg:CPX-1642 .
+
+kg:YML019W rdfs:subClassOf kg:CPLX3O-10527 .
+
+kg:YML022W rdfs:subClassOf kg:CPLX-8141 .
+
+kg:YML023C rdfs:subClassOf kg:CPX-1364 .
+
+kg:YML024W rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YML025C rdfs:subClassOf kg:CPX-1602 .
+
+kg:YML029W rdfs:subClassOf kg:CPX-3070 .
+
+kg:YML031W rdfs:subClassOf kg:CPX-824 .
+
+kg:YML036W rdfs:subClassOf kg:CPX-995 .
+
+kg:YML041C rdfs:subClassOf kg:CPX-2122 .
+
+kg:YML043C rdfs:subClassOf kg:CPX-1836 .
+
+kg:YML046W rdfs:subClassOf kg:CPX-23 .
+
+kg:YML049C rdfs:subClassOf kg:CPX-1647,
+        kg:CPX-1651 .
+
+kg:YML051W rdfs:subClassOf kg:CPX-1042,
+        kg:CPX-1043,
+        kg:CPX-1044 .
+
+kg:YML054C rdfs:subClassOf kg:CPLX-7294 .
+
+kg:YML055W rdfs:subClassOf kg:CPX-1835 .
+
+kg:YML057W rdfs:subClassOf kg:CPX-590 .
+
+kg:YML062C rdfs:subClassOf kg:CPX-1792 .
+
+kg:YML065W rdfs:subClassOf kg:CPX-768 .
+
+kg:YML067C rdfs:subClassOf kg:CPX-1045 .
+
+kg:YML069W rdfs:subClassOf kg:CPX-3215 .
+
+kg:YML071C rdfs:subClassOf kg:CPX-1840 .
+
+kg:YML073C rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YML077W rdfs:subClassOf kg:CPX-1383,
+        kg:CPX-1939,
+        kg:CPX-1940 .
+
+kg:YML081C-A rdfs:subClassOf kg:CPLX3O-10571 .
+
+kg:YML085C rdfs:subClassOf kg:CPX-1424 .
+
+kg:YML088W rdfs:subClassOf kg:CPX-3243 .
+
+kg:YML091C rdfs:subClassOf kg:CPX-1294 .
+
+kg:YML092C rdfs:subClassOf kg:CPLX3O-10558 .
+
+kg:YML093W rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YML094W rdfs:subClassOf kg:CPX-1671 .
+
+kg:YML095C rdfs:subClassOf kg:CPX-1362,
+        kg:CPX-1363,
+        kg:CPX-1708 .
+
+kg:YML098W rdfs:subClassOf kg:CPX-1642 .
+
+kg:YML099C rdfs:subClassOf kg:CPX-1152 .
+
+kg:YML100W rdfs:subClassOf kg:CPX-583 .
+
+kg:YML102W rdfs:subClassOf kg:CPX-568 .
+
+kg:YML103C rdfs:subClassOf kg:CPX-824 .
+
+kg:YML105C rdfs:subClassOf kg:CPX-609 .
+
+kg:YML110C rdfs:subClassOf kg:CPX-1155 .
+
+kg:YML111W rdfs:subClassOf kg:CPX-2923 .
+
+kg:YML112W rdfs:subClassOf kg:CPX-1710 .
+
+kg:YML114C rdfs:subClassOf kg:CPX-1642 .
+
+kg:YML115C rdfs:subClassOf kg:CPX-1672 .
+
+kg:YML120C rdfs:subClassOf kg:CPLX-8683 .
+
+kg:YML121W rdfs:subClassOf kg:CPX-3172 .
+
+kg:YML124C rdfs:subClassOf kg:CPX-1425 .
+
+kg:YML126C rdfs:subClassOf kg:CPLX-707 .
+
+kg:YML127W rdfs:subClassOf kg:CPX-1888,
+        kg:CPX-1889 .
+
+kg:YML129C rdfs:subClassOf kg:CPX-1423 .
+
+kg:YML130C rdfs:subClassOf kg:CPLX-8241 .
+
+kg:YMR005W rdfs:subClassOf kg:CPX-1642 .
+
+kg:YMR020W rdfs:subClassOf kg:CPLX3O-10519 .
+
+kg:YMR022W rdfs:subClassOf kg:CPX-2948 .
+
+kg:YMR023C rdfs:subClassOf kg:CPLX3O-10528 .
+
+kg:YMR024W rdfs:subClassOf kg:CPX-1602 .
+
+kg:YMR025W rdfs:subClassOf kg:CPX-1894 .
+
+kg:YMR026C rdfs:subClassOf kg:CPX-1903 .
+
+kg:YMR028W rdfs:subClassOf kg:CPX-1380,
+        kg:CPX-1382,
+        kg:CPX-1863 .
+
+kg:YMR029C rdfs:subClassOf kg:CPX-1197 .
+
+kg:YMR032W rdfs:subClassOf kg:CPX-1140,
+        kg:CPX-3503 .
+
+kg:YMR033W rdfs:subClassOf kg:CPX-1150,
+        kg:CPX-1888,
+        kg:CPX-1889 .
+
+kg:YMR038C rdfs:subClassOf kg:CPX-2267,
+        kg:CPX-2895 .
+
+kg:YMR042W rdfs:subClassOf kg:CPX-1152 .
+
+kg:YMR043W rdfs:subClassOf kg:CPX-1152,
+        kg:CPX-692,
+        kg:CPX-693 .
+
+kg:YMR044W rdfs:subClassOf kg:CPX-636 .
+
+kg:YMR047C rdfs:subClassOf kg:CPX-824 .
+
+kg:YMR048W rdfs:subClassOf kg:CPX-1673 .
+
+kg:YMR049C rdfs:subClassOf kg:CPX-1862 .
+
+kg:YMR052W rdfs:subClassOf kg:CPX-1197 .
+
+kg:YMR054W rdfs:subClassOf kg:CPX-1192 .
+
+kg:YMR055C rdfs:subClassOf kg:CPX-964 .
+
+kg:YMR058W rdfs:subClassOf kg:CPX-868 .
+
+kg:YMR059W rdfs:subClassOf kg:CPLX-8216 .
+
+kg:YMR060C rdfs:subClassOf kg:CPX-1744 .
+
+kg:YMR061W rdfs:subClassOf kg:CPX-1895,
+        kg:CPX-1896 .
+
+kg:YMR068W rdfs:subClassOf kg:CPLX3O-10895 .
+
+kg:YMR075W rdfs:subClassOf kg:CPX-1851 .
+
+kg:YMR077C rdfs:subClassOf kg:CPX-1624 .
+
+kg:YMR078C rdfs:subClassOf kg:CPX-1731 .
+
+kg:YMR080C rdfs:subClassOf kg:CPX-1315 .
+
+kg:YMR083W rdfs:subClassOf kg:CPLX-8689 .
+
+kg:YMR089C rdfs:subClassOf kg:CPLX3O-10546 .
+
+kg:YMR091C rdfs:subClassOf kg:CPLX3O-10552 .
+
+kg:YMR093W rdfs:subClassOf kg:CPX-1409 .
+
+kg:YMR094W rdfs:subClassOf kg:CPX-1898 .
+
+kg:YMR095C rdfs:subClassOf kg:CPLX-8699 .
+
+kg:YMR096W rdfs:subClassOf kg:CPLX-8753 .
+
+kg:YMR100W rdfs:subClassOf kg:CPX-2937 .
+
+kg:YMR101C rdfs:subClassOf kg:CPX-166 .
+
+kg:YMR106C rdfs:subClassOf kg:CPX-1732 .
+
+kg:YMR108W rdfs:subClassOf kg:CPLX3O-30 .
+
+kg:YMR109W rdfs:subClassOf kg:CPX-1470 .
+
+kg:YMR112C rdfs:subClassOf kg:CPX-3226 .
+
+kg:YMR115W rdfs:subClassOf kg:CPX-1655 .
+
+kg:YMR116C rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YMR117C rdfs:subClassOf kg:CPX-548 .
+
+kg:YMR119W rdfs:subClassOf kg:CPX-3248 .
+
+kg:YMR120C rdfs:subClassOf kg:CPLX3O-10518 .
+
+kg:YMR125W rdfs:subClassOf kg:CPX-1657 .
+
+kg:YMR127C rdfs:subClassOf kg:CPX-777 .
+
+kg:YMR128W rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YMR129W rdfs:subClassOf kg:CPX-824 .
+
+kg:YMR133W rdfs:subClassOf kg:CPX-1809 .
+
+kg:YMR135C rdfs:subClassOf kg:CPX-301 .
+
+kg:YMR143W rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YMR146C rdfs:subClassOf kg:CPX-1831 .
+
+kg:YMR149W rdfs:subClassOf kg:CPLX3O-10527,
+        kg:CPLX3O-10889 .
+
+kg:YMR150C rdfs:subClassOf kg:CPX-1892 .
+
+kg:YMR153W rdfs:subClassOf kg:CPX-824 .
+
+kg:YMR158W rdfs:subClassOf kg:CPX-1603 .
+
+kg:YMR159C rdfs:subClassOf kg:CPX-1849 .
+
+kg:YMR162C rdfs:subClassOf kg:CPX-1026 .
+
+kg:YMR167W rdfs:subClassOf kg:CPX-1666,
+        kg:CPX-1667,
+        kg:CPX-1668 .
+
+kg:YMR168C rdfs:subClassOf kg:CPX-1898 .
+
+kg:YMR176W rdfs:subClassOf kg:CPX-1372 .
+
+kg:YMR183C rdfs:subClassOf kg:CPX-1369 .
+
+kg:YMR186W rdfs:subClassOf kg:CPX-1276 .
+
+kg:YMR188C rdfs:subClassOf kg:CPX-1603 .
+
+kg:YMR189W rdfs:subClassOf kg:CPLX3O-213 .
+
+kg:YMR190C rdfs:subClassOf kg:CPX-1071 .
+
+kg:YMR193W rdfs:subClassOf kg:CPX-1602 .
+
+kg:YMR194W rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YMR197C rdfs:subClassOf kg:CPX-1887 .
+
+kg:YMR199W rdfs:subClassOf kg:CPX-1699 .
+
+kg:YMR201C rdfs:subClassOf kg:CPX-1708 .
+
+kg:YMR203W rdfs:subClassOf kg:CPX-473,
+        kg:CPX-474 .
+
+kg:YMR205C rdfs:subClassOf kg:CPLX3O-77 .
+
+kg:YMR207C rdfs:subClassOf kg:CPLX3O-102 .
+
+kg:YMR208W rdfs:subClassOf kg:CPLX-708 .
+
+kg:YMR213W rdfs:subClassOf kg:CPX-1885 .
+
+kg:YMR217W rdfs:subClassOf kg:CPLX-8637 .
+
+kg:YMR218C rdfs:subClassOf kg:CPX-1939 .
+
+kg:YMR223W rdfs:subClassOf kg:CPX-656,
+        kg:CPX-675 .
+
+kg:YMR224C rdfs:subClassOf kg:CPX-1872 .
+
+kg:YMR225C rdfs:subClassOf kg:CPX-1602 .
+
+kg:YMR227C rdfs:subClassOf kg:CPX-1642 .
+
+kg:YMR228W rdfs:subClassOf kg:CPLX3O-10584 .
+
+kg:YMR229C rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YMR231W rdfs:subClassOf kg:CPX-1625,
+        kg:CPX-1626 .
+
+kg:YMR236W rdfs:subClassOf kg:CPX-1642,
+        kg:CPX-656,
+        kg:CPX-675 .
+
+kg:YMR237W rdfs:subClassOf kg:CPX-1719 .
+
+kg:YMR240C rdfs:subClassOf kg:CPX-1647,
+        kg:CPX-1651 .
+
+kg:YMR242C rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YMR246W rdfs:subClassOf kg:CPLX3O-10927 .
+
+kg:YMR247C rdfs:subClassOf kg:CPX-3265 .
+
+kg:YMR256C rdfs:subClassOf kg:CPLX3O-10890,
+        kg:CPLX3O-117 .
+
+kg:YMR261C rdfs:subClassOf kg:CPX-582 .
+
+kg:YMR263W rdfs:subClassOf kg:CPX-1852 .
+
+kg:YMR264W rdfs:subClassOf kg:CPX-2948 .
+
+kg:YMR268C rdfs:subClassOf kg:CPX-24 .
+
+kg:YMR270C rdfs:subClassOf kg:CPX-1101 .
+
+kg:YMR275C rdfs:subClassOf kg:CPX-2921 .
+
+kg:YMR284W rdfs:subClassOf kg:CPX-1732 .
+
+kg:YMR286W rdfs:subClassOf kg:CPX-1602 .
+
+kg:YMR287C rdfs:subClassOf kg:CPX-3180 .
+
+kg:YMR288W rdfs:subClassOf kg:CPX-1647,
+        kg:CPX-1651 .
+
+kg:YMR290C rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YMR293C rdfs:subClassOf kg:CPX-416 .
+
+kg:YMR294W rdfs:subClassOf kg:CPX-1805 .
+
+kg:YMR296C rdfs:subClassOf kg:CPLX-8571 .
+
+kg:YMR298W rdfs:subClassOf kg:CPLX-9392,
+        kg:CPLX3O-78 .
+
+kg:YMR299C rdfs:subClassOf kg:CPX-1178 .
+
+kg:YMR303C rdfs:subClassOf kg:CPLX-8688 .
+
+kg:YMR306W rdfs:subClassOf kg:CPX-3028 .
+
+kg:YMR309C rdfs:subClassOf kg:CPX-1831 .
+
+kg:YMR312W rdfs:subClassOf kg:CPLX-85418 .
+
+kg:YMR314W rdfs:subClassOf kg:CPLX3O-10558 .
+
+kg:YNCB0010W rdfs:subClassOf kg:CPX-3298 .
+
+kg:YNCB0019C rdfs:subClassOf kg:CPX-26 .
+
+kg:YNCE0007C rdfs:subClassOf kg:CPX-1873 .
+
+kg:YNCE0011C rdfs:subClassOf kg:CPX-31 .
+
+kg:YNCE0024W rdfs:subClassOf kg:CPX-609 .
+
+kg:YNCG0044C rdfs:subClassOf kg:CPX-25,
+        kg:CPX-29,
+        kg:CPX-30 .
+
+kg:YNCG0045C rdfs:subClassOf kg:CPX-25,
+        kg:CPX-29,
+        kg:CPX-30 .
+
+kg:YNCL0006W rdfs:subClassOf kg:CPX-24,
+        kg:CPX-25 .
+
+kg:YNCL0012C rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YNCL0014C rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YNCL0016C rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YNCL0018W rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YNCN0005C rdfs:subClassOf kg:CPX-23 .
+
+kg:YNCO0024C rdfs:subClassOf kg:CPLX-85393 .
+
+kg:YNCQ0002W rdfs:subClassOf kg:CPX-1603 .
+
+kg:YNCQ0006W rdfs:subClassOf kg:CPX-1602 .
+
+kg:YNCQ0027W rdfs:subClassOf kg:CPX-1294 .
+
+kg:YNL001W rdfs:subClassOf kg:CPX-465 .
+
+kg:YNL005C rdfs:subClassOf kg:CPX-1602 .
+
+kg:YNL006W rdfs:subClassOf kg:CPLX3O-10895,
+        kg:CPLX3O-10896,
+        kg:CPLX3O-10897 .
+
+kg:YNL008C rdfs:subClassOf kg:CPX-3248 .
+
+kg:YNL015W rdfs:subClassOf kg:CPX-1278,
+        kg:CPX-1279 .
+
+kg:YNL021W rdfs:subClassOf kg:CPX-1884 .
+
+kg:YNL025C rdfs:subClassOf kg:CPX-1853 .
+
+kg:YNL026W rdfs:subClassOf kg:CPX-1744 .
+
+kg:YNL037C rdfs:subClassOf kg:CPLX3O-679 .
+
+kg:YNL038W rdfs:subClassOf kg:CPX-1274 .
+
+kg:YNL039W rdfs:subClassOf kg:CPX-1143 .
+
+kg:YNL041C rdfs:subClassOf kg:CPX-1840 .
+
+kg:YNL051W rdfs:subClassOf kg:CPX-1840 .
+
+kg:YNL052W rdfs:subClassOf kg:CPLX3O-117 .
+
+kg:YNL054W rdfs:subClassOf kg:CPLX-7938,
+        kg:CPX-3088 .
+
+kg:YNL059C rdfs:subClassOf kg:CPX-863 .
+
+kg:YNL062C rdfs:subClassOf kg:CPLX-8309 .
+
+kg:YNL064C rdfs:subClassOf kg:CPX-1276,
+        kg:CPX-1882,
+        kg:CPX-1883 .
+
+kg:YNL070W rdfs:subClassOf kg:CPX-473,
+        kg:CPX-474 .
+
+kg:YNL071W rdfs:subClassOf kg:CPLX3O-10921 .
+
+kg:YNL072W rdfs:subClassOf kg:CPX-1720 .
+
+kg:YNL075W rdfs:subClassOf kg:CPX-1893 .
+
+kg:YNL081C rdfs:subClassOf kg:CPX-1603 .
+
+kg:YNL082W rdfs:subClassOf kg:CPX-1666 .
+
+kg:YNL084C rdfs:subClassOf kg:CPX-426 .
+
+kg:YNL085W rdfs:subClassOf kg:CPX-1295 .
+
+kg:YNL086W rdfs:subClassOf kg:CPX-1153 .
+
+kg:YNL097C rdfs:subClassOf kg:CPX-1852 .
+
+kg:YNL100W rdfs:subClassOf kg:CPX-140 .
+
+kg:YNL102W rdfs:subClassOf kg:CPLX3O-10582 .
+
+kg:YNL103W rdfs:subClassOf kg:CPX-1015,
+        kg:CPX-1016,
+        kg:CPX-999 .
+
+kg:YNL107W rdfs:subClassOf kg:CPX-2122,
+        kg:CPX-3155 .
+
+kg:YNL113W rdfs:subClassOf kg:CPLX3O-10583,
+        kg:CPLX3O-10585 .
+
+kg:YNL117W rdfs:subClassOf kg:CPLX-8685 .
+
+kg:YNL118C rdfs:subClassOf kg:CPX-1628 .
+
+kg:YNL121C rdfs:subClassOf kg:CPX-474 .
+
+kg:YNL122C rdfs:subClassOf kg:CPX-1602 .
+
+kg:YNL126W rdfs:subClassOf kg:CPX-1198 .
+
+kg:YNL127W rdfs:subClassOf kg:CPX-1197 .
+
+kg:YNL131W rdfs:subClassOf kg:CPX-473,
+        kg:CPX-474 .
+
+kg:YNL132W rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YNL136W rdfs:subClassOf kg:CPX-3184 .
+
+kg:YNL137C rdfs:subClassOf kg:CPX-1603 .
+
+kg:YNL138W rdfs:subClassOf kg:CPX-695 .
+
+kg:YNL138W-A rdfs:subClassOf kg:CPX-1647 .
+
+kg:YNL139C rdfs:subClassOf kg:CPX-1792 .
+
+kg:YNL147W rdfs:subClassOf kg:CPX-25,
+        kg:CPX-44,
+        kg:CPX-45,
+        kg:CPX-46 .
+
+kg:YNL151C rdfs:subClassOf kg:CPLX3O-10585 .
+
+kg:YNL152W rdfs:subClassOf kg:CPX-1140 .
+
+kg:YNL153C rdfs:subClassOf kg:CPX-1671 .
+
+kg:YNL158W rdfs:subClassOf kg:CPX-1269 .
+
+kg:YNL159C rdfs:subClassOf kg:CPX-3248 .
+
+kg:YNL161W rdfs:subClassOf kg:CPX-1684 .
+
+kg:YNL162W rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YNL166C rdfs:subClassOf kg:CPX-1712 .
+
+kg:YNL172W rdfs:subClassOf kg:CPX-756,
+        kg:CPX-760,
+        kg:CPX-761,
+        kg:CPX-762 .
+
+kg:YNL177C rdfs:subClassOf kg:CPX-1602 .
+
+kg:YNL178W rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YNL182C rdfs:subClassOf kg:CPX-1711 .
+
+kg:YNL185C rdfs:subClassOf kg:CPX-1602 .
+
+kg:YNL189W rdfs:subClassOf kg:CPX-1068 .
+
+kg:YNL191W rdfs:subClassOf kg:CPX-325 .
+
+kg:YNL196C rdfs:subClassOf kg:CPX-3211 .
+
+kg:YNL199C rdfs:subClassOf kg:CPX-1229 .
+
+kg:YNL201C rdfs:subClassOf kg:CPX-1846 .
+
+kg:YNL202W rdfs:subClassOf kg:CPLX-8720 .
+
+kg:YNL214W rdfs:subClassOf kg:CPX-1904 .
+
+kg:YNL215W rdfs:subClassOf kg:CPX-863 .
+
+kg:YNL216W rdfs:subClassOf kg:CPLX3O-10891,
+        kg:CPX-1200 .
+
+kg:YNL220W rdfs:subClassOf kg:CPLX-672 .
+
+kg:YNL221C rdfs:subClassOf kg:CPLX3O-10556,
+        kg:CPX-1873 .
+
+kg:YNL222W rdfs:subClassOf kg:CPX-1053 .
+
+kg:YNL225C rdfs:subClassOf kg:CPX-1420 .
+
+kg:YNL230C rdfs:subClassOf kg:CPX-1837 .
+
+kg:YNL231C rdfs:subClassOf kg:CPX-2148 .
+
+kg:YNL232W rdfs:subClassOf kg:CPX-599,
+        kg:CPX-603 .
+
+kg:YNL233W rdfs:subClassOf kg:CPX-1230 .
+
+kg:YNL236W rdfs:subClassOf kg:CPX-3226 .
+
+kg:YNL242W rdfs:subClassOf kg:CPX-361 .
+
+kg:YNL245C rdfs:subClassOf kg:CPX-1651 .
+
+kg:YNL246W rdfs:subClassOf kg:CPX-1333 .
+
+kg:YNL248C rdfs:subClassOf kg:CPLX3O-10583 .
+
+kg:YNL250W rdfs:subClassOf kg:CPX-1872 .
+
+kg:YNL251C rdfs:subClassOf kg:CPX-1316 .
+
+kg:YNL252C rdfs:subClassOf kg:CPX-1602 .
+
+kg:YNL253W rdfs:subClassOf kg:CPX-1792 .
+
+kg:YNL258C rdfs:subClassOf kg:CPX-1786 .
+
+kg:YNL261W rdfs:subClassOf kg:CPX-1167,
+        kg:CPX-768 .
+
+kg:YNL262W rdfs:subClassOf kg:CPLX3O-10578 .
+
+kg:YNL264C rdfs:subClassOf kg:CPX-1319 .
+
+kg:YNL271C rdfs:subClassOf kg:CPX-3188 .
+
+kg:YNL273W rdfs:subClassOf kg:CPX-1673 .
+
+kg:YNL277W rdfs:subClassOf kg:CPLX-623 .
+
+kg:YNL282W rdfs:subClassOf kg:CPLX3O-10556,
+        kg:CPX-1873 .
+
+kg:YNL284C rdfs:subClassOf kg:CPX-1602 .
+
+kg:YNL286W rdfs:subClassOf kg:CPX-26 .
+
+kg:YNL287W rdfs:subClassOf kg:CPLX3O-10540 .
+
+kg:YNL288W rdfs:subClassOf kg:CPX-1800 .
+
+kg:YNL289W rdfs:subClassOf kg:CPX-1695 .
+
+kg:YNL290W rdfs:subClassOf kg:CPX-1731,
+        kg:CPX-1807,
+        kg:CPX-422,
+        kg:CPX-545 .
+
+kg:YNL293W rdfs:subClassOf kg:CPX-3188 .
+
+kg:YNL297C rdfs:subClassOf kg:CPX-1028 .
+
+kg:YNL298W rdfs:subClassOf kg:CPX-3462 .
+
+kg:YNL299W rdfs:subClassOf kg:CPX-1680 .
+
+kg:YNL306W rdfs:subClassOf kg:CPX-1603 .
+
+kg:YNL312W rdfs:subClassOf kg:CPX-21 .
+
+kg:YNL317W rdfs:subClassOf kg:CPX-1053 .
+
+kg:YNL323W rdfs:subClassOf kg:CPX-1021,
+        kg:CPX-1022 .
+
+kg:YNL325C rdfs:subClassOf kg:CPLX-7938,
+        kg:CPX-3088 .
+
+kg:YNL329C rdfs:subClassOf kg:CPX-1902 .
+
+kg:YNL330C rdfs:subClassOf kg:CPX-1372,
+        kg:CPX-1851,
+        kg:CPX-1852 .
+
+kg:YNL333W rdfs:subClassOf kg:CPLX3O-10924 .
+
+kg:YNL334C rdfs:subClassOf kg:MONOMER3O-300583 .
+
+kg:YNR003C rdfs:subClassOf kg:CPLX3O-10585 .
+
+kg:YNR006W rdfs:subClassOf kg:CPX-1622 .
+
+kg:YNR010W rdfs:subClassOf kg:CPX-3226 .
+
+kg:YNR016C rdfs:subClassOf kg:CPLX3O-8 .
+
+kg:YNR017W rdfs:subClassOf kg:CPX-539 .
+
+kg:YNR022C rdfs:subClassOf kg:CPX-1602 .
+
+kg:YNR023W rdfs:subClassOf kg:CPX-1150 .
+
+kg:YNR035C rdfs:subClassOf kg:CPX-607 .
+
+kg:YNR036C rdfs:subClassOf kg:CPX-1603 .
+
+kg:YNR037C rdfs:subClassOf kg:CPX-1603 .
+
+kg:YNR038W rdfs:subClassOf kg:CPX-1421 .
+
+kg:YNR039C rdfs:subClassOf kg:CPLX3O-10928 .
+
+kg:YNR043W rdfs:subClassOf kg:CPLX-709 .
+
+kg:YNR044W rdfs:subClassOf kg:CPX-1838 .
+
+kg:YNR046W rdfs:subClassOf kg:CPLX-8294,
+        kg:CPLX3O-10542,
+        kg:CPLX3O-10543,
+        kg:CPX-1052 .
+
+kg:YNR048W rdfs:subClassOf kg:CPX-1026 .
+
+kg:YNR051C rdfs:subClassOf kg:CPX-1412 .
+
+kg:YNR052C rdfs:subClassOf kg:CPX-1800 .
+
+kg:YNR054C rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YOL001W rdfs:subClassOf kg:CPX-1688 .
+
+kg:YOL004W rdfs:subClassOf kg:CPX-1851,
+        kg:CPX-1852 .
+
+kg:YOL005C rdfs:subClassOf kg:CPLX3O-10587 .
+
+kg:YOL009C rdfs:subClassOf kg:CPX-3196 .
+
+kg:YOL010W rdfs:subClassOf kg:CPX-1606 .
+
+kg:YOL012C rdfs:subClassOf kg:CPX-1613,
+        kg:CPX-1614,
+        kg:CPX-2122 .
+
+kg:YOL013C rdfs:subClassOf kg:CPX-3070 .
+
+kg:YOL021C rdfs:subClassOf kg:CPX-599,
+        kg:CPX-603 .
+
+kg:YOL034W rdfs:subClassOf kg:CPX-1364 .
+
+kg:YOL038W rdfs:subClassOf kg:CPLX3O-10558 .
+
+kg:YOL039W rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YOL040C rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YOL044W rdfs:subClassOf kg:CPX-1901 .
+
+kg:YOL051W rdfs:subClassOf kg:CPX-3226 .
+
+kg:YOL052C rdfs:subClassOf kg:CPLX3O-10520 .
+
+kg:YOL055C rdfs:subClassOf kg:CPLX3O-80 .
+
+kg:YOL061W rdfs:subClassOf kg:CPLX3O-10566,
+        kg:CPLX3O-10567 .
+
+kg:YOL062C rdfs:subClassOf kg:CPX-534 .
+
+kg:YOL067C rdfs:subClassOf kg:CPX-828 .
+
+kg:YOL068C rdfs:subClassOf kg:CPX-1342,
+        kg:CPX-1384 .
+
+kg:YOL069W rdfs:subClassOf kg:CPX-548 .
+
+kg:YOL072W rdfs:subClassOf kg:CPX-1686,
+        kg:CPX-1687 .
+
+kg:YOL073C rdfs:subClassOf kg:CPX-1190 .
+
+kg:YOL076W rdfs:subClassOf kg:CPLX3O-10536 .
+
+kg:YOL078W rdfs:subClassOf kg:CPLX3O-10895 .
+
+kg:YOL086C rdfs:subClassOf kg:CPLX-8687 .
+
+kg:YOL090W rdfs:subClassOf kg:CPX-1036,
+        kg:CPX-1037 .
+
+kg:YOL094C rdfs:subClassOf kg:CPX-1731,
+        kg:CPX-1807,
+        kg:CPX-422,
+        kg:CPX-545 .
+
+kg:YOL096C rdfs:subClassOf kg:CPX-1155 .
+
+kg:YOL108C rdfs:subClassOf kg:CPX-1277 .
+
+kg:YOL110W rdfs:subClassOf kg:CPX-813 .
+
+kg:YOL111C rdfs:subClassOf kg:CPX-1861 .
+
+kg:YOL112W rdfs:subClassOf kg:CPX-3188 .
+
+kg:YOL115W rdfs:subClassOf kg:CPX-1678,
+        kg:CPX-1679 .
+
+kg:YOL117W rdfs:subClassOf kg:CPX-1894 .
+
+kg:YOL120C rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YOL121C rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YOL123W rdfs:subClassOf kg:CPX-1896 .
+
+kg:YOL124C rdfs:subClassOf kg:CPLX-8294 .
+
+kg:YOL126C rdfs:subClassOf kg:CPLX3O-88 .
+
+kg:YOL129W rdfs:subClassOf kg:CPX-1413 .
+
+kg:YOL133W rdfs:subClassOf kg:CPX-1157,
+        kg:CPX-1165,
+        kg:CPX-1166,
+        kg:CPX-1167,
+        kg:CPX-1837,
+        kg:CPX-3234,
+        kg:CPX-3241,
+        kg:CPX-3242,
+        kg:CPX-3243,
+        kg:CPX-3244,
+        kg:CPX-3249,
+        kg:CPX-3250,
+        kg:CPX-3253,
+        kg:CPX-3254,
+        kg:CPX-3255,
+        kg:CPX-3681 .
+
+kg:YOL135C rdfs:subClassOf kg:CPX-3226 .
+
+kg:YOL138C rdfs:subClassOf kg:CPX-3231 .
+
+kg:YOL139C rdfs:subClassOf kg:CPX-430,
+        kg:CPX-431 .
+
+kg:YOL142W rdfs:subClassOf kg:CPX-599,
+        kg:CPX-603 .
+
+kg:YOL143C rdfs:subClassOf kg:CPLX-7781 .
+
+kg:YOL144W rdfs:subClassOf kg:CPX-1421 .
+
+kg:YOL145C rdfs:subClassOf kg:CPX-1726 .
+
+kg:YOL146W rdfs:subClassOf kg:CPX-1641 .
+
+kg:YOL148C rdfs:subClassOf kg:CPX-656,
+        kg:CPX-675 .
+
+kg:YOL149W rdfs:subClassOf kg:CPX-1628 .
+
+kg:YOR001W rdfs:subClassOf kg:CPX-599 .
+
+kg:YOR004W rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YOR005C rdfs:subClassOf kg:CPX-1665 .
+
+kg:YOR007C rdfs:subClassOf kg:CPX-1861 .
+
+kg:YOR014W rdfs:subClassOf kg:CPX-1857,
+        kg:CPX-1858 .
+
+kg:YOR023C rdfs:subClassOf kg:CPX-608 .
+
+kg:YOR026W rdfs:subClassOf kg:CPX-154,
+        kg:CPX-963 .
+
+kg:YOR038C rdfs:subClassOf kg:CPX-124 .
+
+kg:YOR039W rdfs:subClassOf kg:CPX-581,
+        kg:CPX-769,
+        kg:CPX-770,
+        kg:CPX-771,
+        kg:CPX-773 .
+
+kg:YOR043W rdfs:subClassOf kg:CPX-1317,
+        kg:CPX-1318 .
+
+kg:YOR045W rdfs:subClassOf kg:CPX-473,
+        kg:CPX-474 .
+
+kg:YOR048C rdfs:subClassOf kg:CPLX3O-10906 .
+
+kg:YOR054C rdfs:subClassOf kg:CPLX-8646 .
+
+kg:YOR061W rdfs:subClassOf kg:CPX-581,
+        kg:CPX-770,
+        kg:CPX-772,
+        kg:CPX-773 .
+
+kg:YOR063W rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YOR064C rdfs:subClassOf kg:CPX-1810 .
+
+kg:YOR065W rdfs:subClassOf kg:CPLX3O-105 .
+
+kg:YOR069W rdfs:subClassOf kg:CPX-1653 .
+
+kg:YOR074C rdfs:subClassOf kg:CPLX3O-630 .
+
+kg:YOR078W rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YOR080W rdfs:subClassOf kg:CPX-3250 .
+
+kg:YOR085W rdfs:subClassOf kg:CPLX3O-10889 .
+
+kg:YOR096W rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YOR098C rdfs:subClassOf kg:CPX-824 .
+
+kg:YOR103C rdfs:subClassOf kg:CPLX3O-10527,
+        kg:CPLX3O-10889 .
+
+kg:YOR106W rdfs:subClassOf kg:CPX-1887 .
+
+kg:YOR110W rdfs:subClassOf kg:CPX-1656 .
+
+kg:YOR115C rdfs:subClassOf kg:CPX-1383,
+        kg:CPX-1939,
+        kg:CPX-1940 .
+
+kg:YOR116C rdfs:subClassOf kg:CPLX3O-10585 .
+
+kg:YOR117W rdfs:subClassOf kg:CPLX3O-10560 .
+
+kg:YOR123C rdfs:subClassOf kg:CPX-1726 .
+
+kg:YOR125C rdfs:subClassOf kg:CPX-1155 .
+
+kg:YOR126C rdfs:subClassOf kg:CPLX-9284 .
+
+kg:YOR132W rdfs:subClassOf kg:CPX-1653 .
+
+kg:YOR136W rdfs:subClassOf kg:CPLX3O-679 .
+
+kg:YOR141C rdfs:subClassOf kg:CPX-863 .
+
+kg:YOR142W rdfs:subClassOf kg:CPLX3O-690 .
+
+kg:YOR143C rdfs:subClassOf kg:CPLX3O-25 .
+
+kg:YOR144C rdfs:subClassOf kg:CPX-422 .
+
+kg:YOR148C rdfs:subClassOf kg:CPX-1651 .
+
+kg:YOR150W rdfs:subClassOf kg:CPX-1602 .
+
+kg:YOR151C rdfs:subClassOf kg:CPLX3O-10587 .
+
+kg:YOR155C rdfs:subClassOf kg:CPLX3O-11 .
+
+kg:YOR157C rdfs:subClassOf kg:CPLX3O-10558 .
+
+kg:YOR158W rdfs:subClassOf kg:CPX-1603 .
+
+kg:YOR159C rdfs:subClassOf kg:CPX-23,
+        kg:CPX-29,
+        kg:CPX-30,
+        kg:CPX-31,
+        kg:CPX-43 .
+
+kg:YOR164C rdfs:subClassOf kg:CPX-1861 .
+
+kg:YOR167C rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YOR173W rdfs:subClassOf kg:CPX-1185 .
+
+kg:YOR174W rdfs:subClassOf kg:CPX-3226 .
+
+kg:YOR178C rdfs:subClassOf kg:CPX-1231 .
+
+kg:YOR179C rdfs:subClassOf kg:CPX-1053 .
+
+kg:YOR181W rdfs:subClassOf kg:CPX-1344 .
+
+kg:YOR184W rdfs:subClassOf kg:CPLX3O-10935 .
+
+kg:YOR189W rdfs:subClassOf kg:CPX-863 .
+
+kg:YOR194C rdfs:subClassOf kg:CPX-1633 .
+
+kg:YOR206W rdfs:subClassOf kg:CPX-1733,
+        kg:CPX-1734 .
+
+kg:YOR207C rdfs:subClassOf kg:CPLX3O-10585 .
+
+kg:YOR210W rdfs:subClassOf kg:CPLX3O-10583,
+        kg:CPLX3O-10585,
+        kg:CPLX3O-10587 .
+
+kg:YOR211C rdfs:subClassOf kg:CPX-161 .
+
+kg:YOR212W rdfs:subClassOf kg:CPX-1645,
+        kg:CPX-1646,
+        kg:CPX-977 .
+
+kg:YOR213C rdfs:subClassOf kg:CPX-777 .
+
+kg:YOR217W rdfs:subClassOf kg:CPX-545 .
+
+kg:YOR223W rdfs:subClassOf kg:CPX-1190 .
+
+kg:YOR224C rdfs:subClassOf kg:CPLX3O-10583,
+        kg:CPLX3O-10585,
+        kg:CPLX3O-10587 .
+
+kg:YOR226C rdfs:subClassOf kg:CPLX3O-10521 .
+
+kg:YOR232W rdfs:subClassOf kg:CPX-539 .
+
+kg:YOR244W rdfs:subClassOf kg:CPX-3155,
+        kg:CPX-3185 .
+
+kg:YOR249C rdfs:subClassOf kg:CPX-756,
+        kg:CPX-760,
+        kg:CPX-761,
+        kg:CPX-762 .
+
+kg:YOR250C rdfs:subClassOf kg:CPX-1895,
+        kg:CPX-1896 .
+
+kg:YOR253W rdfs:subClassOf kg:CPLX3O-10535 .
+
+kg:YOR254C rdfs:subClassOf kg:CPX-3056 .
+
+kg:YOR257W rdfs:subClassOf kg:CPX-1686,
+        kg:CPX-824 .
+
+kg:YOR259C rdfs:subClassOf kg:CPLX3O-10560 .
+
+kg:YOR260W rdfs:subClassOf kg:CPX-429 .
+
+kg:YOR261C rdfs:subClassOf kg:CPLX3O-10559 .
+
+kg:YOR270C rdfs:subClassOf kg:CPLX3O-10575 .
+
+kg:YOR272W rdfs:subClassOf kg:CPX-1862 .
+
+kg:YOR279C rdfs:subClassOf kg:CPX-1384 .
+
+kg:YOR287C rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YOR290C rdfs:subClassOf kg:CPX-1150 .
+
+kg:YOR293W rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YOR295W rdfs:subClassOf kg:CPX-1101 .
+
+kg:YOR297C rdfs:subClassOf kg:CPX-1629 .
+
+kg:YOR299W rdfs:subClassOf kg:CPX-1719 .
+
+kg:YOR303W rdfs:subClassOf kg:CPX-579 .
+
+kg:YOR304W rdfs:subClassOf kg:CPX-728,
+        kg:CPX-734 .
+
+kg:YOR308C rdfs:subClassOf kg:CPX-25 .
+
+kg:YOR310C rdfs:subClassOf kg:CPLX3O-10912,
+        kg:CPX-729 .
+
+kg:YOR317W rdfs:subClassOf kg:CPLX3O-10926 .
+
+kg:YOR319W rdfs:subClassOf kg:CPX-1647 .
+
+kg:YOR321W rdfs:subClassOf kg:CPLX3O-10893,
+        kg:CPX-3037 .
+
+kg:YOR326W rdfs:subClassOf kg:CPX-1304,
+        kg:CPX-2225 .
+
+kg:YOR332W rdfs:subClassOf kg:CPLX3O-10576,
+        kg:CPX-1192 .
+
+kg:YOR340C rdfs:subClassOf kg:CPLX3O-10583 .
+
+kg:YOR341W rdfs:subClassOf kg:CPLX3O-10583 .
+
+kg:YOR352W rdfs:subClassOf kg:CPX-1659 .
+
+kg:YOR358W rdfs:subClassOf kg:CPX-1830 .
+
+kg:YOR361C rdfs:subClassOf kg:CPX-1831 .
+
+kg:YOR362C rdfs:subClassOf kg:CPLX3O-10558 .
+
+kg:YOR363C rdfs:subClassOf kg:CPX-1038 .
+
+kg:YOR368W rdfs:subClassOf kg:CPX-1806 .
+
+kg:YOR369C rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YOR370C rdfs:subClassOf kg:CPX-1636 .
+
+kg:YOR375C rdfs:subClassOf kg:CPLX-6841 .
+
+kg:YPL001W rdfs:subClassOf kg:CPX-1682 .
+
+kg:YPL002C rdfs:subClassOf kg:CPX-1623 .
+
+kg:YPL003W rdfs:subClassOf kg:CPX-1414 .
+
+kg:YPL007C rdfs:subClassOf kg:CPX-1656 .
+
+kg:YPL009C rdfs:subClassOf kg:CPX-3265 .
+
+kg:YPL010W rdfs:subClassOf kg:CPLX3O-10540 .
+
+kg:YPL011C rdfs:subClassOf kg:CPX-1642 .
+
+kg:YPL013C rdfs:subClassOf kg:CPX-1603 .
+
+kg:YPL016W rdfs:subClassOf kg:CPX-1150 .
+
+kg:YPL018W rdfs:subClassOf kg:CPX-1187 .
+
+kg:YPL019C rdfs:subClassOf kg:CPX-784 .
+
+kg:YPL022W rdfs:subClassOf kg:CPX-1362,
+        kg:CPX-1363,
+        kg:CPX-1708 .
+
+kg:YPL024W rdfs:subClassOf kg:CPX-1071 .
+
+kg:YPL028W rdfs:subClassOf kg:CPLX-706 .
+
+kg:YPL029W rdfs:subClassOf kg:CPX-3180 .
+
+kg:YPL031C rdfs:subClassOf kg:CPX-1688,
+        kg:CPX-1689,
+        kg:CPX-1690,
+        kg:CPX-1691,
+        kg:CPX-1692,
+        kg:CPX-1693,
+        kg:CPX-1694,
+        kg:CPX-1695,
+        kg:CPX-1696,
+        kg:CPX-1697 .
+
+kg:YPL037C rdfs:subClassOf kg:CPX-1306 .
+
+kg:YPL038W rdfs:subClassOf kg:CPX-999 .
+
+kg:YPL042C rdfs:subClassOf kg:CPX-1853 .
+
+kg:YPL045W rdfs:subClassOf kg:CPX-1625,
+        kg:CPX-1626 .
+
+kg:YPL046C rdfs:subClassOf kg:CPX-1191,
+        kg:CPX-1837 .
+
+kg:YPL047W rdfs:subClassOf kg:CPX-656 .
+
+kg:YPL048W rdfs:subClassOf kg:CPX-2854 .
+
+kg:YPL049C rdfs:subClassOf kg:CPX-575,
+        kg:CPX-576 .
+
+kg:YPL050C rdfs:subClassOf kg:CPX-1672,
+        kg:CPX-1839 .
+
+kg:YPL053C rdfs:subClassOf kg:CPLX-9678 .
+
+kg:YPL057C rdfs:subClassOf kg:CPLX3O-383 .
+
+kg:YPL063W rdfs:subClassOf kg:CPX-539 .
+
+kg:YPL064C rdfs:subClassOf kg:CPX-1651 .
+
+kg:YPL065W rdfs:subClassOf kg:CPX-940 .
+
+kg:YPL075W rdfs:subClassOf kg:CPX-1200 .
+
+kg:YPL076W rdfs:subClassOf kg:CPX-1274 .
+
+kg:YPL078C rdfs:subClassOf kg:CPLX3O-10574 .
+
+kg:YPL081W rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YPL082C rdfs:subClassOf kg:CPX-1141 .
+
+kg:YPL083C rdfs:subClassOf kg:CPLX-8216 .
+
+kg:YPL086C rdfs:subClassOf kg:CPLX-85417 .
+
+kg:YPL090C rdfs:subClassOf kg:CPLX3O-10915 .
+
+kg:YPL094C rdfs:subClassOf kg:CPX-3056 .
+
+kg:YPL096C-A rdfs:subClassOf kg:CPX-1274 .
+
+kg:YPL096W rdfs:subClassOf kg:CPX-1320 .
+
+kg:YPL099C rdfs:subClassOf kg:CPX-3279 .
+
+kg:YPL101W rdfs:subClassOf kg:CPLX-85418 .
+
+kg:YPL111W rdfs:subClassOf kg:CPLX-6892 .
+
+kg:YPL118W rdfs:subClassOf kg:CPX-1603 .
+
+kg:YPL120W rdfs:subClassOf kg:CPX-1677,
+        kg:CPX-1881 .
+
+kg:YPL121C rdfs:subClassOf kg:CPX-1288 .
+
+kg:YPL122C rdfs:subClassOf kg:CPX-1659 .
+
+kg:YPL124W rdfs:subClassOf kg:CPX-1419 .
+
+kg:YPL126W rdfs:subClassOf kg:CPX-1409 .
+
+kg:YPL129W rdfs:subClassOf kg:CPX-1149,
+        kg:CPX-1150,
+        kg:CPX-1642,
+        kg:CPX-1810,
+        kg:CPX-863 .
+
+kg:YPL131W rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YPL135W rdfs:subClassOf kg:CPLX-8670 .
+
+kg:YPL138C rdfs:subClassOf kg:CPX-1039 .
+
+kg:YPL139C rdfs:subClassOf kg:CPX-1851,
+        kg:CPX-1852 .
+
+kg:YPL143W rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YPL147W rdfs:subClassOf kg:CPX-1730 .
+
+kg:YPL149W rdfs:subClassOf kg:CPX-1848 .
+
+kg:YPL151C rdfs:subClassOf kg:CPX-1651 .
+
+kg:YPL152W rdfs:subClassOf kg:CPX-1380,
+        kg:CPX-1382 .
+
+kg:YPL153C rdfs:subClassOf kg:CPX-1322 .
+
+kg:YPL164C rdfs:subClassOf kg:CPX-1668 .
+
+kg:YPL166W rdfs:subClassOf kg:CPX-397 .
+
+kg:YPL167C rdfs:subClassOf kg:CPX-1091 .
+
+kg:YPL169C rdfs:subClassOf kg:CPX-1142 .
+
+kg:YPL173W rdfs:subClassOf kg:CPX-1602 .
+
+kg:YPL174C rdfs:subClassOf kg:CPX-1805 .
+
+kg:YPL175W rdfs:subClassOf kg:CPX-1274 .
+
+kg:YPL178W rdfs:subClassOf kg:CPX-1657 .
+
+kg:YPL180W rdfs:subClassOf kg:CPLX3O-10896,
+        kg:CPLX3O-10897 .
+
+kg:YPL181W rdfs:subClassOf kg:CPX-1852 .
+
+kg:YPL183W-A rdfs:subClassOf kg:CPX-1602 .
+
+kg:YPL190C rdfs:subClassOf kg:CPX-1316 .
+
+kg:YPL194W rdfs:subClassOf kg:CPX-1806 .
+
+kg:YPL195W rdfs:subClassOf kg:CPX-535 .
+
+kg:YPL203W rdfs:subClassOf kg:CPX-537,
+        kg:CPX-572,
+        kg:CPX-574 .
+
+kg:YPL204W rdfs:subClassOf kg:CPX-1681 .
+
+kg:YPL209C rdfs:subClassOf kg:CPX-1900 .
+
+kg:YPL210C rdfs:subClassOf kg:CPX-609 .
+
+kg:YPL213W rdfs:subClassOf kg:CPX-1651,
+        kg:CPX-26 .
+
+kg:YPL214C rdfs:subClassOf kg:CPLX3O-9180 .
+
+kg:YPL215W rdfs:subClassOf kg:CPX-384 .
+
+kg:YPL217C rdfs:subClassOf kg:CPX-1606 .
+
+kg:YPL218W rdfs:subClassOf kg:CPX-2523 .
+
+kg:YPL219W rdfs:subClassOf kg:CPX-1691 .
+
+kg:YPL220W rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YPL228W rdfs:subClassOf kg:CPLX-8752 .
+
+kg:YPL231W rdfs:subClassOf kg:CPLX-7627 .
+
+kg:YPL232W rdfs:subClassOf kg:CPX-1365 .
+
+kg:YPL233W rdfs:subClassOf kg:CPX-1186 .
+
+kg:YPL234C rdfs:subClassOf kg:CPLX3O-10575,
+        kg:CPX-1192 .
+
+kg:YPL235W rdfs:subClassOf kg:CPX-1814,
+        kg:CPX-2122,
+        kg:CPX-863 .
+
+kg:YPL237W rdfs:subClassOf kg:CPX-427 .
+
+kg:YPL240C rdfs:subClassOf kg:CPX-1276 .
+
+kg:YPL242C rdfs:subClassOf kg:CPX-3503 .
+
+kg:YPL243W rdfs:subClassOf kg:CPX-609 .
+
+kg:YPL248C rdfs:subClassOf kg:CPX-1044 .
+
+kg:YPL254W rdfs:subClassOf kg:CPX-656,
+        kg:CPX-675 .
+
+kg:YPL255W rdfs:subClassOf kg:CPX-1287 .
+
+kg:YPL256C rdfs:subClassOf kg:CPX-342 .
+
+kg:YPL258C rdfs:subClassOf kg:CPLX3O-82 .
+
+kg:YPL259C rdfs:subClassOf kg:CPX-532 .
+
+kg:YPL271W rdfs:subClassOf kg:CPLX3O-10573 .
+
+kg:YPR007C rdfs:subClassOf kg:CPX-1408 .
+
+kg:YPR010C rdfs:subClassOf kg:CPLX3O-10583 .
+
+kg:YPR018W rdfs:subClassOf kg:CPX-568 .
+
+kg:YPR019W rdfs:subClassOf kg:CPX-2944 .
+
+kg:YPR020W rdfs:subClassOf kg:CPLX3O-10572 .
+
+kg:YPR023C rdfs:subClassOf kg:CPX-1851,
+        kg:CPX-3184 .
+
+kg:YPR024W rdfs:subClassOf kg:CPLX3O-10545,
+        kg:CPX-1655 .
+
+kg:YPR025C rdfs:subClassOf kg:CPX-1660 .
+
+kg:YPR029C rdfs:subClassOf kg:CPX-532,
+        kg:CPX-533 .
+
+kg:YPR031W rdfs:subClassOf kg:CPX-1810 .
+
+kg:YPR034W rdfs:subClassOf kg:CPX-1150,
+        kg:CPX-1888,
+        kg:CPX-1889 .
+
+kg:YPR035W rdfs:subClassOf kg:CPLX-7158 .
+
+kg:YPR036W rdfs:subClassOf kg:CPLX3O-10576,
+        kg:CPX-1192 .
+
+kg:YPR043W rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YPR046W rdfs:subClassOf kg:CPX-1156 .
+
+kg:YPR048W rdfs:subClassOf kg:CPX-386 .
+
+kg:YPR051W rdfs:subClassOf kg:CPLX3O-10537 .
+
+kg:YPR055W rdfs:subClassOf kg:CPX-1890 .
+
+kg:YPR056W rdfs:subClassOf kg:CPX-1659 .
+
+kg:YPR066W rdfs:subClassOf kg:CPX-1414 .
+
+kg:YPR070W rdfs:subClassOf kg:CPX-3226 .
+
+kg:YPR072W rdfs:subClassOf kg:CPX-1800 .
+
+kg:YPR075C rdfs:subClassOf kg:CPX-1302 .
+
+kg:YPR082C rdfs:subClassOf kg:CPX-25,
+        kg:CPX-29 .
+
+kg:YPR088C rdfs:subClassOf kg:CPX-609 .
+
+kg:YPR094W rdfs:subClassOf kg:CPX-1647 .
+
+kg:YPR100W rdfs:subClassOf kg:CPX-1602 .
+
+kg:YPR101W rdfs:subClassOf kg:CPX-1885 .
+
+kg:YPR102C rdfs:subClassOf kg:CPLX3O-10916 .
+
+kg:YPR103W rdfs:subClassOf kg:CPLX3O-10558 .
+
+kg:YPR105C rdfs:subClassOf kg:CPX-1840 .
+
+kg:YPR107C rdfs:subClassOf kg:CPX-1053 .
+
+kg:YPR108W rdfs:subClassOf kg:CPLX3O-10559 .
+
+kg:YPR110C rdfs:subClassOf kg:CPLX3O-10583,
+        kg:CPLX3O-10585 .
+
+kg:YPR112C rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YPR118W rdfs:subClassOf kg:CPLX3O-10525 .
+
+kg:YPR119W rdfs:subClassOf kg:CPX-1701 .
+
+kg:YPR120C rdfs:subClassOf kg:CPX-1702 .
+
+kg:YPR131C rdfs:subClassOf kg:CPLX3O-10536 .
+
+kg:YPR133W-A rdfs:subClassOf kg:CPX-473,
+        kg:CPX-474 .
+
+kg:YPR135W rdfs:subClassOf kg:CPX-1165 .
+
+kg:YPR137W rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:YPR144C rdfs:subClassOf kg:CPX-1735 .
+
+kg:YPR160W rdfs:subClassOf kg:CPLX-7568 .
+
+kg:YPR161C rdfs:subClassOf kg:CPX-1685 .
+
+kg:YPR162C rdfs:subClassOf kg:CPX-768 .
+
+kg:YPR164W rdfs:subClassOf kg:CPX-1157,
+        kg:CPX-1165,
+        kg:CPX-1166,
+        kg:CPX-1167 .
+
+kg:YPR165W rdfs:subClassOf kg:CPX-1812,
+        kg:CPX-1813,
+        kg:CPX-3028 .
+
+kg:YPR166C rdfs:subClassOf kg:CPX-1603 .
+
+kg:YPR167C rdfs:subClassOf kg:CPLX-564 .
+
+kg:YPR168W rdfs:subClassOf kg:CPX-3226 .
+
+kg:YPR173C rdfs:subClassOf kg:CPX-334 .
+
+kg:YPR175W rdfs:subClassOf kg:CPLX3O-10578 .
+
+kg:YPR176C rdfs:subClassOf kg:CPX-1636 .
+
+kg:YPR178W rdfs:subClassOf kg:CPX-31 .
+
+kg:YPR179C rdfs:subClassOf kg:CPX-1884 .
+
+kg:YPR180W rdfs:subClassOf kg:CPX-3238 .
+
+kg:YPR181C rdfs:subClassOf kg:CPX-1341,
+        kg:CPX-2523 .
+
+kg:YPR182W rdfs:subClassOf kg:CPX-1651,
+        kg:CPX-23,
+        kg:CPX-29,
+        kg:CPX-30,
+        kg:CPX-31,
+        kg:CPX-43 .
+
+kg:YPR185W rdfs:subClassOf kg:CPX-1676 .
+
+kg:YPR187W rdfs:subClassOf kg:CPLX3O-10583,
+        kg:CPLX3O-10585,
+        kg:CPLX3O-10587 .
+
+kg:YPR188C rdfs:subClassOf kg:CPX-1426 .
+
+kg:YPR189W rdfs:subClassOf kg:CPX-1040 .
+
+kg:YPR190C rdfs:subClassOf kg:CPLX3O-10585 .
+
+kg:YPR191W rdfs:subClassOf kg:CPLX3O-105 .
+
+kg:YPR193C rdfs:subClassOf kg:CPX-2143 .
+
+kg:YPR200C rdfs:subClassOf kg:CPLX-6362 .
+
+kg:ALLANTOICASE-TRIMER rdfs:subClassOf kg:CPLX-7519 .
+
+kg:CPLX-6892 rdfs:subClassOf kg:CPLX3O-10888 .
+
+kg:CPLX-8753 rdfs:subClassOf kg:CPLX-8699 .
+
+kg:CPLX-8921 rdfs:subClassOf kg:CPX-325 .
+
+kg:CPLX3O-10513 rdfs:subClassOf kg:CPLX3O-10515 .
+
+kg:CPLX3O-10887 rdfs:subClassOf kg:CPLX3O-10888 .
+
+kg:CPLX3O-109 rdfs:subClassOf kg:CPLX3O-10936 .
+
+kg:CPLX3O-10924 rdfs:subClassOf kg:MONOMER3O-300583 .
+
+kg:CPLX3O-10925 rdfs:subClassOf kg:MONOMER3O-300584 .
+
+kg:CPLX3O-12 rdfs:subClassOf kg:CPLX3O-33 .
+
+kg:CPLX3O-155 rdfs:subClassOf kg:CPLX3O-10511 .
+
+kg:CPLX3O-16 rdfs:subClassOf kg:CPLX3O-33 .
+
+kg:CPLX3O-80 rdfs:subClassOf kg:CPLX3O-10524 .
+
+kg:CPLX-8571 rdfs:subClassOf kg:CPX-3158 .
+
+kg:CPLX3O-10512 rdfs:subClassOf kg:CPLX3O-10921 .
+
+kg:CPLX3O-10514 rdfs:subClassOf kg:CPLX3O-10515,
+        kg:CPLX3O-10517 .
+
+kg:CPLX3O-10516 rdfs:subClassOf kg:CPLX3O-10517 .
+
+kg:CPLX3O-10561 rdfs:subClassOf kg:CPLX3O-10562 .
+
+kg:CPLX3O-10581 rdfs:subClassOf kg:CPX-2091 .
+
+kg:CPLX3O-10582 rdfs:subClassOf kg:CPX-2091 .
+
+kg:CPLX3O-10586 rdfs:subClassOf kg:CPLX3O-10587 .
+
+kg:CPLX3O-10906 rdfs:subClassOf kg:CPLX3O-10919 .
+
+kg:CPLX3O-32 rdfs:subClassOf kg:CPLX3O-742 .
+
+kg:CPLX3O-34 rdfs:subClassOf kg:CPLX3O-44,
+        kg:CPLX3O-742 .
+
+kg:CPLX3O-35 rdfs:subClassOf kg:CPLX3O-44 .
+
+kg:CPX-1200 rdfs:subClassOf kg:CPX-1229 .
+
+kg:CPX-1417 rdfs:subClassOf kg:CPLX3O-10918 .
+
+kg:CPX-154 rdfs:subClassOf kg:CPX-3212 .
+
+kg:CPX-1606 rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:CPX-1735 rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:CPX-1848 rdfs:subClassOf kg:CPX-1849 .
+
+kg:CPX-1902 rdfs:subClassOf kg:CPX-1901 .
+
+kg:CPX-2268 rdfs:subClassOf kg:CPX-2950 .
+
+kg:CPX-2935 rdfs:subClassOf kg:CPX-2937 .
+
+kg:CPX-2950 rdfs:subClassOf kg:CPX-1629 .
+
+kg:CPX-3159 rdfs:subClassOf kg:CPX-1355 .
+
+kg:CPX-961 rdfs:subClassOf kg:CPX-3212 .
+
+kg:CPLX-85417 rdfs:subClassOf kg:CPX-779 .
+
+kg:CPLX-85418 rdfs:subClassOf kg:CPX-779 .
+
+kg:CPLX3O-10539 rdfs:subClassOf kg:CPX-1652 .
+
+kg:CPX-1648 rdfs:subClassOf kg:CPX-26 .
+
+kg:CPX-1649 rdfs:subClassOf kg:CPX-26 .
+
+kg:CPX-1660 rdfs:subClassOf kg:CPX-1659 .
+
+kg:CPX-1833 rdfs:subClassOf kg:CPX-3055 .
+
+kg:CPX-1893 rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:CPX-24 rdfs:subClassOf kg:CPX-32 .
+
+kg:CPX-297 rdfs:subClassOf kg:CPLX3O-10913 .
+
+kg:CPX-3184 rdfs:subClassOf kg:CPX-3155 .
+
+kg:CPX-397 rdfs:subClassOf kg:CPX-1676 .
+
+kg:CPX-769 rdfs:subClassOf kg:CPX-775 .
+
+kg:CPX-770 rdfs:subClassOf kg:CPX-776 .
+
+kg:CPLX3O-10540 rdfs:subClassOf kg:CPX-1652 .
+
+kg:CPLX3O-10569 rdfs:subClassOf kg:CPLX3O-10571 .
+
+kg:CPLX3O-10571 rdfs:subClassOf kg:CPLX3O-10572 .
+
+kg:CPLX3O-10574 rdfs:subClassOf kg:CPLX3O-10571 .
+
+kg:CPLX3O-10578 rdfs:subClassOf kg:CPLX3O-10913 .
+
+kg:CPX-1187 rdfs:subClassOf kg:CPX-1156 .
+
+kg:CPX-1641 rdfs:subClassOf kg:CPX-297 .
+
+kg:CPX-3056 rdfs:subClassOf kg:CPX-3055 .
+
+kg:CPX-581 rdfs:subClassOf kg:CPX-772,
+        kg:CPX-774 .
+
+kg:CPX-737 rdfs:subClassOf kg:CPLX-85393 .
+
+kg:CPX-772 rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:CPLX3O-10552 rdfs:subClassOf kg:CPX-1888,
+        kg:CPX-1889 .
+
+kg:CPLX3O-10573 rdfs:subClassOf kg:CPLX3O-10571 .
+
+kg:CPX-1792 rdfs:subClassOf kg:CPX-1793 .
+
+kg:CPX-3172 rdfs:subClassOf kg:CPX-3233 .
+
+kg:CPLX3O-10575 rdfs:subClassOf kg:CPLX3O-10577 .
+
+kg:CPLX3O-10905 rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:CPX-1647 rdfs:subClassOf kg:CPX-26 .
+
+kg:CPX-2944 rdfs:subClassOf kg:CPX-297 .
+
+kg:CPX-1409 rdfs:subClassOf kg:CPLX3O-10912 .
+
+kg:CPX-43 rdfs:subClassOf kg:CPX-26 .
+
+kg:CPX-44 rdfs:subClassOf kg:CPX-24 .
+
+kg:CPX-45 rdfs:subClassOf kg:CPX-112 .
+
+kg:CPLX3O-10576 rdfs:subClassOf kg:CPLX3O-10577 .
+
+kg:CPX-1885 rdfs:subClassOf kg:CPX-1651 .
+
+kg:CPLX3O-10559 rdfs:subClassOf kg:CPLX3O-10561 .
+
+kg:CPLX3O-105 rdfs:subClassOf kg:CPLX3O-109 .
+
+kg:CPLX3O-10560 rdfs:subClassOf kg:CPLX3O-10561 .
+
+kg:CPX-31 rdfs:subClassOf kg:CPX-25,
+        kg:CPX-32 .
+
+kg:CPLX3O-117 rdfs:subClassOf kg:CPLX3O-10936 .
+
+kg:CPLX3O-10558 rdfs:subClassOf kg:CPLX3O-10562 .
+
+kg:CPX-23 rdfs:subClassOf kg:CPLX3O-10918 .
+

@@ -1,0 +1,751 @@
+@prefix bc: <http://biocyc.project-genesis.io#> .
+@prefix go: <http://purl.obolibrary.org/obo/GO_> .
+@prefix oboInOwl: <http://www.geneontology.org/formats/oboInOwl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+bc:CCI-GOLGI-LUM-FUN-CCO-CYTOSOL rdfs:subClassOf bc:CCO-CYTOSOL,
+        bc:CCO-GOLGI-LUM .
+
+bc:CCO-ACIDCALC-LUM oboInOwl:hasRelatedSynonym "acidocalcisomal lumen" ;
+    rdfs:subClassOf bc:CCO-SPACE .
+
+bc:CCO-ACIDCALC-MEM oboInOwl:hasRelatedSynonym "acidocalcisomal membrane" ;
+    rdfs:subClassOf bc:CCO-MEMBRANE .
+
+bc:CCO-ACIDOCALCISOME oboInOwl:hasRelatedSynonym "acidocalcisome" ;
+    rdfs:subClassOf bc:CCO-MEM-ORG,
+        go:0020022 .
+
+bc:CCO-AMYLOPLAST oboInOwl:hasRelatedSynonym "amyloplast" ;
+    rdfs:subClassOf bc:CCO-LEUCOPLAST,
+        go:0009501 .
+
+bc:CCO-BAC-NUCLEOID oboInOwl:hasRelatedSynonym "bacterial nucleoid" ;
+    rdfs:subClassOf bc:CCO-NUCLEOID,
+        go:0043590 .
+
+bc:CCO-CARBOXYSOME oboInOwl:hasRelatedSynonym "carboxysome" ;
+    rdfs:subClassOf bc:CCO-NON-MEM-ORG,
+        go:0031470 .
+
+bc:CCO-CARBOXYSOME-SHELL oboInOwl:hasRelatedSynonym "carboxysome shell" ;
+    rdfs:subClassOf bc:CCO-NON-MEMBRANE-BARRIER .
+
+bc:CCO-CARBOXYSOME-SPC oboInOwl:hasRelatedSynonym "carboxysomal space" ;
+    rdfs:subClassOf bc:CCO-SPACE .
+
+bc:CCO-CE-BAC-NEG oboInOwl:hasRelatedSynonym "cell envelope (sensu Gram-negative Bacteria)" ;
+    rdfs:subClassOf bc:CCO-CE-BAC .
+
+bc:CCO-CE-BAC-POS oboInOwl:hasRelatedSynonym "cell envelope (sensu Gram-positive Bacteria)" ;
+    rdfs:subClassOf bc:CCO-CE-BAC .
+
+bc:CCO-CENTRAL-VACUOLE oboInOwl:hasRelatedSynonym "central vacuole" ;
+    rdfs:subClassOf bc:CCO-VACUOLE,
+        go:0042807 .
+
+bc:CCO-CHL-IM-SPC oboInOwl:hasRelatedSynonym "chloroplast intermembrane space" ;
+    rdfs:subClassOf bc:CCO-PLAST-IM-SPC,
+        go:0031972 .
+
+bc:CCO-CHL-STKD-THY oboInOwl:hasRelatedSynonym "chloroplast stacked thylakoid" ;
+    rdfs:subClassOf bc:CCO-CHLOR-THY,
+        go:0009515 .
+
+bc:CCO-CHL-STR-THY oboInOwl:hasRelatedSynonym "chloroplast stromal thylakoid" ;
+    rdfs:subClassOf bc:CCO-CHLOR-THY,
+        go:0009533 .
+
+bc:CCO-CHL-THY-LUM oboInOwl:hasRelatedSynonym "chloroplast thylakoid lumen" ;
+    rdfs:subClassOf bc:CCO-THY-LUM,
+        go:0009543 .
+
+bc:CCO-CHL-THY-MEM oboInOwl:hasRelatedSynonym "chloroplast thylakoid membrane" ;
+    rdfs:subClassOf bc:CCO-THY-MEM,
+        go:0009535 .
+
+bc:CCO-CHLOR-ENV oboInOwl:hasRelatedSynonym "chloroplast envelope" ;
+    rdfs:subClassOf bc:CCO-PLASTID-ENV,
+        go:0009941 .
+
+bc:CCO-CHLOR-IMEM oboInOwl:hasRelatedSynonym "chloroplast inner membrane" ;
+    rdfs:subClassOf bc:CCO-CHLOR-MEM,
+        bc:CCO-PLAST-IMEM,
+        go:0009706 .
+
+bc:CCO-CHLOR-OMEM oboInOwl:hasRelatedSynonym "chloroplast outer membrane" ;
+    rdfs:subClassOf bc:CCO-CHLOR-MEM,
+        bc:CCO-PLAST-OMEM,
+        go:0009707 .
+
+bc:CCO-CHLOR-STR oboInOwl:hasRelatedSynonym "chloroplast stroma" ;
+    rdfs:subClassOf bc:CCO-PLASTID-STR,
+        go:0009570 .
+
+bc:CCO-CHLOROPLAST oboInOwl:hasRelatedSynonym "chloroplast" ;
+    rdfs:subClassOf bc:CCO-PLASTID,
+        go:0009507 .
+
+bc:CCO-CHR-IM-SPC oboInOwl:hasRelatedSynonym "chromoplast intermembrane space" ;
+    rdfs:subClassOf bc:CCO-PLAST-IM-SPC,
+        go:0031973 .
+
+bc:CCO-CHROM-ENV oboInOwl:hasRelatedSynonym "chromoplast envelope" ;
+    rdfs:subClassOf bc:CCO-PLASTID-ENV,
+        go:0031898 .
+
+bc:CCO-CHROM-IMEM oboInOwl:hasRelatedSynonym "chromoplast inner membrane" ;
+    rdfs:subClassOf bc:CCO-CHROM-MEM,
+        bc:CCO-PLAST-IMEM,
+        go:0031899 .
+
+bc:CCO-CHROM-OMEM oboInOwl:hasRelatedSynonym "chromoplast outer membrane" ;
+    rdfs:subClassOf bc:CCO-CHROM-MEM,
+        bc:CCO-PLAST-OMEM,
+        go:0031900 .
+
+bc:CCO-CHROM-STR oboInOwl:hasRelatedSynonym "chromoplast stroma" ;
+    rdfs:subClassOf bc:CCO-PLASTID-STR,
+        go:0009575 .
+
+bc:CCO-CHROMOPLAST oboInOwl:hasRelatedSynonym "chromoplast" ;
+    rdfs:subClassOf bc:CCO-PLASTID,
+        go:0009509 .
+
+bc:CCO-CONTRACTILE-VACUOLE oboInOwl:hasRelatedSynonym "contractile vacuole",
+        "pulsatile vacuole",
+        "pulsating vacuole" ;
+    rdfs:subClassOf bc:CCO-VACUOLE,
+        go:0000331 .
+
+bc:CCO-CONTRCTVAC-LUM oboInOwl:hasRelatedSynonym "contractile vacuolar lumen" ;
+    rdfs:subClassOf bc:CCO-VAC-LUM .
+
+bc:CCO-CONTRCTVAC-MEM oboInOwl:hasRelatedSynonym "contractile vacuolar membrane" ;
+    rdfs:subClassOf bc:CCO-VAC-MEM,
+        go:0031164 .
+
+bc:CCO-CW-BAC-ACT oboInOwl:hasRelatedSynonym "cell wall (sensu Actinobacteria)" ;
+    rdfs:subClassOf bc:CCO-CW-BAC .
+
+bc:CCO-CW-BAC-NEG oboInOwl:hasRelatedSynonym "cell wall (sensu Gram-negative Bacteria)" ;
+    rdfs:subClassOf bc:CCO-CW-BAC .
+
+bc:CCO-CW-BAC-POS oboInOwl:hasRelatedSynonym "cell wall (sensu Gram-positive Bacteria)" ;
+    rdfs:subClassOf bc:CCO-CW-BAC .
+
+bc:CCO-CW-FUNGI oboInOwl:hasRelatedSynonym "cell wall (sensu Fungi)" ;
+    rdfs:subClassOf bc:CCO-CELLWALL .
+
+bc:CCO-CW-PL-PRIM oboInOwl:hasRelatedSynonym "primary cell wall (sensu Magnoliophyta)" ;
+    rdfs:subClassOf bc:CCO-CW-PLANT .
+
+bc:CCO-CW-PL-SEC oboInOwl:hasRelatedSynonym "secondary cell wall (sensu Magnoliophyta)" ;
+    rdfs:subClassOf bc:CCO-CW-PLANT .
+
+bc:CCO-CYTOPLASM oboInOwl:hasRelatedSynonym "cytoplasm" ;
+    rdfs:subClassOf bc:CCO-SUPER-COMP,
+        go:0005737 .
+
+bc:CCO-CYTOSKELETON oboInOwl:hasRelatedSynonym "cytoskeleton" ;
+    rdfs:subClassOf bc:CCO-NON-MEM-ORG,
+        go:0005856 .
+
+bc:CCO-CYTOSOL-CCO-MIT-LUM rdfs:subClassOf bc:CCO-CYTOSOL,
+        bc:CCO-MIT-LUM .
+
+bc:CCO-EARLY-END-LUM oboInOwl:hasRelatedSynonym "early endosome lumen" ;
+    rdfs:subClassOf bc:CCO-ENDO-LUM,
+        go:0031905 .
+
+bc:CCO-EARLY-ENDO oboInOwl:hasRelatedSynonym "early endosome" ;
+    rdfs:subClassOf bc:CCO-ENDOSOME,
+        go:0005769 .
+
+bc:CCO-EARLY-ENDO-MEM oboInOwl:hasRelatedSynonym "early endosome membrane" ;
+    rdfs:subClassOf bc:CCO-ENDO-MEM,
+        go:0031901 .
+
+bc:CCO-ELAIOPLAST oboInOwl:hasRelatedSynonym "elaioplast" ;
+    rdfs:subClassOf bc:CCO-LEUCOPLAST,
+        go:0009545 .
+
+bc:CCO-ENDOCYT-VES oboInOwl:hasRelatedSynonym "endocytic vesicle" ;
+    rdfs:subClassOf bc:CCO-VESICLE,
+        go:0030139 .
+
+bc:CCO-ENDOCYT-VES-LUM-CCO-CYTOSOL rdfs:subClassOf bc:CCO-CYTOSOL,
+        bc:CCO-ENDOCYT-VES-LUM .
+
+bc:CCO-ENDOCYT-VES-MEM oboInOwl:hasRelatedSynonym "endocytic vesicle membrane" ;
+    rdfs:subClassOf bc:CCO-VESICLE-MEM,
+        go:0030666 .
+
+bc:CCO-ER-GOLGI-VES oboInOwl:hasRelatedSynonym "ER-Golgi transport vesicle" ;
+    rdfs:subClassOf bc:CCO-GOLGI-VES .
+
+bc:CCO-ETIOPLAST oboInOwl:hasRelatedSynonym "etioplast" ;
+    rdfs:subClassOf bc:CCO-PLASTID,
+        go:0009513 .
+
+bc:CCO-EXTRACELL-MAT oboInOwl:hasRelatedSynonym "extracellular matrix (sensu Animalia)" ;
+    rdfs:subClassOf bc:CCO-SURFACE-MAT .
+
+bc:CCO-EXTRACELLULAR-CCO-CYTOSOL rdfs:subClassOf bc:CCO-CYTOSOL,
+        bc:CCO-EXTRACELLULAR .
+
+bc:CCO-FLAGELLUM oboInOwl:hasRelatedSynonym "flagellum" ;
+    rdfs:subClassOf bc:CCO-CELL-PROJECTION .
+
+bc:CCO-GG-CIS-CIST oboInOwl:hasRelatedSynonym "Golgi cis cisterna" ;
+    rdfs:subClassOf bc:CCO-GOLGI-CIST,
+        go:0000137 .
+
+bc:CCO-GG-MED-CIST oboInOwl:hasRelatedSynonym "Golgi medial cisterna" ;
+    rdfs:subClassOf bc:CCO-GOLGI-CIST,
+        go:0005797 .
+
+bc:CCO-GG-TR-CIST oboInOwl:hasRelatedSynonym "Golgi trans cisterna" ;
+    rdfs:subClassOf bc:CCO-GOLGI-CIST,
+        go:0000138 .
+
+bc:CCO-GLYCO-LUM oboInOwl:hasRelatedSynonym "glycosomal lumen" ;
+    rdfs:subClassOf bc:CCO-MICRO-LUM .
+
+bc:CCO-GLYCO-MEM oboInOwl:hasRelatedSynonym "glycosomal membrane" ;
+    rdfs:subClassOf bc:CCO-MBODY-MEM .
+
+bc:CCO-GLYCOSOME oboInOwl:hasRelatedSynonym "glycosome" ;
+    rdfs:subClassOf bc:CCO-MICROBODY,
+        go:0020015 .
+
+bc:CCO-GLYOX-LUM oboInOwl:hasRelatedSynonym "glyoxysomal lumen" ;
+    rdfs:subClassOf bc:CCO-MICRO-LUM,
+        go:0031908 .
+
+bc:CCO-GLYOX-MEM oboInOwl:hasRelatedSynonym "glyoxysomal membrane" ;
+    rdfs:subClassOf bc:CCO-MBODY-MEM,
+        go:0046861 .
+
+bc:CCO-GLYOXYSOME oboInOwl:hasRelatedSynonym "glyoxysome" ;
+    rdfs:subClassOf bc:CCO-MICROBODY,
+        go:0009514 .
+
+bc:CCO-GOLGI oboInOwl:hasRelatedSynonym "Golgi apparatus",
+        "Golgi complex, Golgi body" ;
+    rdfs:subClassOf bc:CCO-MEM-ORG,
+        go:0005794 .
+
+bc:CCO-GOLGI-CIST-MEM oboInOwl:hasRelatedSynonym "Golgi cisterna membrane" ;
+    rdfs:subClassOf bc:CCO-GOLGI-MEM,
+        go:0032580 .
+
+bc:CCO-GOLGI-ER-VES oboInOwl:hasRelatedSynonym "Golgi-ER transport vesicle" ;
+    rdfs:subClassOf bc:CCO-GOLGI-VES,
+        go:0030142 .
+
+bc:CCO-GOLGI-VES-MEM oboInOwl:hasRelatedSynonym "Golgi-associated vesicle membrane" ;
+    rdfs:subClassOf bc:CCO-GOLGI-MEM,
+        bc:CCO-VESICLE-MEM,
+        go:0030660 .
+
+bc:CCO-INTER-GOLGI-VES oboInOwl:hasRelatedSynonym "inter-Golgi transport vesicle" ;
+    rdfs:subClassOf bc:CCO-GOLGI-VES .
+
+bc:CCO-LATE-END-LUM oboInOwl:hasRelatedSynonym "late endosome lumen" ;
+    rdfs:subClassOf bc:CCO-ENDO-LUM,
+        go:0031906 .
+
+bc:CCO-LATE-ENDO oboInOwl:hasRelatedSynonym "late endosome" ;
+    rdfs:subClassOf bc:CCO-ENDOSOME,
+        go:0005770 .
+
+bc:CCO-LATE-ENDO-MEM oboInOwl:hasRelatedSynonym "late endosome membrane" ;
+    rdfs:subClassOf bc:CCO-ENDO-MEM,
+        go:0031902 .
+
+bc:CCO-LYS-LUM oboInOwl:hasRelatedSynonym "lysosome lumen" ;
+    rdfs:subClassOf bc:CCO-SPACE .
+
+bc:CCO-LYS-MEM oboInOwl:hasRelatedSynonym "lysosomal membrane" ;
+    rdfs:subClassOf bc:CCO-MEMBRANE,
+        go:0005765 .
+
+bc:CCO-LYSOSOME oboInOwl:hasRelatedSynonym "lysosome" ;
+    rdfs:subClassOf bc:CCO-MEM-ORG,
+        go:0005764 .
+
+bc:CCO-MIT oboInOwl:hasRelatedSynonym "mitochondrion" ;
+    rdfs:subClassOf bc:CCO-MEM-ORG,
+        go:0005739 .
+
+bc:CCO-MIT-ENV oboInOwl:hasRelatedSynonym "mitochondrial envelope" ;
+    rdfs:subClassOf bc:CCO-ORGANEL-ENV,
+        go:0005740 .
+
+bc:CCO-MIT-IM-SPC oboInOwl:hasRelatedSynonym "mitochondrial intermembrane space" ;
+    rdfs:subClassOf bc:CCO-SPACE,
+        go:0005758 .
+
+bc:CCO-MIT-IMEM oboInOwl:hasRelatedSynonym "mitochondrial inner membrane" ;
+    rdfs:subClassOf bc:CCO-MIT-MEM,
+        go:0005743 .
+
+bc:CCO-MIT-NUCLEOID oboInOwl:hasRelatedSynonym "mitochondrial nucleoid" ;
+    rdfs:subClassOf bc:CCO-NUCLEOID,
+        go:0042645 .
+
+bc:CCO-MIT-OMEM oboInOwl:hasRelatedSynonym "mitochondrial outer membrane" ;
+    rdfs:subClassOf bc:CCO-MIT-MEM,
+        go:0005741 .
+
+bc:CCO-NUC-ENV oboInOwl:hasRelatedSynonym "nuclear envelope" ;
+    rdfs:subClassOf bc:CCO-ORGANEL-ENV,
+        go:0005635 .
+
+bc:CCO-NUC-IMEM oboInOwl:hasRelatedSynonym "nuclear inner membrane" ;
+    rdfs:subClassOf bc:CCO-NUC-MEM,
+        go:0005637 .
+
+bc:CCO-NUC-LUM oboInOwl:hasRelatedSynonym "nuclear lumen" ;
+    rdfs:subClassOf bc:CCO-SPACE,
+        go:0031981 .
+
+bc:CCO-NUC-OMEM oboInOwl:hasRelatedSynonym "nuclear outer membrane" ;
+    rdfs:subClassOf bc:CCO-NUC-MEM,
+        go:0005640 .
+
+bc:CCO-NUCLEOLUS oboInOwl:hasRelatedSynonym "nucleolus" ;
+    rdfs:subClassOf bc:CCO-NON-MEM-ORG,
+        go:0005730 .
+
+bc:CCO-NUCLEUS oboInOwl:hasRelatedSynonym "nucleus" ;
+    rdfs:subClassOf bc:CCO-MEM-ORG,
+        go:0005634 .
+
+bc:CCO-OILBODY oboInOwl:hasRelatedSynonym "monolayer-surrounded lipid storage body",
+        "oil body",
+        "oleosome",
+        "spherosome" ;
+    rdfs:subClassOf bc:CCO-MEM-ORG,
+        go:0012511 .
+
+bc:CCO-OUT-CCO-IN rdfs:subClassOf bc:CCO-IN,
+        bc:CCO-OUT .
+
+bc:CCO-OUTER-MEM oboInOwl:hasRelatedSynonym "outer membrane (sensu Gram-negative Bacteria)" ;
+    rdfs:subClassOf bc:CCO-OUTER-MEM-DIDERM .
+
+bc:CCO-OUTER-MEM-ACT oboInOwl:hasRelatedSynonym "MOM",
+        "mycobacterial outer membrane",
+        "mycolate outer membrane",
+        "mycomembrane" ;
+    rdfs:subClassOf bc:CCO-OUTER-MEM-DIDERM,
+        go:0036407 .
+
+bc:CCO-PERI-ACT oboInOwl:hasRelatedSynonym "periplasm (sensu Actinobacteria)" ;
+    rdfs:subClassOf bc:CCO-PERIPLASM .
+
+bc:CCO-PERI-BAC oboInOwl:hasRelatedSynonym "periplasm (sensu Gram-negative Bacteria)" ;
+    rdfs:subClassOf bc:CCO-PERIPLASM .
+
+bc:CCO-PERI-FUNGI oboInOwl:hasRelatedSynonym "periplasm (sensu Fungi)" ;
+    rdfs:subClassOf bc:CCO-PERIPLASM .
+
+bc:CCO-PERINUC-SPC oboInOwl:hasRelatedSynonym "nuclear membrane lumen",
+        "perinuclear space" ;
+    rdfs:subClassOf bc:CCO-SPACE,
+        go:0005641 .
+
+bc:CCO-PEROX-LUM oboInOwl:hasRelatedSynonym "peroxisomal lumen" ;
+    rdfs:subClassOf bc:CCO-MICRO-LUM,
+        go:0005782 .
+
+bc:CCO-PEROX-MEM oboInOwl:hasRelatedSynonym "peroxisomal membrane" ;
+    rdfs:subClassOf bc:CCO-MBODY-MEM,
+        go:0005778 .
+
+bc:CCO-PEROXISOME oboInOwl:hasRelatedSynonym "peroxisome" ;
+    rdfs:subClassOf bc:CCO-MICROBODY,
+        go:0005777 .
+
+bc:CCO-PILUS oboInOwl:hasRelatedSynonym "pilus" ;
+    rdfs:subClassOf bc:CCO-CELL-PROJECTION,
+        go:0009289 .
+
+bc:CCO-PLAST-NUCLEOID oboInOwl:hasRelatedSynonym "plastid nucleoid" ;
+    rdfs:subClassOf bc:CCO-NUCLEOID,
+        go:0042646 .
+
+bc:CCO-PM-ANIMAL oboInOwl:hasRelatedSynonym "cell membrane, cytoplasmic membrane, plasmalemma",
+        "plasma membrane (sensu Animalia)" ;
+    rdfs:subClassOf bc:CCO-PLASMA-MEM .
+
+bc:CCO-PM-BAC-ACT oboInOwl:hasRelatedSynonym "inner membrane (sensu Actinobacteria)" ;
+    rdfs:subClassOf bc:CCO-PM-BACTERIA .
+
+bc:CCO-PM-BAC-NEG oboInOwl:hasRelatedSynonym "cell membrane",
+        "cytoplasmic membrane",
+        "inner membrane (sensu Gram-negative Bacteria)",
+        "plasma membrane (sensu Gram-negative Bacteria)",
+        "plasmalemma" ;
+    rdfs:subClassOf bc:CCO-PM-BACTERIA,
+        go:0005886 .
+
+bc:CCO-PM-BAC-POS oboInOwl:hasRelatedSynonym "cell membrane, cytoplasmic membrane, bacteria inner membrane, plasmalemma",
+        "plasma membrane (sensu Gram-positive Bacteria)" ;
+    rdfs:subClassOf bc:CCO-PM-BACTERIA .
+
+bc:CCO-PM-FUNGI oboInOwl:hasRelatedSynonym "cell membrane, cytoplasmic membrane, plasmalemma",
+        "plasma membrane (sensu Fungi)" ;
+    rdfs:subClassOf bc:CCO-PLASMA-MEM .
+
+bc:CCO-PM-PLANT oboInOwl:hasRelatedSynonym "cell membrane, cytoplasmic membrane, plasmalemma",
+        "plasma membrane (sensu Viridiplantae)" ;
+    rdfs:subClassOf bc:CCO-PLASMA-MEM .
+
+bc:CCO-PROT-PLAST oboInOwl:hasRelatedSynonym "proteinoplast" ;
+    rdfs:subClassOf bc:CCO-LEUCOPLAST,
+        go:0031986 .
+
+bc:CCO-RGH-ER-LUM oboInOwl:hasRelatedSynonym "rough ER lumen",
+        "rough endoplasmic reticulum lumen" ;
+    rdfs:subClassOf bc:CCO-ER-LUM,
+        go:0048237 .
+
+bc:CCO-RGH-ER-MEM oboInOwl:hasRelatedSynonym "rough ER membrane",
+        "rough endoplasmic reticulum membrane" ;
+    rdfs:subClassOf bc:CCO-ER-MEM,
+        go:0030867 .
+
+bc:CCO-RIBOSOME oboInOwl:hasRelatedSynonym "ribosome" ;
+    rdfs:subClassOf bc:CCO-NON-MEM-ORG,
+        go:0005840 .
+
+bc:CCO-ROUGH-ER oboInOwl:hasRelatedSynonym "rough ER",
+        "rough endoplasmic reticulum" ;
+    rdfs:subClassOf bc:CCO-ER,
+        go:0005791 .
+
+bc:CCO-S-LAYER oboInOwl:hasRelatedSynonym "S-layer" ;
+    rdfs:subClassOf bc:CCO-SURFACE-MAT,
+        go:0030115 .
+
+bc:CCO-SEC-GRANULE oboInOwl:hasRelatedSynonym "secretory granule",
+        "secretory vesicle" ;
+    rdfs:subClassOf bc:CCO-VESICLE,
+        go:0030141,
+        go:0099503 .
+
+bc:CCO-SEC-GRANULE-LUM oboInOwl:hasRelatedSynonym "secretory granule lumen" ;
+    rdfs:subClassOf bc:CCO-VES-LUM,
+        go:0034774 .
+
+bc:CCO-SEC-GRANULE-MEM oboInOwl:hasRelatedSynonym "secretory granule membrane",
+        "secretory vesicle membrane" ;
+    rdfs:subClassOf bc:CCO-VESICLE-MEM,
+        go:0030667 .
+
+bc:CCO-SENESC-VACUOLE oboInOwl:hasRelatedSynonym "senescence-associated vacuole" ;
+    rdfs:subClassOf bc:CCO-VACUOLE,
+        go:0010282 .
+
+bc:CCO-SMOOTH-ER oboInOwl:hasRelatedSynonym "smooth ER",
+        "smooth endoplasmic reticulum" ;
+    rdfs:subClassOf bc:CCO-ER,
+        go:0005790 .
+
+bc:CCO-SMTH-ER-LUM oboInOwl:hasRelatedSynonym "smooth ER lumen",
+        "smooth endoplasmic reticulum lumen" ;
+    rdfs:subClassOf bc:CCO-ER-LUM,
+        go:0048238 .
+
+bc:CCO-SMTH-ER-MEM oboInOwl:hasRelatedSynonym "smooth ER membrane",
+        "smooth endoplasmic reticulum membrane" ;
+    rdfs:subClassOf bc:CCO-ER-MEM,
+        go:0030868 .
+
+bc:CCO-SPORE rdfs:subClassOf bc:CCO-SUPER-COMP .
+
+bc:CCO-STORAGE-VAC oboInOwl:hasRelatedSynonym "storage vacuole" ;
+    rdfs:subClassOf bc:CCO-VACUOLE,
+        go:0000322 .
+
+bc:CCO-SYN-VES oboInOwl:hasRelatedSynonym "synaptic vesicle" ;
+    rdfs:subClassOf bc:CCO-VESICLE,
+        go:0008021 .
+
+bc:CCO-SYN-VES-LUM oboInOwl:hasRelatedSynonym "synaptic vesicle lumen" ;
+    rdfs:subClassOf bc:CCO-VES-LUM,
+        go:0034592 .
+
+bc:CCO-SYN-VES-MEM oboInOwl:hasRelatedSynonym "synaptic vesicle membrane" ;
+    rdfs:subClassOf bc:CCO-VESICLE-MEM,
+        go:0030672 .
+
+bc:CCO-THY-CYA oboInOwl:hasRelatedSynonym "thylakoid (sensu Cyanobacteria)" ;
+    rdfs:subClassOf bc:CCO-MEM-ORG .
+
+bc:CCO-THY-LUM-CYA oboInOwl:hasRelatedSynonym "thylakoid lumen (sensu Cyanobacteria)" ;
+    rdfs:subClassOf bc:CCO-THY-LUM .
+
+bc:CCO-THY-MEM-CYA oboInOwl:hasRelatedSynonym "thylakoid membrane (sensu Cyanobacteria)" ;
+    rdfs:subClassOf bc:CCO-THY-MEM .
+
+bc:CCO-TOGA oboInOwl:hasRelatedSynonym "toga" ;
+    rdfs:subClassOf bc:CCO-OUTER-MEM-DIDERM .
+
+bc:CCO-TR-GOLGI-VES oboInOwl:hasRelatedSynonym "trans-Golgi network transport vesicle" ;
+    rdfs:subClassOf bc:CCO-GOLGI-VES,
+        go:0030140 .
+
+bc:CCO-UNKNOWN-SPACE oboInOwl:hasRelatedSynonym "unknown space" ;
+    rdfs:subClassOf bc:CCO-SPACE .
+
+bc:CCO-ENDOCYT-VES-LUM oboInOwl:hasRelatedSynonym "endocytic vesicle lumen" ;
+    rdfs:subClassOf bc:CCO-VES-LUM,
+        go:0071682 .
+
+bc:CCO-EXTRACELLULAR oboInOwl:hasRelatedSynonym "extracellular space" ;
+    rdfs:subClassOf bc:CCO-SPACE,
+        go:0005615 .
+
+bc:CCO-GOLGI-LUM oboInOwl:hasRelatedSynonym "Golgi lumen" ;
+    rdfs:subClassOf bc:CCO-SPACE,
+        go:0005796 .
+
+bc:CCO-IN rdfs:subClassOf go:0110165 .
+
+bc:CCO-MIT-LUM oboInOwl:hasRelatedSynonym "mitochondrial lumen" ;
+    rdfs:subClassOf bc:CCO-SPACE,
+        go:0005759 .
+
+bc:CCO-NON-MEMBRANE-BARRIER oboInOwl:hasRelatedSynonym "non-membrane barrier" ;
+    rdfs:subClassOf bc:CCO-BARRIER .
+
+bc:CCO-OUT rdfs:subClassOf go:0110165 .
+
+bc:CCO-VAC-LUM oboInOwl:hasRelatedSynonym "vacuolar lumen" ;
+    rdfs:subClassOf bc:CCO-SPACE,
+        go:0005775 .
+
+bc:CCO-VAC-MEM oboInOwl:hasRelatedSynonym "vacuolar membrane" ;
+    rdfs:subClassOf bc:CCO-MEMBRANE,
+        go:0005774 .
+
+bc:CCO-BARRIER oboInOwl:hasRelatedSynonym "barrier" ;
+    rdfs:subClassOf go:0110165 .
+
+bc:CCO-CE-BAC oboInOwl:hasRelatedSynonym "cell envelope (sensu Bacteria)" ;
+    rdfs:subClassOf bc:CCO-ENVELOPE .
+
+bc:CCO-CELL-PROJECTION oboInOwl:hasRelatedSynonym "cell projection" ;
+    rdfs:subClassOf bc:CCO-NON-MEM-ORG,
+        go:0042995 .
+
+bc:CCO-CHLOR-MEM oboInOwl:hasRelatedSynonym "chloroplast membrane" ;
+    rdfs:subClassOf bc:CCO-PLASTID-MEM,
+        go:0031969 .
+
+bc:CCO-CHLOR-THY oboInOwl:hasRelatedSynonym "chloroplast thylakoid" ;
+    rdfs:subClassOf bc:CCO-SUBORG-CMPT,
+        go:0009534 .
+
+bc:CCO-CHROM-MEM oboInOwl:hasRelatedSynonym "chromoplast membrane" ;
+    rdfs:subClassOf bc:CCO-PLASTID-MEM,
+        go:0046862 .
+
+bc:CCO-CW-PLANT oboInOwl:hasRelatedSynonym "cell wall (sensu Viridiplantae)" ;
+    rdfs:subClassOf bc:CCO-CELLWALL .
+
+bc:CCO-ENDO-LUM oboInOwl:hasRelatedSynonym "endosome lumen" ;
+    rdfs:subClassOf bc:CCO-SPACE,
+        go:0031904 .
+
+bc:CCO-ENDO-MEM oboInOwl:hasRelatedSynonym "endosome membrane" ;
+    rdfs:subClassOf bc:CCO-MEMBRANE,
+        go:0010008 .
+
+bc:CCO-ENDOSOME oboInOwl:hasRelatedSynonym "endosome" ;
+    rdfs:subClassOf bc:CCO-MEM-ORG,
+        go:0005768 .
+
+bc:CCO-ENVELOPE oboInOwl:hasRelatedSynonym "envelope" ;
+    rdfs:subClassOf go:0031975,
+        go:0110165 .
+
+bc:CCO-ER oboInOwl:hasRelatedSynonym "ER",
+        "endoplasmic reticulum" ;
+    rdfs:subClassOf bc:CCO-MEM-ORG,
+        go:0005783 .
+
+bc:CCO-ER-LUM oboInOwl:hasRelatedSynonym "ER lumen",
+        "endoplasmic reticulum lumen" ;
+    rdfs:subClassOf bc:CCO-SPACE,
+        go:0005788 .
+
+bc:CCO-ER-MEM oboInOwl:hasRelatedSynonym "ER membrane",
+        "endoplasmic reticulum membrane" ;
+    rdfs:subClassOf bc:CCO-MEMBRANE,
+        go:0005789 .
+
+bc:CCO-GOLGI-MEM oboInOwl:hasRelatedSynonym "Golgi membrane" ;
+    rdfs:subClassOf bc:CCO-MEMBRANE,
+        go:0000139 .
+
+bc:CCO-MIT-MEM oboInOwl:hasRelatedSynonym "mitochondrial membrane" ;
+    rdfs:subClassOf bc:CCO-MEMBRANE,
+        go:0031966 .
+
+bc:CCO-NUC-MEM oboInOwl:hasRelatedSynonym "nuclear membrane" ;
+    rdfs:subClassOf bc:CCO-MEMBRANE,
+        go:0031965 .
+
+bc:CCO-ORGANELLE oboInOwl:hasRelatedSynonym "organelle" ;
+    rdfs:subClassOf go:0043226,
+        go:0110165 .
+
+bc:CCO-PLAST-IM-SPC oboInOwl:hasRelatedSynonym "plastid intermembrane space" ;
+    rdfs:subClassOf bc:CCO-SPACE,
+        go:0009529 .
+
+bc:CCO-PLAST-IMEM oboInOwl:hasRelatedSynonym "plastid inner membrane" ;
+    rdfs:subClassOf bc:CCO-PLASTID-MEM,
+        go:0009528 .
+
+bc:CCO-PLAST-OMEM oboInOwl:hasRelatedSynonym "plastid outer membrane" ;
+    rdfs:subClassOf bc:CCO-PLASTID-MEM,
+        go:0009527 .
+
+bc:CCO-PLASTID-ENV oboInOwl:hasRelatedSynonym "plastid envelope" ;
+    rdfs:subClassOf bc:CCO-ORGANEL-ENV,
+        go:0009526 .
+
+bc:CCO-PLASTID-STR oboInOwl:hasRelatedSynonym "plastid stroma" ;
+    rdfs:subClassOf bc:CCO-SPACE,
+        go:0009532 .
+
+bc:CCO-SUBORG-CMPT oboInOwl:hasRelatedSynonym "suborganelle compartment" ;
+    rdfs:subClassOf go:0031984,
+        go:0110165 .
+
+bc:CCO-SUPER-COMP oboInOwl:hasRelatedSynonym "super component" ;
+    rdfs:subClassOf go:0110165 .
+
+bc:CCO-THY-LUM oboInOwl:hasRelatedSynonym "thylakoid lumen" ;
+    rdfs:subClassOf bc:CCO-SPACE,
+        go:0031977 .
+
+bc:CCO-THY-MEM oboInOwl:hasRelatedSynonym "thylakoid membrane" ;
+    rdfs:subClassOf bc:CCO-MEMBRANE,
+        go:0042651 .
+
+bc:CCO-CELLWALL oboInOwl:hasRelatedSynonym "cell wall" ;
+    rdfs:subClassOf bc:CCO-SURFACE-MAT,
+        go:0005618 .
+
+bc:CCO-CW-BAC oboInOwl:hasRelatedSynonym "cell wall (sensu Bacteria)" ;
+    rdfs:subClassOf bc:CCO-CELLWALL .
+
+bc:CCO-GOLGI-CIST oboInOwl:hasRelatedSynonym "Golgi cisterna" ;
+    rdfs:subClassOf bc:CCO-SUBORG-CMPT,
+        go:0031985 .
+
+bc:CCO-LEUCOPLAST oboInOwl:hasRelatedSynonym "leucoplast" ;
+    rdfs:subClassOf bc:CCO-PLASTID,
+        go:0009516 .
+
+bc:CCO-MBODY-MEM oboInOwl:hasRelatedSynonym "microbody membrane" ;
+    rdfs:subClassOf bc:CCO-MEMBRANE,
+        go:0031903 .
+
+bc:CCO-MICRO-LUM oboInOwl:hasRelatedSynonym "microbody lumen" ;
+    rdfs:subClassOf bc:CCO-SPACE,
+        go:0031907 .
+
+bc:CCO-MICROBODY oboInOwl:hasRelatedSynonym "microbody" ;
+    rdfs:subClassOf bc:CCO-MEM-ORG,
+        go:0042579 .
+
+bc:CCO-NUCLEOID oboInOwl:hasRelatedSynonym "nucleoid" ;
+    rdfs:subClassOf bc:CCO-NON-MEM-ORG,
+        go:0009295 .
+
+bc:CCO-ORGANEL-ENV oboInOwl:hasRelatedSynonym "organellar envelope",
+        "organelle envelope" ;
+    rdfs:subClassOf bc:CCO-ENVELOPE,
+        go:0031967 .
+
+bc:CCO-OUTER-MEM-DIDERM oboInOwl:hasRelatedSynonym "outer membrane (in diderm bacteria)" ;
+    rdfs:subClassOf bc:CCO-MEMBRANE .
+
+bc:CCO-PERIPLASM oboInOwl:hasRelatedSynonym "periplasm" ;
+    rdfs:subClassOf bc:CCO-SPACE,
+        go:0042597 .
+
+bc:CCO-PM-BACTERIA oboInOwl:hasRelatedSynonym "cell membrane",
+        "cytoplasmic membrane",
+        "plasma membrane (sensu Bacteria)",
+        "plasmalemma" ;
+    rdfs:subClassOf bc:CCO-PLASMA-MEM,
+        go:0005886 .
+
+bc:CCO-SURFACE-MAT oboInOwl:hasRelatedSynonym "cell surface matrix",
+        "proteinaceous extracellular matrix" ;
+    rdfs:subClassOf go:0031012,
+        go:0110165 .
+
+bc:CCO-VES-LUM oboInOwl:hasRelatedSynonym "vesicle lumen" ;
+    rdfs:subClassOf bc:CCO-SPACE,
+        go:0031983 .
+
+bc:CCO-CYTOSOL oboInOwl:hasRelatedSynonym "cytosol" ;
+    rdfs:subClassOf bc:CCO-SPACE,
+        go:0005829 .
+
+bc:CCO-GOLGI-VES oboInOwl:hasRelatedSynonym "Golgi vesicle" ;
+    rdfs:subClassOf bc:CCO-VESICLE,
+        go:0005798 .
+
+bc:CCO-PLASMA-MEM oboInOwl:hasRelatedSynonym "cell membrane",
+        "cytoplasmic membrane",
+        "plasma membrane",
+        "plasmalemma" ;
+    rdfs:subClassOf bc:CCO-MEMBRANE,
+        go:0005886 .
+
+bc:CCO-PLASTID oboInOwl:hasRelatedSynonym "plastid" ;
+    rdfs:subClassOf bc:CCO-MEM-ORG,
+        go:0009536 .
+
+bc:CCO-PLASTID-MEM oboInOwl:hasRelatedSynonym "plastid membrane" ;
+    rdfs:subClassOf bc:CCO-MEMBRANE,
+        go:0042170 .
+
+bc:CCO-VACUOLE oboInOwl:hasRelatedSynonym "vacuole" ;
+    rdfs:subClassOf bc:CCO-MEM-ORG,
+        go:0005773 .
+
+bc:CCO-VESICLE oboInOwl:hasRelatedSynonym "cytoplasmic membrane-bounded vesicle",
+        "vesicle" ;
+    rdfs:subClassOf bc:CCO-MEM-ORG,
+        go:0031410,
+        go:0031982 .
+
+bc:CCO-VESICLE-MEM oboInOwl:hasRelatedSynonym "vesicle membrane" ;
+    rdfs:subClassOf bc:CCO-MEMBRANE,
+        go:0012506 .
+
+bc:CCO-NON-MEM-ORG oboInOwl:hasRelatedSynonym "non-membrane-bound organelle" ;
+    rdfs:subClassOf bc:CCO-ORGANELLE .
+
+bc:CCO-MEM-ORG oboInOwl:hasRelatedSynonym "membrane-bound organelle" ;
+    rdfs:subClassOf bc:CCO-ORGANELLE .
+
+bc:CCO-MEMBRANE oboInOwl:hasRelatedSynonym "membrane" ;
+    rdfs:subClassOf bc:CCO-BARRIER,
+        go:0016020 .
+
+bc:CCO-SPACE oboInOwl:hasRelatedSynonym "space" ;
+    rdfs:subClassOf go:0110165 .
+

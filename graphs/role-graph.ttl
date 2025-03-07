@@ -1,0 +1,1039 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <http://www.geneontology.org/formats/oboInOwl#> .
+@prefix ns2: <http://purl.obolibrary.org/obo/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ns2:BFO_0000050 a owl:ObjectProperty,
+        owl:TransitiveProperty ;
+    rdfs:label "part of",
+        "part of"@en ;
+    ns2:IAO_0000111 "is part of"@en ;
+    ns2:IAO_0000112 "my brain is part of my body (continuant parthood, two material entities)"@en,
+        "my stomach cavity is part of my stomach (continuant parthood, immaterial entity is part of material entity)"@en,
+        "this day is part of this year (occurrent parthood)"@en ;
+    ns2:IAO_0000115 "a core relation that holds between a part and its whole"@en ;
+    ns2:IAO_0000116 "Everything is part of itself. Any part of any part of a thing is itself part of that thing. Two distinct things cannot be part of each other."@en,
+        "Occurrents are not subject to change and so parthood between occurrents holds for all the times that the part exists. Many continuants are subject to change, so parthood between continuants will only hold at certain times, but this is difficult to specify in OWL. See http://purl.obolibrary.org/obo/ro/docs/temporal-semantics/"@en,
+        """Parthood requires the part and the whole to have compatible classes: only an occurrent can be part of an occurrent; only a process can be part of a process; only a continuant can be part of a continuant; only an independent continuant can be part of an independent continuant; only an immaterial entity can be part of an immaterial entity; only a specifically dependent continuant can be part of a specifically dependent continuant; only a generically dependent continuant can be part of a generically dependent continuant. (This list is not exhaustive.)
+
+A continuant cannot be part of an occurrent: use 'participates in'. An occurrent cannot be part of a continuant: use 'has participant'. A material entity cannot be part of an immaterial entity: use 'has location'. A specifically dependent continuant cannot be part of an independent continuant: use 'inheres in'. An independent continuant cannot be part of a specifically dependent continuant: use 'bearer of'."""@en ;
+    ns2:IAO_0000118 "part_of"@en ;
+    ns2:RO_0001900 ns2:RO_0001901 ;
+    ns2:RO_0040042 ns2:BFO_0000002,
+        ns2:BFO_0000003,
+        ns2:BFO_0000004,
+        ns2:BFO_0000017,
+        ns2:BFO_0000019,
+        ns2:BFO_0000020,
+        ns2:BFO_0000031 ;
+    ns1:hasDbXref "BFO:0000050" ;
+    ns1:hasOBONamespace "external" ;
+    ns1:id "part_of" ;
+    ns1:inSubset ns2:valid_for_go_annotation_extension,
+        ns2:valid_for_go_gp2term,
+        ns2:valid_for_go_ontology,
+        ns2:valid_for_gocam ;
+    ns1:shorthand "part_of" ;
+    rdfs:seeAlso <http://ontologydesignpatterns.org/wiki/Community:Parts_and_Collections>,
+        <http://ontologydesignpatterns.org/wiki/Submissions:PartOf>,
+        "http://www.obofoundry.org/ro/#OBO_REL:part_of" ;
+    rdfs:subPropertyOf ns2:RO_0002131 ;
+    owl:inverseOf ns2:BFO_0000051 .
+
+ns2:BFO_0000066 a owl:ObjectProperty ;
+    rdfs:label "occurs in" ;
+    ns1:hasDbXref "BFO:0000066" ;
+    ns1:hasOBONamespace "external" ;
+    ns1:id "occurs_in" ;
+    ns1:shorthand "occurs_in" ;
+    owl:propertyChainAxiom [ ] .
+
+ns2:RO_0000087 a owl:ObjectProperty ;
+    rdfs:label "has role" ;
+    ns1:hasDbXref "RO:0000087" ;
+    ns1:hasOBONamespace "chebi_ontology" ;
+    ns1:id "has_role" ;
+    ns1:is_cyclic false ;
+    ns1:is_transitive false ;
+    ns1:shorthand "has_role" .
+
+ns2:RO_0001025 a owl:ObjectProperty,
+        owl:TransitiveProperty ;
+    rdfs:label "located in"@en ;
+    ns2:IAO_0000111 "located in"@en ;
+    ns2:IAO_0000112 "my brain is located in my head"@en,
+        "this rat is located in this cage"@en ;
+    ns2:IAO_0000115 "a relation between two independent continuants, the target and the location, in which the target is entirely within the location"@en ;
+    ns2:IAO_0000116 "Location as a relation between instances: The primitive instance-level relation c located_in r at t reflects the fact that each continuant is at any given time associated with exactly one spatial region, namely its exact location. Following we can use this relation to define a further instance-level location relation - not between a continuant and the region which it exactly occupies, but rather between one continuant and another. c is located in c1, in this sense, whenever the spatial region occupied by c is part_of the spatial region occupied by c1.    Note that this relation comprehends both the relation of exact location between one continuant and another which obtains when r and r1 are identical (for example, when a portion of fluid exactly fills a cavity), as well as those sorts of inexact location relations which obtain, for example, between brain and head or between ovum and uterus"@en,
+        "Most location relations will only hold at certain times, but this is difficult to specify in OWL. See http://purl.obolibrary.org/obo/ro/docs/temporal-semantics/"@en ;
+    ns2:IAO_0000118 "located_in"@en ;
+    ns2:RO_0001900 ns2:RO_0001901 ;
+    dc:source "http://www.obofoundry.org/ro/#OBO_REL:located_in" ;
+    ns1:inSubset ns2:valid_for_go_gp2term ;
+    rdfs:domain ns2:BFO_0000004 .
+
+ns2:RO_0002092 a owl:ObjectProperty,
+        owl:TransitiveProperty ;
+    rdfs:label "happens during",
+        "happens during"@en ;
+    ns2:IAO_0000117 "David Osumi-Sutherland" ;
+    ns2:IAO_0000118 "d",
+        "during" ;
+    ns2:IAO_0000412 ns2:ro.owl ;
+    ns1:hasDbXref "RO:0002092" ;
+    ns1:hasOBONamespace "external" ;
+    ns1:id "happens_during" ;
+    ns1:inSubset <http://purl.oboInOwllibrary.org/oboInOwl/ro/subsets#ro-eco>,
+        <http://purl.oboInOwllibrary.org/oboInOwl/valid_for_go_annotation_extension>,
+        <http://purl.oboInOwllibrary.org/oboInOwl/valid_for_go_ontology>,
+        <http://purl.oboInOwllibrary.org/oboInOwl/valid_for_gocam>,
+        <http://purl.obolibrary.org/obo/ro/subsets#ro-eco>,
+        ns2:valid_for_go_annotation_extension,
+        ns2:valid_for_go_ontology,
+        ns2:valid_for_gocam ;
+    ns1:shorthand "happens_during" ;
+    rdfs:comment "X happens_during Y iff: (start(Y) before_or_simultaneous_with start(X)) AND (end(X) before_or_simultaneous_with end(Y))"@en ;
+    rdfs:subPropertyOf ns2:RO_0002091,
+        ns2:RO_0002093 .
+
+ns2:RO_0002160 a owl:ObjectProperty .
+
+ns2:RO_0002200 a owl:ObjectProperty ;
+    rdfs:label "has phenotype"@en ;
+    ns2:IAO_0000114 ns2:IAO_0000125 ;
+    ns2:IAO_0000115 "A relationship that holds between a biological entity and a phenotype. Here a phenotype is construed broadly as any kind of quality of an organism part, a collection of these qualities, or a change in quality or qualities (e.g. abnormally increased temperature). The subject of this relationship can be an organism (where the organism has the phenotype, i.e. the qualities inhere in parts of this organism), a genomic entity such as a gene or genotype (if modifications of the gene or the genotype causes the phenotype), or a condition such as a disease (such that if the condition inheres in an organism, then the organism has the phenotype)." ;
+    ns2:IAO_0000117 "Chris Mungall"@en ;
+    ns1:inSubset <http://purl.obolibrary.org/obo/ro/subsets#ro-eco> ;
+    rdfs:subPropertyOf ns2:RO_0016001 .
+
+ns2:RO_0002212 a owl:ObjectProperty ;
+    rdfs:label "negatively regulates",
+        "negatively regulates"@en ;
+    ns2:IAO_0000115 "Process(P1) negatively regulates process(P2) iff: P1 terminates P2, or P1 descreases the the frequency of initiation of P2 or the magnitude or rate of output of P2." ;
+    ns2:IAO_0000117 "Chris Mungall"@en ;
+    ns2:IAO_0000119 <http://purl.obolibrary.org/obo/ro/docs/causal-relations> ;
+    ns2:IAO_0000412 ns2:ro.owl ;
+    ns2:IAO_0000589 "negatively regulates (process to process)" ;
+    ns2:RO_0004050 ns2:RO_0002211 ;
+    ns1:hasDbXref "RO:0002212" ;
+    ns1:hasOBONamespace "external" ;
+    ns1:id "negatively_regulates" ;
+    ns1:inSubset <http://purl.oboInOwllibrary.org/oboInOwl/valid_for_go_annotation_extension>,
+        <http://purl.oboInOwllibrary.org/oboInOwl/valid_for_go_ontology>,
+        <http://purl.oboInOwllibrary.org/oboInOwl/valid_for_gocam>,
+        ns2:valid_for_go_annotation_extension,
+        ns2:valid_for_go_ontology,
+        ns2:valid_for_gocam ;
+    ns1:shorthand "negatively_regulates" ;
+    rdfs:subPropertyOf ns2:RO_0002211,
+        ns2:RO_0002305 .
+
+ns2:RO_0002213 a owl:ObjectProperty,
+        owl:TransitiveProperty ;
+    rdfs:label "positively regulates",
+        "positively regulates"@en ;
+    ns2:IAO_0000115 "Process(P1) postively regulates process(P2) iff: P1 initiates P2, or P1 increases the the frequency of initiation of P2 or the magnitude or rate of output of P2." ;
+    ns2:IAO_0000117 "Chris Mungall"@en ;
+    ns2:IAO_0000119 <http://purl.obolibrary.org/obo/ro/docs/causal-relations> ;
+    ns2:IAO_0000412 ns2:ro.owl ;
+    ns2:IAO_0000589 "positively regulates (process to process)" ;
+    ns2:RO_0004049 ns2:RO_0002211 ;
+    ns1:hasDbXref "RO:0002213" ;
+    ns1:hasOBONamespace "external" ;
+    ns1:id "positively_regulates" ;
+    ns1:inSubset <http://purl.oboInOwllibrary.org/oboInOwl/valid_for_go_annotation_extension>,
+        <http://purl.oboInOwllibrary.org/oboInOwl/valid_for_go_ontology>,
+        <http://purl.oboInOwllibrary.org/oboInOwl/valid_for_gocam>,
+        ns2:valid_for_go_annotation_extension,
+        ns2:valid_for_go_ontology,
+        ns2:valid_for_gocam ;
+    ns1:shorthand "positively_regulates" ;
+    rdfs:subPropertyOf ns2:RO_0002211,
+        ns2:RO_0002304 ;
+    owl:propertyChainAxiom [ ] .
+
+ns2:RO_0002233 a owl:ObjectProperty ;
+    rdfs:label "has input"@en ;
+    ns2:IAO_0000114 ns2:IAO_0000125 ;
+    ns2:IAO_0000115 "p has input c iff: p is a process, c is a material entity, c is a participant in p, c is present at the start of p, and the state of c is modified during p." ;
+    ns2:IAO_0000117 "Chris Mungall" ;
+    ns2:IAO_0000118 "consumes" ;
+    ns1:inSubset <http://purl.obolibrary.org/obo/ro/subsets#ro-eco>,
+        ns2:valid_for_go_annotation_extension,
+        ns2:valid_for_go_ontology,
+        ns2:valid_for_gocam ;
+    rdfs:domain ns2:BFO_0000015 ;
+    rdfs:subPropertyOf ns2:RO_0000057 .
+
+ns2:RO_0002234 a owl:ObjectProperty ;
+    rdfs:label "has output",
+        "has output"@en ;
+    ns2:IAO_0000114 ns2:IAO_0000125 ;
+    ns2:IAO_0000115 "p has output c iff c is a participant in p, c is present at the end of p, and c is not present in the same state at the beginning of p." ;
+    ns2:IAO_0000117 "Chris Mungall" ;
+    ns2:IAO_0000118 "produces" ;
+    ns1:hasDbXref "RO:0002234" ;
+    ns1:hasOBONamespace "external" ;
+    ns1:id "has_output" ;
+    ns1:inSubset <http://purl.obolibrary.org/obo/ro/subsets#ro-eco>,
+        ns2:valid_for_go_annotation_extension,
+        ns2:valid_for_go_ontology,
+        ns2:valid_for_gocam ;
+    ns1:shorthand "has_output" ;
+    rdfs:subPropertyOf ns2:RO_0000057 .
+
+ns2:RO_0002325 a owl:ObjectProperty ;
+    rdfs:label "colocalizes with"@en ;
+    ns2:IAO_0000112 "Clp1p relocalizes from the nucleolus to the spindle and site of cell division; i.e. it is associated transiently with the spindle pole body and the contractile ring (evidence from GFP fusion). Clp1p colocalizes_with spindle pole body (GO:0005816) and contractile ring (GO:0005826)" ;
+    ns2:IAO_0000115 "a colocalizes_with b if and only if  a is transiently or peripherally associated with b[GO]." ;
+    ns2:IAO_0000117 "Chris Mungall" ;
+    ns2:IAO_0000232 "In the context of the Gene Ontology, colocalizes_with may be used for annotating to cellular component terms[GO]" ;
+    dcterms:creator "Gene Ontology Consortium" ;
+    ns1:inSubset ns2:valid_for_go_gp2term ;
+    rdfs:domain ns2:BFO_0000040 ;
+    rdfs:subPropertyOf ns2:RO_0002323 .
+
+ns2:RO_0002326 a owl:ObjectProperty ;
+    rdfs:label "contributes to"@en ;
+    ns2:IAO_0000112 "ATP citrate lyase (ACL) in Arabidopsis: it is a heterooctamer, composed of two types of subunits, ACLA and ACLB in a A(4)B(4) stoichiometry. Neither of the subunits expressed alone give ACL activity, but co-expression results in ACL activity. Both subunits contribute_to the ATP citrate lyase activity.",
+        "Subunits of nuclear RNA polymerases: none of the individual subunits have RNA polymerase activity, yet all of these subunits contribute_to DNA-dependent RNA polymerase activity.",
+        "eIF2: has three subunits (alpha, beta, gamma); one binds GTP; one binds RNA; the whole complex binds the ribosome (all three subunits are required for ribosome binding). So one subunit is annotated to GTP binding and one to RNA binding without qualifiers, and all three stand in the contributes_to relationship to \"ribosome binding\". And all three are part_of an eIF2 complex" ;
+    ns2:IAO_0000116 """We would like to say
+
+if and only if
+ exists c', p'
+  c part_of c' and c' capable_of p
+   and
+  c capable_of p' and p' part_of p
+then
+ c contributes_to p
+
+However, this is not possible in OWL. We instead make this relation a sub-relation of the two chains, which gives us the inference in the one direction.""" ;
+    ns2:IAO_0000117 "Chris Mungall" ;
+    ns2:IAO_0000232 "In the context of the Gene Ontology, contributes_to may be used only with classes from the molecular function ontology. " ;
+    ns1:inSubset ns2:valid_for_go_gp2term ;
+    rdfs:subPropertyOf ns2:RO_0002216,
+        ns2:RO_0002329 .
+
+ns2:RO_0002327 a owl:ObjectProperty ;
+    rdfs:label "enables"@en ;
+    ns2:IAO_0000112 "a particular instances of akt-2 enables some instance of protein kinase activity" ;
+    ns2:IAO_0000117 "Chris Mungall" ;
+    ns2:IAO_0000118 "catalyzes",
+        "executes",
+        "has",
+        "is catalyzing",
+        "is executing" ;
+    ns2:IAO_0000232 "This relation differs from the parent relation 'capable of' in that the parent is weaker and only expresses a capability that may not be actually realized, whereas this relation is always realized." ;
+    ns1:inSubset ns2:valid_for_go_gp2term ;
+    rdfs:subPropertyOf ns2:RO_0002215 .
+
+ns2:RO_0002331 a owl:ObjectProperty ;
+    rdfs:label "involved in"@en ;
+    ns2:IAO_0000115 "c involved_in p if and only if c enables some process p', and p' is part of p" ;
+    ns2:IAO_0000117 "Chris Mungall" ;
+    ns2:IAO_0000118 "actively involved in",
+        "enables part of" ;
+    rdfs:seeAlso <http://wiki.geneontology.org/index.php/Involved_in> ;
+    rdfs:subPropertyOf ns2:RO_0000056,
+        ns2:RO_0002431 .
+
+ns2:RO_0002335 a owl:ObjectProperty ;
+    rdfs:label "negatively regulated by",
+        "negatively regulated by"@en ;
+    ns2:IAO_0000115 "inverse of negatively regulates" ;
+    ns2:IAO_0000117 "Chris Mungall" ;
+    ns1:hasDbXref "RO:0002335" ;
+    ns1:hasOBONamespace "external" ;
+    ns1:id "negatively_regulated_by" ;
+    ns1:inSubset ns2:RO_0002259 ;
+    ns1:shorthand "negatively_regulated_by" ;
+    rdfs:subPropertyOf ns2:RO_0002334 .
+
+ns2:RO_0002336 a owl:ObjectProperty ;
+    rdfs:label "positively regulated by",
+        "positively regulated by"@en ;
+    ns2:IAO_0000115 "inverse of positively regulates" ;
+    ns2:IAO_0000117 "Chris Mungall" ;
+    ns1:hasDbXref "RO:0002336" ;
+    ns1:hasOBONamespace "external" ;
+    ns1:id "positively_regulated_by" ;
+    ns1:inSubset ns2:RO_0002259 ;
+    ns1:shorthand "positively_regulated_by" ;
+    rdfs:subPropertyOf ns2:RO_0002334 .
+
+ns2:RO_0002432 a owl:ObjectProperty ;
+    rdfs:label "is active in" ;
+    ns2:IAO_0000112 "A protein that enables activity in a cytosol." ;
+    ns2:IAO_0000115 "c executes activity in d if and only if c enables p and p occurs_in d.  Assuming no action at a distance by gene products, if a gene product enables (is capable of) a process that occurs in some structure, it must have at least some part in that structure." ;
+    ns2:IAO_0000117 "Chris Mungall" ;
+    ns2:IAO_0000118 "executes activity in" ;
+    ns1:hasExactSynonym "enables activity in" ;
+    rdfs:comment "" ;
+    rdfs:subPropertyOf ns2:RO_0002131,
+        ns2:RO_0002328 .
+
+ns2:RO_0004009 a owl:ObjectProperty ;
+    rdfs:label "has primary input" ;
+    ns1:hasDbXref "RO:0004009" ;
+    ns1:hasOBONamespace "external" ;
+    ns1:id "has_primary_input" ;
+    ns1:shorthand "has_primary_input" .
+
+ns2:RO_0004034 a owl:ObjectProperty ;
+    rdfs:label "acts upstream of, positive effect" ;
+    ns2:IAO_0000115 "c 'acts upstream of, positive effect' p if c is enables f, and f is causally upstream of p, and the direction of f is positive" ;
+    ns2:RO_0004049 ns2:RO_0002263 ;
+    ns1:created_by "cjm" ;
+    ns1:creation_date "2018-01-26T23:53:14+00:00"^^xsd:dateTime ;
+    ns1:inSubset ns2:valid_for_go_gp2term ;
+    rdfs:seeAlso <http://wiki.geneontology.org/index.php/Acts_upstream_of,_positive_effect> ;
+    rdfs:subPropertyOf ns2:RO_0002263,
+        ns2:RO_0004032 .
+
+ns2:RO_0004035 a owl:ObjectProperty ;
+    rdfs:label "acts upstream of, negative effect" ;
+    ns2:IAO_0000115 "c 'acts upstream of, negative effect' p if c is enables f, and f is causally upstream of p, and the direction of f is negative" ;
+    ns2:RO_0004050 ns2:RO_0002263 ;
+    ns1:created_by "cjm" ;
+    ns1:creation_date "2018-01-26T23:53:22+00:00"^^xsd:dateTime ;
+    ns1:inSubset ns2:valid_for_go_gp2term ;
+    rdfs:seeAlso <http://wiki.geneontology.org/index.php/Acts_upstream_of,_negative_effect> ;
+    rdfs:subPropertyOf ns2:RO_0002263,
+        ns2:RO_0004033 .
+
+<http://purl.obolibrary.org/obo/chebi#has_functional_parent> a owl:ObjectProperty ;
+    rdfs:label "has functional parent" ;
+    ns1:hasOBONamespace "chebi_ontology" ;
+    ns1:id "has_functional_parent" ;
+    ns1:is_cyclic false ;
+    ns1:is_transitive false .
+
+<http://purl.obolibrary.org/obo/chebi#has_major_microspecies_at_pH_7_3> a owl:ObjectProperty ;
+    rdfs:label "has major microspecies at pH 7.3" ;
+    ns1:hasOBONamespace "chebi_ontology" ;
+    ns1:id "has_major_microspecies_at_pH_7_3" ;
+    ns1:is_cyclic true ;
+    ns1:is_transitive false .
+
+<http://purl.obolibrary.org/obo/chebi#has_parent_hydride> a owl:ObjectProperty ;
+    rdfs:label "has parent hydride" ;
+    ns1:hasOBONamespace "chebi_ontology" ;
+    ns1:id "has_parent_hydride" ;
+    ns1:is_cyclic false ;
+    ns1:is_transitive false .
+
+<http://purl.obolibrary.org/obo/chebi#is_conjugate_acid_of> a owl:ObjectProperty ;
+    rdfs:label "is conjugate acid of" ;
+    ns1:hasOBONamespace "chebi_ontology" ;
+    ns1:id "is_conjugate_acid_of" ;
+    ns1:is_cyclic true ;
+    ns1:is_transitive false ;
+    owl:inverseOf <http://purl.obolibrary.org/obo/chebi#is_conjugate_base_of> .
+
+<http://purl.obolibrary.org/obo/chebi#is_enantiomer_of> a owl:ObjectProperty ;
+    rdfs:label "is enantiomer of" ;
+    ns1:hasOBONamespace "chebi_ontology" ;
+    ns1:id "is_enantiomer_of" ;
+    ns1:is_cyclic true ;
+    ns1:is_transitive false .
+
+<http://purl.obolibrary.org/obo/chebi#is_substituent_group_from> a owl:ObjectProperty ;
+    rdfs:label "is substituent group from" ;
+    ns1:hasOBONamespace "chebi_ontology" ;
+    ns1:id "is_substituent_group_from" ;
+    ns1:is_cyclic false ;
+    ns1:is_transitive false .
+
+<http://purl.obolibrary.org/obo/chebi#is_tautomer_of> a owl:ObjectProperty,
+        owl:TransitiveProperty ;
+    rdfs:label "is tautomer of" ;
+    ns1:hasOBONamespace "chebi_ontology" ;
+    ns1:id "is_tautomer_of" ;
+    ns1:is_cyclic true .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#aboutChemical> a owl:ObjectProperty .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#catalyzedBy> a owl:ObjectProperty .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#from_strain> a owl:ObjectProperty ;
+    rdfs:label "from strain" .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#genetically_interacts_with> a owl:ObjectProperty,
+        owl:SymmetricProperty ;
+    rdfs:label "genetically interacts with" ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#interacts_with> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemBudding> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemDevelopment> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemCellDeath> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemCellularProc> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemCellMorph> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemMorphology> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemChemCompAcc> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemMetAndGrowth> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemChemCompExc> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemMetAndGrowth> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemChromMaint> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemCellularProc> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemCompetitiveGrowth> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemFitness> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemCultureApp> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemMorphology> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemFilamentousGrowth> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemDevelopment> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemHaploinsufficient> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemFitness> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemIntracellTransp> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemCellularProc> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemInviable> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemEssentiality> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemLifespan> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemDevelopment> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemMitoticCellCycle> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemCellularProc> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemNutrientUtilization> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemMetAndGrowth> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemPrionState> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemCellularProc> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemProteinAcc> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemMetAndGrowth> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemProteinActivity> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemMetAndGrowth> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemProteinDistribution> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemMetAndGrowth> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemProteinMod> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemMetAndGrowth> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemRNAacc> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemMetAndGrowth> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemRNAmod> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemMetAndGrowth> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemRedoxState> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemMetAndGrowth> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemSexualCycle> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemDevelopment> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemStressResistance> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemCellularProc> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemVegGrowth> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemMetAndGrowth> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemViability> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemFitness> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemViable> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemEssentiality> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasGeneProductPart> a owl:ObjectProperty,
+        owl:TransitiveProperty ;
+    rdfs:subPropertyOf ns2:BFO_0000051 .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasLeftParticipant> a owl:ObjectProperty ;
+    rdfs:subPropertyOf ns2:RO_0000057 .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasRightParticipant> a owl:ObjectProperty ;
+    rdfs:subPropertyOf ns2:RO_0000057 .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#has_genetic_interaction> a owl:ObjectProperty ;
+    rdfs:label "has genetic interaction" ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#has_interaction> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#has_physical_interaction> a owl:ObjectProperty ;
+    rdfs:label "has physical interaction" ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#has_interaction> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#negative_regulator_of> a owl:ObjectProperty ;
+    rdfs:label "negative regulator of" ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulator_of> ;
+    owl:propertyDisjointWith <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#positive_regulator_of> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#negatively_regulating_RNA_activity> a owl:ObjectProperty ;
+    rdfs:label "negatively regulating RNA activity" ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulating_RNA_activity> ;
+    owl:propertyDisjointWith <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#positively_regulating_RNA_activity> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#negatively_regulating_RNA_stability> a owl:ObjectProperty ;
+    rdfs:label "negatively regulating RNA stability" ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulating_RNA_stability> ;
+    owl:propertyDisjointWith <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#positively_regulating_RNA_stability> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#negatively_regulating_protein_activity> a owl:ObjectProperty ;
+    rdfs:label "negatively regulating protein activity" ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulating_protein_activity> ;
+    owl:propertyDisjointWith <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#positively_regulating_protein_activity> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#negatively_regulating_protein_stability> a owl:ObjectProperty ;
+    rdfs:label "negatively regulating protein stability" ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulating_protein_stability> ;
+    owl:propertyDisjointWith <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#positively_regulating_protein_stability> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#negatively_regulating_transcription> a owl:ObjectProperty ;
+    rdfs:label "negatively regulating transcription" ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulating_transcription> ;
+    owl:propertyDisjointWith <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#positively_regulating_transcription> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#negatively_regulating_translation> a owl:ObjectProperty ;
+    rdfs:label "negatively regulating translation" ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulating_translation> ;
+    owl:propertyDisjointWith <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#positively_regulating_translation> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#observed_from_mutation> a owl:ObjectProperty ;
+    rdfs:label "observed from mutation" ;
+    rdfs:domain ns2:APO_0000017 ;
+    rdfs:subPropertyOf ns2:RO_0002410 .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#physically_interacts_with> a owl:ObjectProperty,
+        owl:SymmetricProperty ;
+    rdfs:label "physically interacts with" ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#interacts_with> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulating_gene> a owl:ObjectProperty ;
+    rdfs:label "regulating gene" .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#resultsInPhenotype> a owl:ObjectProperty ;
+    rdfs:subPropertyOf ns2:RO_0016001 .
+
+ns2:BFO_0000063 a owl:ObjectProperty,
+        owl:TransitiveProperty ;
+    rdfs:label "precedes",
+        "precedes"@en ;
+    ns2:IAO_0000111 "precedes"@en ;
+    ns2:IAO_0000115 "x precedes y if and only if the time point at which x ends is before or equivalent to the time point at which y starts. Formally: x precedes y iff ω(x) <= α(y), where α is a function that maps a process to a start point, and ω is a function that maps a process to an end point."@en ;
+    ns2:IAO_0000412 ns2:ro.owl ;
+    ns1:hasDbXref "BFO:0000063" ;
+    ns1:hasOBONamespace "external" ;
+    ns1:id "precedes" ;
+    ns1:inSubset <http://purl.oboInOwllibrary.org/oboInOwl/ro/subsets#ro-eco>,
+        <http://purl.obolibrary.org/obo/ro/subsets#ro-eco> ;
+    ns1:shorthand "precedes" ;
+    rdfs:domain ns2:BFO_0000003 ;
+    rdfs:subPropertyOf ns2:RO_0002222 .
+
+ns2:RO_0000056 a owl:ObjectProperty ;
+    rdfs:label "participates_in",
+        "participates in"@en ;
+    ns2:IAO_0000111 "participates in"@en ;
+    ns2:IAO_0000112 "this blood clot participates in this blood coagulation"@en,
+        "this input material (or this output material) participates in this process"@en,
+        "this investigator participates in this investigation"@en ;
+    ns2:IAO_0000115 "a relation between a continuant and a process, in which the continuant is somehow involved in the process"@en ;
+    ns2:IAO_0000118 "participates_in"@en ;
+    ns1:hasDbXref "RO:0000056" ;
+    ns1:hasOBONamespace "external" ;
+    ns1:id "participates_in" ;
+    ns1:shorthand "participates_in" ;
+    rdfs:domain ns2:BFO_0000002 ;
+    owl:inverseOf ns2:RO_0000057 .
+
+ns2:RO_0002091 a owl:ObjectProperty ;
+    rdfs:label "starts_during",
+        "starts during"@en ;
+    ns2:IAO_0000117 "David Osumi-Sutherland" ;
+    ns2:IAO_0000118 "io" ;
+    ns2:IAO_0000412 ns2:ro.owl ;
+    ns1:hasDbXref "RO:0002091" ;
+    ns1:hasOBONamespace "external" ;
+    ns1:id "starts_during" ;
+    ns1:inSubset <http://purl.oboInOwllibrary.org/oboInOwl/ro/subsets#ro-eco>,
+        <http://purl.obolibrary.org/obo/ro/subsets#ro-eco> ;
+    ns1:shorthand "starts_during" ;
+    rdfs:comment "X starts_during Y iff: (start(Y) before_or_simultaneous_with start(X)) AND (start(X) before_or_simultaneous_with end(Y))"@en ;
+    rdfs:domain ns2:BFO_0000003 ;
+    rdfs:subPropertyOf ns2:RO_0002222 .
+
+ns2:RO_0002093 a owl:ObjectProperty ;
+    rdfs:label "ends_during",
+        "ends during"@en ;
+    ns2:IAO_0000117 "David Osumi-Sutherland" ;
+    ns2:IAO_0000118 "o",
+        "overlaps" ;
+    ns2:IAO_0000412 ns2:ro.owl ;
+    ns1:hasDbXref "RO:0002093" ;
+    ns1:hasOBONamespace "external" ;
+    ns1:id "ends_during" ;
+    ns1:inSubset <http://purl.oboInOwllibrary.org/oboInOwl/ro/subsets#ro-eco>,
+        <http://purl.obolibrary.org/obo/ro/subsets#ro-eco> ;
+    ns1:shorthand "ends_during" ;
+    rdfs:comment "X ends_during Y iff: ((start(Y) before_or_simultaneous_with end(X)) AND end(X) before_or_simultaneous_with end(Y). "@en ;
+    rdfs:subPropertyOf ns2:RO_0002222 .
+
+ns2:RO_0002215 a owl:ObjectProperty ;
+    rdfs:label "capable of",
+        "capable of"@en ;
+    ns2:IAO_0000112 "mechanosensory neuron capable of detection of mechanical stimulus involved in sensory perception (GO:0050974)",
+        "osteoclast SubClassOf 'capable of' some 'bone resorption'" ;
+    ns2:IAO_0000115 "A relation between a material entity (such as a cell) and a process, in which the material entity has the ability to carry out the process. " ;
+    ns2:IAO_0000117 "Chris Mungall" ;
+    ns2:IAO_0000118 "has function realized in" ;
+    ns2:IAO_0000119 <http://www.ncbi.nlm.nih.gov/pubmed/20123131>,
+        <http://www.ncbi.nlm.nih.gov/pubmed/21208450> ;
+    ns2:IAO_0000232 "For compatibility with BFO, this relation has a shortcut definition in which the expression \"capable of some P\" expands to \"bearer_of (some realized_by only P)\"." ;
+    ns1:hasDbXref "RO:0002215" ;
+    ns1:hasOBONamespace "external" ;
+    ns1:id "capable_of" ;
+    ns1:inSubset <http://purl.obolibrary.org/obo/ro/subsets#ro-eco> ;
+    ns1:shorthand "capable_of" ;
+    rdfs:domain ns2:BFO_0000004 ;
+    rdfs:subPropertyOf ns2:RO_0002216 .
+
+ns2:RO_0002304 a owl:ObjectProperty ;
+    rdfs:label "causally upstream of, positive effect" ;
+    ns2:IAO_0000412 ns2:ro.owl ;
+    ns2:RO_0004049 ns2:RO_0002411 ;
+    dcterms:creator "cjm" ;
+    ns1:hasDbXref "RO:0002304" ;
+    ns1:hasOBONamespace "external" ;
+    ns1:id "causally_upstream_of,_positive_effect" ;
+    ns1:inSubset <http://purl.oboInOwllibrary.org/oboInOwl/valid_for_go_annotation_extension>,
+        <http://purl.oboInOwllibrary.org/oboInOwl/valid_for_gocam>,
+        ns2:valid_for_go_annotation_extension,
+        ns2:valid_for_gocam ;
+    ns1:shorthand "causally_upstream_of,_positive_effect" ;
+    rdfs:comment "holds between x and y if and only if x is causally upstream of y and the progression of x increases the frequency, rate or extent of y" ;
+    rdfs:subPropertyOf ns2:RO_0002411,
+        ns2:RO_0004047 .
+
+ns2:RO_0002305 a owl:ObjectProperty ;
+    rdfs:label "causally upstream of, negative effect" ;
+    ns2:IAO_0000412 ns2:ro.owl ;
+    ns2:RO_0004050 ns2:RO_0002411 ;
+    dcterms:creator "cjm" ;
+    ns1:hasDbXref "RO:0002305" ;
+    ns1:hasOBONamespace "external" ;
+    ns1:id "causally_upstream_of,_negative_effect" ;
+    ns1:shorthand "causally_upstream_of,_negative_effect" ;
+    rdfs:comment "holds between x and y if and only if x is causally upstream of y and the progression of x decreases the frequency, rate or extent of y" ;
+    rdfs:subPropertyOf ns2:RO_0002411,
+        ns2:RO_0004046 .
+
+ns2:RO_0002329 a owl:ObjectProperty ;
+    rdfs:label "part of structure that is capable of"@en ;
+    ns2:IAO_0000115 "this relation holds between c and p when c is part of some c', and c' is capable of p." ;
+    ns2:IAO_0000117 "Chris Mungall" ;
+    ns2:IAO_0000118 false ;
+    rdfs:subPropertyOf ns2:RO_0002328 .
+
+ns2:RO_0002427 a owl:ObjectProperty,
+        owl:TransitiveProperty ;
+    rdfs:label "causally downstream of or within" ;
+    ns2:IAO_0000115 "inverse of causally upstream of or within" ;
+    ns2:IAO_0000117 "Chris Mungall" ;
+    ns2:IAO_0000119 <http://purl.obolibrary.org/obo/ro/docs/causal-relations> ;
+    ns2:IAO_0000412 ns2:ro.owl ;
+    ns1:hasDbXref "RO:0002427" ;
+    ns1:hasOBONamespace "external" ;
+    ns1:id "causally_downstream_of_or_within" ;
+    ns1:inSubset <http://purl.oboInOwllibrary.org/oboInOwl/RO_0002259>,
+        ns2:RO_0002259 ;
+    ns1:shorthand "causally_downstream_of_or_within" ;
+    rdfs:subPropertyOf ns2:RO_0002501 .
+
+ns2:RO_0002431 a owl:ObjectProperty ;
+    rdfs:label "involved in or involved in regulation of" ;
+    ns2:IAO_0000115 "c involved in or regulates p if and only if either (i) c is involved in p or (ii) c is involved in regulation of p" ;
+    ns2:IAO_0000116 "OWL does not allow defining object properties via a Union" ;
+    ns2:IAO_0000117 "Chris Mungall" ;
+    ns2:IAO_0000118 "involved in or reguates" ;
+    rdfs:subPropertyOf ns2:RO_0002264,
+        ns2:RO_0002328,
+        ns2:RO_0002500 .
+
+ns2:RO_0002595 a owl:ObjectProperty ;
+    rdfs:label "causal relation between material entity and a process" ;
+    ns2:IAO_0000115 "A relationship that holds between a material entity and a process in which causality is involved, with either the material entity or some part of the material entity exerting some influence over the process, or the process influencing some aspect of the material entity." ;
+    ns2:IAO_0000116 "Do not use this relation directly. It is intended as a grouping for a diverse set of relations, all involving cause and effect." ;
+    ns2:IAO_0000117 "Chris Mungall" ;
+    ns2:IAO_0000119 <http://purl.obolibrary.org/obo/ro/docs/causal-relations> ;
+    rdfs:domain ns2:BFO_0000040 ;
+    rdfs:subPropertyOf ns2:RO_0002410 .
+
+ns2:RO_0004032 a owl:ObjectProperty ;
+    rdfs:label "acts upstream of or within, positive effect" ;
+    ns2:RO_0004049 ns2:RO_0002264 ;
+    ns1:created_by "cjm" ;
+    ns1:creation_date "2018-01-26T23:49:30+00:00"^^xsd:dateTime ;
+    ns1:inSubset ns2:valid_for_go_gp2term ;
+    rdfs:seeAlso <http://wiki.geneontology.org/index.php/Acts_upstream_of_or_within,_positive_effect> ;
+    rdfs:subPropertyOf ns2:RO_0002264 .
+
+ns2:RO_0004033 a owl:ObjectProperty ;
+    rdfs:label "acts upstream of or within, negative effect" ;
+    ns2:RO_0004050 ns2:RO_0002264 ;
+    ns1:created_by "cjm" ;
+    ns1:creation_date "2018-01-26T23:49:51+00:00"^^xsd:dateTime ;
+    ns1:inSubset ns2:valid_for_go_gp2term ;
+    rdfs:subPropertyOf ns2:RO_0002264 .
+
+ns2:RO_0004046 a owl:ObjectProperty ;
+    rdfs:label "causally upstream of or within, negative effect" ;
+    ns2:IAO_0000412 ns2:ro.owl ;
+    ns2:RO_0004050 ns2:RO_0002418 ;
+    ns1:created_by "cjm" ;
+    ns1:creation_date "2018-03-13T23:55:05+00:00"^^xsd:dateTime ;
+    rdfs:subPropertyOf ns2:RO_0002418 .
+
+ns2:RO_0004047 a owl:ObjectProperty ;
+    rdfs:label "causally upstream of or within, positive effect" ;
+    ns2:IAO_0000412 ns2:ro.owl ;
+    ns2:RO_0004049 ns2:RO_0002418 ;
+    ns1:created_by "cjm" ;
+    ns1:creation_date "2018-03-13T23:55:19+00:00"^^xsd:dateTime ;
+    rdfs:subPropertyOf ns2:RO_0002418 .
+
+<http://purl.obolibrary.org/obo/chebi#is_conjugate_base_of> a owl:ObjectProperty ;
+    rdfs:label "is conjugate base of" ;
+    ns1:hasOBONamespace "chebi_ontology" ;
+    ns1:id "is_conjugate_base_of" ;
+    ns1:is_cyclic true ;
+    ns1:is_transitive false .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#positive_regulator_of> a owl:ObjectProperty ;
+    rdfs:label "positive regulator of" ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulator_of> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#positively_regulating_RNA_activity> a owl:ObjectProperty ;
+    rdfs:label "positively regulating RNA activity" ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulating_RNA_activity> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#positively_regulating_RNA_stability> a owl:ObjectProperty ;
+    rdfs:label "positively regulating RNA stability" ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulating_RNA_stability> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#positively_regulating_protein_activity> a owl:ObjectProperty ;
+    rdfs:label "positively regulating protein activity" ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulating_protein_activity> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#positively_regulating_protein_stability> a owl:ObjectProperty ;
+    rdfs:label "positively regulating protein stability" ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulating_protein_stability> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#positively_regulating_transcription> a owl:ObjectProperty ;
+    rdfs:label "positively regulating transcription" ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulating_transcription> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#positively_regulating_translation> a owl:ObjectProperty ;
+    rdfs:label "positively regulating translation" ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulating_translation> .
+
+ns2:BFO_0000051 a owl:ObjectProperty,
+        owl:TransitiveProperty ;
+    rdfs:label "has part",
+        "has part"@en ;
+    ns2:IAO_0000111 "has part"@en ;
+    ns2:IAO_0000112 "my body has part my brain (continuant parthood, two material entities)"@en,
+        "my stomach has part my stomach cavity (continuant parthood, material entity has part immaterial entity)"@en,
+        "this year has part this day (occurrent parthood)"@en ;
+    ns2:IAO_0000115 "a core relation that holds between a whole and its part"@en ;
+    ns2:IAO_0000116 "Everything has itself as a part. Any part of any part of a thing is itself part of that thing. Two distinct things cannot have each other as a part."@en,
+        "Occurrents are not subject to change and so parthood between occurrents holds for all the times that the part exists. Many continuants are subject to change, so parthood between continuants will only hold at certain times, but this is difficult to specify in OWL. See http://purl.obolibrary.org/obo/ro/docs/temporal-semantics/"@en,
+        """Parthood requires the part and the whole to have compatible classes: only an occurrent have an occurrent as part; only a process can have a process as part; only a continuant can have a continuant as part; only an independent continuant can have an independent continuant as part; only a specifically dependent continuant can have a specifically dependent continuant as part; only a generically dependent continuant can have a generically dependent continuant as part. (This list is not exhaustive.)
+
+A continuant cannot have an occurrent as part: use 'participates in'. An occurrent cannot have a continuant as part: use 'has participant'. An immaterial entity cannot have a material entity as part: use 'location of'. An independent continuant cannot have a specifically dependent continuant as part: use 'bearer of'. A specifically dependent continuant cannot have an independent continuant as part: use 'inheres in'."""@en ;
+    ns2:IAO_0000118 "has_part"@en ;
+    ns2:RO_0001900 ns2:RO_0001901 ;
+    ns1:hasDbXref "BFO:0000051" ;
+    ns1:hasOBONamespace "chebi_ontology",
+        "external" ;
+    ns1:id "has_part" ;
+    ns1:inSubset ns2:valid_for_go_annotation_extension,
+        ns2:valid_for_go_ontology,
+        ns2:valid_for_gocam ;
+    ns1:is_cyclic false ;
+    ns1:shorthand "has_part" ;
+    rdfs:subPropertyOf ns2:RO_0002131 .
+
+ns2:RO_0002216 a owl:ObjectProperty ;
+    rdfs:label "capable of part of",
+        "capable of part of"@en ;
+    ns2:IAO_0000115 "c stands in this relationship to p if and only if there exists some p' such that c is capable_of p', and p' is part_of p." ;
+    ns2:IAO_0000117 "Chris Mungall" ;
+    ns2:IAO_0000118 "has function in" ;
+    ns1:hasDbXref "RO:0002216" ;
+    ns1:hasOBONamespace "external" ;
+    ns1:id "capable_of_part_of" ;
+    ns1:shorthand "capable_of_part_of" ;
+    rdfs:seeAlso <http://purl.obolibrary.org/obo/ro/docs/reflexivity/> ;
+    rdfs:subPropertyOf ns2:RO_0002328,
+        ns2:RO_0002500 .
+
+ns2:RO_0002323 a owl:ObjectProperty ;
+    rdfs:label "mereotopologically related to"@en ;
+    ns2:IAO_0000115 "A mereological relationship or a topological relationship" ;
+    ns2:IAO_0000117 "Chris Mungall" ;
+    ns2:IAO_0000232 "Do not use this relation directly. It is ended as a grouping for a diverse set of relations, all involving parthood or connectivity relationships" ;
+    ns2:RO_0001900 ns2:RO_0001901 .
+
+ns2:RO_0002334 a owl:ObjectProperty,
+        owl:TransitiveProperty ;
+    rdfs:label "regulated by",
+        "regulated by"@en ;
+    ns2:IAO_0000115 "inverse of regulates" ;
+    ns2:IAO_0000117 "Chris Mungall" ;
+    ns2:IAO_0000589 "regulated by (processual)" ;
+    ns1:hasDbXref "RO:0002334" ;
+    ns1:hasOBONamespace "external" ;
+    ns1:id "regulated_by" ;
+    ns1:inSubset ns2:RO_0002259 ;
+    ns1:shorthand "regulated_by" ;
+    rdfs:domain ns2:BFO_0000015 ;
+    rdfs:subPropertyOf ns2:RO_0002427 .
+
+ns2:RO_0002501 a owl:ObjectProperty ;
+    rdfs:label "causal relation between processes" ;
+    ns2:IAO_0000115 "p is causally related to q if and only if p or any part of p and q or any part of q are linked by a chain of events where each event pair is one of direct activation or direct inhibition. p may be upstream, downstream, part of or a container of q." ;
+    ns2:IAO_0000117 "Chris Mungall" ;
+    ns2:IAO_0000119 <http://purl.obolibrary.org/obo/ro/docs/causal-relations> ;
+    ns2:IAO_0000232 "Do not use this relation directly. It is intended as a grouping for a diverse set of relations, all involving cause and effect." ;
+    ns2:IAO_0000412 ns2:ro.owl ;
+    rdfs:domain ns2:BFO_0000003 ;
+    rdfs:subPropertyOf ns2:RO_0002410 .
+
+ns2:RO_0016001 a owl:ObjectProperty ;
+    rdfs:label "has phenotype or disease" ;
+    ns2:IAO_0000232 "Do not use this relation directly. It is intended as a grouping for a set of relations regarding presentation of phenotypes and disease." ;
+    dc:contributor <http://orcid.org/0000-0002-7463-6306> ;
+    dc:date "2021-11-05T17:30:14+00:00"^^xsd:dateTime ;
+    rdfs:seeAlso "https://github.com/oborel/obo-relations/issues/478" .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemEssentiality> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemObservable> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemMorphology> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemObservable> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#has_interaction> a owl:ObjectProperty ;
+    rdfs:label "has interaction" .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#interacts_with> a owl:ObjectProperty,
+        owl:SymmetricProperty ;
+    rdfs:label "interacts with" .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulating_RNA_activity> a owl:ObjectProperty ;
+    rdfs:label "regulating RNA activity" ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulating> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulating_RNA_stability> a owl:ObjectProperty ;
+    rdfs:label "regulating RNA stability" ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulating> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulating_protein_activity> a owl:ObjectProperty ;
+    rdfs:label "regulating protein activity" ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulating> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulating_protein_stability> a owl:ObjectProperty ;
+    rdfs:label "regulating protein stability" ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulating> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulating_transcription> a owl:ObjectProperty ;
+    rdfs:label "regulating transcription" ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulating> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulating_translation> a owl:ObjectProperty ;
+    rdfs:label "regulating translation" ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulating> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulator_of> a owl:ObjectProperty ;
+    rdfs:label "regulator of" .
+
+ns2:RO_0002131 a owl:ObjectProperty,
+        owl:SymmetricProperty ;
+    rdfs:label "overlaps",
+        "overlaps"@en ;
+    ns2:IAO_0000114 ns2:IAO_0000125 ;
+    ns2:IAO_0000115 "x overlaps y if and only if there exists some z such that x has part z and z part of y" ;
+    ns2:IAO_0000424 "http://purl.obolibrary.org/obo/BFO_0000051 some (http://purl.obolibrary.org/obo/BFO_0000050 some ?Y)" ;
+    ns2:RO_0001900 ns2:RO_0001901 ;
+    ns1:hasDbXref "RO:0002131" ;
+    ns1:hasOBONamespace "external" ;
+    ns1:id "overlaps" ;
+    ns1:inSubset <http://purl.obolibrary.org/obo/ro/subsets#ro-eco>,
+        ns2:valid_for_go_annotation_extension,
+        ns2:valid_for_gocam ;
+    ns1:shorthand "overlaps" ;
+    rdfs:subPropertyOf ns2:RO_0002323 .
+
+ns2:RO_0002222 a owl:ObjectProperty ;
+    rdfs:label "temporally related to"@en ;
+    ns2:IAO_0000114 ns2:IAO_0000125 ;
+    ns2:IAO_0000117 "Chris Mungall" ;
+    ns2:IAO_0000119 <https://en.wikipedia.org/wiki/Allen%27s_interval_algebra> ;
+    ns2:IAO_0000232 "Do not use this relation directly. It is ended as a grouping for relations between occurrents involving the relative timing of their starts and ends." ;
+    ns2:IAO_0000412 ns2:ro.owl ;
+    dcterms:source "https://docs.google.com/document/d/1kBv1ep_9g3sTR-SD3jqzFqhuwo9TPNF-l-9fUDbO6rM/edit?pli=1"^^xsd:anyURI ;
+    ns1:inSubset <http://purl.oboInOwllibrary.org/oboInOwl/ro/subsets#ro-eco>,
+        <http://purl.obolibrary.org/obo/ro/subsets#ro-eco> ;
+    rdfs:comment "A relation that holds between two occurrents. This is a grouping relation that collects together all the Allen relations." ;
+    rdfs:domain ns2:BFO_0000003 .
+
+ns2:RO_0002410 a owl:ObjectProperty ;
+    rdfs:label "causally related to"@en ;
+    ns2:IAO_0000114 ns2:IAO_0000428 ;
+    ns2:IAO_0000115 "This relation groups causal relations between material entities and causal relations between processes" ;
+    ns2:IAO_0000116 """This branch of the ontology deals with causal relations between entities. It is divided into two branches: causal relations between occurrents/processes, and causal relations between material entities. We take an 'activity flow-centric approach', with the former as primary, and define causal relations between material entities in terms of causal relations between occurrents.
+
+To define causal relations in an activity-flow type network, we make use of 3 primitives:
+
+ * Temporal: how do the intervals of the two occurrents relate? 
+ * Is the causal relation regulatory?
+ * Is the influence positive or negative
+
+The first of these can be formalized in terms of the Allen Interval Algebra. Informally, the 3 bins we care about are 'direct', 'indirect' or overlapping. Note that all causal relations should be classified under a RO temporal relation (see the branch under 'temporally related to'). Note that all causal relations are temporal, but not all temporal relations are causal. Two occurrents can be related in time without being causally connected. We take causal influence to be primitive, elucidated as being such that has the upstream changed, some qualities of the donwstream would necessarily be modified.
+
+For the second, we consider a relationship to be regulatory if the system in which the activities occur is capable of altering the relationship to achieve some objective. This could include changing the rate of production of a molecule.
+
+For the third, we consider the effect of the upstream process on the output(s) of the downstream process. If the level of output is increased, or the rate of production of the output is increased, then the direction is increased. Direction can be positive, negative or neutral or capable of either direction. Two positives in succession yield a positive, two negatives in succession yield a positive, otherwise the default assumption is that the net effect is canceled and the influence is neutral.
+
+Each of these 3 primitives can be composed to yield a cross-product of different relation types.""" ;
+    ns2:IAO_0000117 "Chris Mungall" ;
+    ns2:IAO_0000232 "Do not use this relation directly. It is intended as a grouping for a diverse set of relations, all involving cause and effect." .
+
+ns2:RO_0002500 a owl:ObjectProperty ;
+    rdfs:label "causal agent in process" ;
+    ns2:IAO_0000115 "A relationship between a material entity and a process where the material entity has some causal role that influences the process" ;
+    ns2:IAO_0000119 <http://purl.obolibrary.org/obo/ro/docs/causal-relations> ;
+    rdfs:subPropertyOf ns2:RO_0002595 .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemFitness> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemObservable> .
+
+ns2:RO_0002211 a owl:ObjectProperty,
+        owl:TransitiveProperty ;
+    rdfs:label "regulates",
+        "regulates"@en ;
+    ns2:IAO_0000114 ns2:IAO_0000125 ;
+    ns2:IAO_0000115 "process(P1) regulates process(P2) iff: P1 results in the initiation or termination of P2 OR affects the frequency of its initiation or termination OR affects the magnitude or rate of output of P2." ;
+    ns2:IAO_0000116 "We use 'regulates' here to specifically imply control. However, many colloquial usages of the term correctly correspond to the weaker relation of 'causally upstream of or within' (aka influences). Consider relabeling to make things more explicit" ;
+    ns2:IAO_0000117 "Chris Mungall",
+        "David Hill",
+        "Tanya Berardini" ;
+    ns2:IAO_0000119 <http://purl.obolibrary.org/obo/ro/docs/causal-relations>,
+        "GO" ;
+    ns2:IAO_0000232 "Regulation precludes parthood; the regulatory process may not be within the regulated process." ;
+    ns2:IAO_0000412 ns2:ro.owl ;
+    ns2:IAO_0000589 "regulates (processual)" ;
+    ns2:IAO_0000600 false ;
+    ns1:hasDbXref "RO:0002211" ;
+    ns1:hasOBONamespace "external" ;
+    ns1:id "regulates" ;
+    ns1:inSubset <http://purl.oboInOwllibrary.org/oboInOwl/valid_for_go_annotation_extension>,
+        <http://purl.oboInOwllibrary.org/oboInOwl/valid_for_go_ontology>,
+        <http://purl.oboInOwllibrary.org/oboInOwl/valid_for_gocam>,
+        ns2:valid_for_go_annotation_extension,
+        ns2:valid_for_go_ontology,
+        ns2:valid_for_gocam ;
+    ns1:shorthand "regulates" ;
+    rdfs:domain ns2:BFO_0000015 ;
+    rdfs:subPropertyOf ns2:RO_0002411 .
+
+ns2:RO_0002263 a owl:ObjectProperty ;
+    rdfs:label "acts upstream of" ;
+    ns2:IAO_0000112 "A faulty traffic light (material entity) whose malfunctioning (a process) is causally upstream of a traffic collision (a process): the traffic light acts upstream of the collision." ;
+    ns2:IAO_0000115 "c acts upstream of p if and only if c enables some f that is involved in p' and p' occurs chronologically before p, is not part of p, and affects the execution of p. c is a material entity and f, p, p' are processes." ;
+    ns1:inSubset ns2:valid_for_go_gp2term ;
+    rdfs:seeAlso <http://wiki.geneontology.org/index.php/Acts_upstream_of> ;
+    rdfs:subPropertyOf ns2:RO_0002264 .
+
+ns2:RO_0002328 a owl:ObjectProperty ;
+    rdfs:label "functionally related to"@en ;
+    ns2:IAO_0000115 "A grouping relationship for any relationship directly involving a function, or that holds because of a function of one of the related entities." ;
+    ns2:IAO_0000117 "Chris Mungall" ;
+    ns2:IAO_0000232 "This is a grouping relation that collects relations used for the purpose of connecting structure and function" .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemDevelopment> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemObservable> .
+
+ns2:RO_0000057 a owl:ObjectProperty ;
+    rdfs:label "has participant"@en ;
+    ns2:IAO_0000111 "has participant"@en ;
+    ns2:IAO_0000112 "this blood coagulation has participant this blood clot"@en,
+        "this investigation has participant this investigator"@en,
+        "this process has participant this input material (or this output material)"@en ;
+    ns2:IAO_0000115 "a relation between a process and a continuant, in which the continuant is somehow involved in the process"@en ;
+    ns2:IAO_0000116 "Has_participant is a primitive instance-level relation between a process, a continuant, and a time at which the continuant participates in some way in the process. The relation obtains, for example, when this particular process of oxygen exchange across this particular alveolar membrane has_participant this particular sample of hemoglobin at this particular time."@en ;
+    ns2:IAO_0000118 "has_participant"@en ;
+    dc:source "http://www.obofoundry.org/ro/#OBO_REL:has_participant" ;
+    rdfs:domain ns2:BFO_0000003 ;
+    rdfs:range ns2:BFO_0000002 .
+
+ns2:RO_0002411 a owl:ObjectProperty,
+        owl:TransitiveProperty ;
+    rdfs:label "causally upstream of",
+        "causally upstream of"@en ;
+    ns2:IAO_0000114 ns2:IAO_0000428 ;
+    ns2:IAO_0000115 "p is causally upstream of q if and only if p precedes q and p and q are linked in a causal chain" ;
+    ns2:IAO_0000117 "Chris Mungall" ;
+    ns2:IAO_0000412 ns2:ro.owl ;
+    ns1:hasDbXref "RO:0002411" ;
+    ns1:hasOBONamespace "external" ;
+    ns1:id "causally_upstream_of" ;
+    ns1:inSubset <http://purl.oboInOwllibrary.org/oboInOwl/valid_for_go_annotation_extension>,
+        <http://purl.oboInOwllibrary.org/oboInOwl/valid_for_gocam>,
+        ns2:valid_for_go_annotation_extension,
+        ns2:valid_for_gocam ;
+    ns1:shorthand "causally_upstream_of" ;
+    rdfs:subPropertyOf ns2:BFO_0000063,
+        ns2:RO_0002418 .
+
+ns2:RO_0002418 a owl:ObjectProperty,
+        owl:TransitiveProperty ;
+    rdfs:label "causally upstream of or within" ;
+    ns2:IAO_0000115 "p 'causally upstream or within' q iff (1) the end of p is before the end of q and (2) the execution of p exerts some causal influence over the outputs of q; i.e. if p was abolished or the outputs of p were to be modified, this would necessarily affect q." ;
+    ns2:IAO_0000116 "We would like to make this disjoint with 'preceded by', but this is prohibited in OWL2" ;
+    ns2:IAO_0000117 "Chris Mungall" ;
+    ns2:IAO_0000118 "influences (processual)" ;
+    ns2:IAO_0000412 ns2:ro.owl ;
+    ns1:hasDbXref "RO:0002418" ;
+    ns1:hasOBONamespace "external" ;
+    ns1:hasRelatedSynonym "affects" ;
+    ns1:id "causally_upstream_of_or_within" ;
+    ns1:shorthand "causally_upstream_of_or_within" ;
+    rdfs:subPropertyOf ns2:RO_0002501 .
+
+ns2:RO_0002264 a owl:ObjectProperty ;
+    rdfs:label "acts upstream of or within" ;
+    ns2:IAO_0000112 "A gene product that has some activity, where that activity may be a part of a pathway or upstream of the pathway." ;
+    ns2:IAO_0000115 "c acts upstream of or within p if c is enables f, and f is causally upstream of or within p. c is a material entity and p is an process." ;
+    ns1:hasRelatedSynonym "affects" ;
+    ns1:inSubset ns2:valid_for_go_gp2term ;
+    rdfs:seeAlso <http://wiki.geneontology.org/index.php/Acts_upstream_of_or_within> ;
+    rdfs:subPropertyOf ns2:RO_0002500 .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemCellularProc> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemObservable> .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemObservable> a owl:ObjectProperty .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#regulating> a owl:ObjectProperty,
+        owl:TransitiveProperty ;
+    owl:propertyChainAxiom [ ] .
+
+<http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemMetAndGrowth> a owl:ObjectProperty ;
+    rdfs:subPropertyOf <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#hasChemObservable> .
+

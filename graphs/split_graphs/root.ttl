@@ -1,0 +1,78 @@
+@prefix obo: <http://purl.obolibrary.org/obo/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sgd: <http://www.semanticweb.org/filipkro/ontologies/2023/10/sgd_kg#> .
+
+sgd:CEN.PK rdfs:label "Saccharomyces cerevisiae CEN.PK" ;
+    rdfs:subClassOf obo:NCBITaxon_4932 .
+
+sgd:D273-10B rdfs:label "Saccharomyces cerevisiae D273-10B" ;
+    rdfs:subClassOf obo:NCBITaxon_4932 .
+
+sgd:FL100 rdfs:label "Saccharomyces cerevisiae FL100" ;
+    rdfs:subClassOf obo:NCBITaxon_4932 .
+
+sgd:JK9-3d rdfs:label "Saccharomyces cerevisiae JK9-3d" ;
+    rdfs:subClassOf obo:NCBITaxon_4932 .
+
+sgd:RM11-1a rdfs:label "Saccharomyces cerevisiae RM11-1a" ;
+    rdfs:subClassOf obo:NCBITaxon_4932 .
+
+sgd:SEY6210 rdfs:label "Saccharomyces cerevisiae SEY6210" ;
+    rdfs:subClassOf obo:NCBITaxon_4932 .
+
+sgd:SK1 rdfs:label "Saccharomyces cerevisiae SK1" ;
+    rdfs:subClassOf obo:NCBITaxon_4932 .
+
+sgd:Sigma1278b rdfs:label "Saccharomyces cerevisiae Sigma1278b" ;
+    rdfs:subClassOf obo:NCBITaxon_4932 .
+
+sgd:W303 rdfs:label "Saccharomyces cerevisiae W303" ;
+    rdfs:subClassOf obo:NCBITaxon_4932 .
+
+sgd:X2180-1A rdfs:label "Saccharomyces cerevisiae X2180-1A" ;
+    rdfs:subClassOf obo:NCBITaxon_4932 .
+
+sgd:Y55 rdfs:label "Saccharomyces cerevisiae Y55" ;
+    rdfs:subClassOf obo:NCBITaxon_4932 .
+
+obo:NCBITaxon_1 rdfs:label "root" .
+
+obo:NCBITaxon_131567 rdfs:label "cellular organisms" ;
+    rdfs:subClassOf obo:NCBITaxon_1 .
+
+obo:NCBITaxon_147537 rdfs:label "Saccharomycotina" ;
+    rdfs:subClassOf obo:NCBITaxon_716545 .
+
+obo:NCBITaxon_2759 rdfs:label "Eukaryota" ;
+    rdfs:subClassOf obo:NCBITaxon_131567 .
+
+obo:NCBITaxon_33154 rdfs:label "Opisthokonta" ;
+    rdfs:subClassOf obo:NCBITaxon_2759 .
+
+obo:NCBITaxon_451864 rdfs:label "Dikarya" ;
+    rdfs:subClassOf obo:NCBITaxon_4751 .
+
+obo:NCBITaxon_4751 rdfs:label "Fungi" ;
+    rdfs:subClassOf obo:NCBITaxon_33154 .
+
+obo:NCBITaxon_4890 rdfs:label "Ascomycota" ;
+    rdfs:subClassOf obo:NCBITaxon_451864 .
+
+obo:NCBITaxon_4891 rdfs:label "Saccharomycetes" ;
+    rdfs:subClassOf obo:NCBITaxon_147537 .
+
+obo:NCBITaxon_4892 rdfs:label "Saccharomycetales" ;
+    rdfs:subClassOf obo:NCBITaxon_4891 .
+
+obo:NCBITaxon_4893 rdfs:label "Saccharomycetaceae" ;
+    rdfs:subClassOf obo:NCBITaxon_4892 .
+
+obo:NCBITaxon_4930 rdfs:label "Saccharomyces" ;
+    rdfs:subClassOf obo:NCBITaxon_4893 .
+
+obo:NCBITaxon_716545 rdfs:label "saccharomyceta" ;
+    rdfs:subClassOf obo:NCBITaxon_4890 .
+
+obo:NCBITaxon_4932 rdfs:label "Saccharomyces cerevisiae" ;
+    rdfs:subClassOf obo:NCBITaxon_4930 .
+

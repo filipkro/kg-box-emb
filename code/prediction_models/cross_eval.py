@@ -16,13 +16,13 @@ with open(os.path.join(BASE, 'datasets/split_datasets/'
                        'pyg_graph_c_DMA30_fitness.pkl'), 'rb') as fi:
     data = pickle.load(fi).contiguous()
 # %%
-with open(os.path.join(BASE, 'trained_gnns/20250202-102800-reg.pkl'),
+with open(os.path.join(BASE, 'large_files/20250202-102800-reg.pkl'),
           'rb') as fi:
     l = pickle.load(fi)
     models = l['models']
     results = l['metrics']
 
-with open(os.path.join(BASE, 'trained_gnns/20250222-163641-reg.pkl'),
+with open(os.path.join(BASE, 'large_files/datasplit.pkl'),
           'rb') as fi:
     d = pickle.load(fi)['data']
 

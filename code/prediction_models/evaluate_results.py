@@ -4,10 +4,10 @@ import numpy as np
 from scipy.stats import binomtest, wilcoxon, shapiro, ttest_rel
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # %%
-with open(os.path.join(BASE, 'trained_gnns/20250211-123659-reg.pkl'),
+with open(os.path.join(BASE, 'large_files/20250211-123659-reg.pkl'),
           'rb') as fi:
     results_wo_boxes = pickle.load(fi)['metrics']
-with open(os.path.join(BASE, 'trained_gnns/20250202-102800-reg.pkl'),
+with open(os.path.join(BASE, 'large_files/20250202-102800-reg.pkl'),
           'rb') as fi:
     results_boxes = pickle.load(fi)['metrics']
 # %%

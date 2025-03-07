@@ -26,3 +26,9 @@ full-kg.ttl
 go-ext.ttl
 kg-nf-no-int.ttl
 kg-nf.ttl
+
+datasplit.pkl
+20250211-123659-reg.pkl
+20250202-102800-reg.pkl
+
+large_files*

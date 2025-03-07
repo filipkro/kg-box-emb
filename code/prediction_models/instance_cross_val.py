@@ -1,12 +1,11 @@
 # %%
 import os, pickle
 from sklearn.model_selection import KFold
-from comparison_model import InstantiationModelLight
+from instantiation_model import InstantiationModelLight
 import torch as th
 import torch_geometric.transforms as T
 import numpy as np
 from sklearn.metrics import r2_score
-import matplotlib.pyplot as plt
 # %%
 def get_data_from_idx(data, idx, transform):
     new_data = data.clone()
@@ -79,17 +78,10 @@ for i, (t_idx, v_idx) in enumerate(kf.split(data_to_split)):
     vscore = r2_score(val_y, val_preds)
     vscores.append(vscore)
     tscores.append(tscore)
-    # plt.figure()
-    # plt.scatter(val_y, val_preds, s=0.1)
-    # plt.ylim((-0.05,1.5))
-    # plt.xlim((-0.05,1.5))
     print(f"train r2: {tscore}")
     print(f"val r2: {vscore}")
     models.append({'model': model, 'train_score': tscore, 'val_score': vscore})
-    
-    # break
 
-# plt.show()
 print(f"train: {np.mean(tscores)} +- {np.std(tscores)}")
 print(f"val: {np.mean(vscores)} +- {np.std(vscores)}")
 # %%

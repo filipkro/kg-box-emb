@@ -1,5 +1,5 @@
 # %%
-from simple_gnn import Regressor
+from model import Regressor
 from sklearn.metrics import r2_score
 from torch.nn.functional import mse_loss
 from sklearn.model_selection import KFold

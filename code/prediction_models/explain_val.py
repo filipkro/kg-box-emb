@@ -5,7 +5,7 @@ from sklearn.model_selection import KFold
 from train_loop import link_split, node_split
 import torch_geometric.transforms as T
 from torch_geometric.loader import LinkNeighborLoader
-from simple_gnn import Model
+from model import Model
 from torch_geometric.data import HeteroData
 from torch_geometric.explain import CaptumExplainer, Explainer
 import pandas as pd

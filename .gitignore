@@ -1,2 +1,14 @@
 .DS_Store
 __pycache__
+
+
+# large files
+prel_explanationsDMA30-InputXGradient-full_model-feb02-10000-cleaned.tsv
+prel_explanationsDMA30-InputXGradient-full_model-feb02-10000.tsv
+sgd-data-ext.pkl
+sgd-data-slim.pkl
+SGA_DAmP.txt
+SGA_ExN_NxE.txt
+SGA_ExE.txt
+SGA_NxN.txt
+aao1729_data_s1.tsv

@@ -7,7 +7,7 @@ from rdflib.plugins.stores import sparqlstore
 # %%
 BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 print(BASE)
-
+# %%
 graph_dir = os.path.join(BASE, 'graphs/split_graphs')
 dataset_dir = os.path.join(BASE, 'datasets/split_datasets')
 

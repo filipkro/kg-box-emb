@@ -2,8 +2,8 @@
 import pandas as pd
 import os
 # %%
-BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+print(BASE)
 # %%
 def extract_genes(row):
     ga, gb = row['Query strain ID'].split('_')[0].split('+')
@@ -26,5 +26,5 @@ df['g1'], df['g2'], df['g3'] = zip(*df.apply(extract_genes, axis=1))
 df.sort_values(by='P-value', ascending=False, inplace=True)
 df = df[df.duplicated(['g1', 'g2', 'g3'], keep='last')]
 # %%
-df.to_csv(os.path.join(BASE, 'interaction_data/unique_triples.tsv'), sep='\t')
+df.to_csv(os.path.join(BASE, 'data/interaction_data/unique_triples.tsv'), sep='\t')
 # %%

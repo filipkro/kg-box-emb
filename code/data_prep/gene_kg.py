@@ -341,9 +341,11 @@ def generate_gene_kg(BASE, go, sgd):
 
 if __name__ =='__main__':
     BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    print(BASE)
     sgd = rdflib.Graph()
     sgd.parse(os.path.join(BASE, 'graphs/sgd_kg_fix.ttl'))
     go = rdflib.Graph()
     go.parse(os.path.join(BASE, 'graphs/go-ext.ttl'))
 
     generate_gene_kg(BASE, go, sgd)
+# %%

@@ -160,10 +160,12 @@ def generate_reactions(BASE, cco):
 
     return react_kg, cco, cat_kg
 
-
+# %%
 if __name__ == '__main__':
     BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    print(BASE)
     cco = rdflib.Graph()
     cco.parse(os.path.join(BASE, 'graphs/cco.ttl'))
     print(f"cco len: {len(cco)}")
     generate_reactions(BASE, cco)
+# %%

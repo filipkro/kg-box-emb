@@ -1,3 +1,4 @@
+# %%
 import rdflib
 import re, os
 
@@ -12,6 +13,8 @@ from merge_graphs import generate_merged
 
 BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 MERGE_ALL = True
+print(BASE)
+# %%
 if not os.path.exists(os.path.join(BASE, 'data/sgd-data-ext.pkl')):
     print("Querying SGD for gene data...")
     import query_sgd

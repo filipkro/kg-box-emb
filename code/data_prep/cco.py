@@ -121,7 +121,9 @@ def generate_cco(BASE, go):
 
 # %%
 if __name__ == '__main__':
-    BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    print(BASE)
     go = rdflib.Graph()
     go.parse(os.path.join('graphs/go-ext.ttl'))
     generate_cco(BASE, go)
+# %%

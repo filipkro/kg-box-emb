@@ -2,7 +2,7 @@
 import os, pickle
 import requests
 # %%
-BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 data_dir = os.path.join(BASE, 'data/')
 BASE_URL = 'https://www.yeastgenome.org/backend/locus/'
 end_points = ['go_details', 'phenotype_details', 'interaction_details',
@@ -10,7 +10,7 @@ end_points = ['go_details', 'phenotype_details', 'interaction_details',
 
 with open(data_dir + 'orf-names-ext.pkl', 'rb') as fi:
     all_orfs = pickle.load(fi)
-
+# %%
 try:
     data = pickle.load(open(data_dir + 'sgd-data-ext.pkl', 'rb'))
 except FileNotFoundError:

@@ -228,11 +228,12 @@ def generate_proteins(BASE, kg):
     print('proteins.ttl saved')
     return prot_kg
 
-
+# %%
 if __name__ == '__main__':
     BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
+    print(BASE)
     kg = rdflib.Graph()
     kg.parse(os.path.join(BASE, 'graphs/kg-nf-no-int.ttl'))
 
     generate_proteins(BASE, kg)
+# %%

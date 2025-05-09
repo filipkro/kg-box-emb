@@ -100,6 +100,7 @@ def generate_go_kg(BASE, go, sgd):
 
 if __name__ == '__main__':
     BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    print(BASE)
     go = rdflib.Graph()
     go.parse(os.path.join(BASE, 'graphs/go-ext.ttl'))
     sgd = rdflib.Graph()

@@ -7,7 +7,7 @@ import torch as th
 BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 print(BASE)
 # %%
-df = pd.read_csv(os.path.join(BASE, 'interaction_data/SGA_NxN.txt'), delimiter='\t')
+df = pd.read_csv(os.path.join(BASE, 'data/interaction_data/SGA_NxN.txt'), delimiter='\t')
 df.drop(['Query allele name', 'Array allele name'] , axis=1, inplace=True)
 
 df = df.loc[df['P-value'] < 0.8]
@@ -19,7 +19,7 @@ df_refined = df.loc[df['P-value'] < 0.05]
 df_refined_DMA30 = df_refined.loc[df_refined['Arraytype/Temp'] == 'DMA30']
 df_DMA30 = df.loc[df['Arraytype/Temp'] == 'DMA30']
 # %%
-dfE = pd.read_csv(os.path.join(BASE, 'interaction_data/SGA_ExE.txt'), delimiter='\t')
+dfE = pd.read_csv(os.path.join(BASE, 'data/interaction_data/SGA_ExE.txt'), delimiter='\t')
 dfE.drop(['Query allele name', 'Array allele name'] , axis=1, inplace=True)
 dfE = dfE.loc[dfE['P-value'] < 0.8]
 dfE['abs-interact'] = dfE['Genetic interaction score (ε)'].abs()
@@ -30,7 +30,7 @@ dfE_refined = dfE.loc[dfE['P-value'] < 0.05]
 print(dfE.shape)
 print(dfE_refined.shape)
 # %%
-dfNE = pd.read_csv(os.path.join(BASE, 'interaction_data/SGA_ExN_NxE.txt'), delimiter='\t')
+dfNE = pd.read_csv(os.path.join(BASE, 'data/interaction_data/SGA_ExN_NxE.txt'), delimiter='\t')
 dfNE.drop(['Query allele name', 'Array allele name'] , axis=1, inplace=True)
 
 dfNE = dfNE.loc[dfNE['P-value'] < 0.8]

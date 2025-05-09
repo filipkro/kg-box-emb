@@ -322,12 +322,12 @@ def generate_bc(BASE, chebi):
     ont.add((BC['CPD-20744'], RDFS.subClassOf,
             BC['Adjacent-pyrimidine-dimer-in-DNA']))
     ont.add((BC['E-'], RDFS.subClassOf, CHEBI['10545']))
-# %%
+
     ont.serialize(destination=os.path.join(BASE, 'graphs/bc-fix.ttl'))
     print('bc.ttl saved')
     return ont
 
-
+# %%
 
 if __name__ == '__main__':
     BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

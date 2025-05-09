@@ -84,6 +84,7 @@ def generate_merged(BASE, bc, cco, chebi, go_ext, kg_nf, pathways,
 if __name__ == '__main__':
 
     BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    print(BASE)
     GRAPHS = os.path.join(BASE, 'graphs')
     bc = rdflib.Graph()
     bc.parse(os.path.join(GRAPHS, 'bc.ttl'))
@@ -106,3 +107,4 @@ if __name__ == '__main__':
 
     generate_merged(BASE, bc, cco, chebi, go_ext, kg_nf, pathways,
                     proteins, reactions, sgd_kg_fix)
+# %%

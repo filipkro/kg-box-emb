@@ -110,6 +110,7 @@ cm = cm.resampled(int(heatmap.max()))
 fig, ax = plt.subplots()
 ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
+plt.axline((0, 0), slope=1, linestyle='--', color='red')
 im = ax.imshow(cm((heatmap.T+ (heatmap.T < 1) * (-2)).astype('int')),
                extent=extent, origin='lower', cmap=cm)
 plt.xlabel("Target fitness", size=13)
@@ -118,3 +119,5 @@ plt.xticks(fontsize=11)
 plt.yticks(fontsize=11)
 # plt.savefig(os.path.join(BASE, 'paper/figs/double-parity.eps'),
             # format='eps', bbox_inches='tight')
+
+# %%

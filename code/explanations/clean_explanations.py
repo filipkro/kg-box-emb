@@ -1,8 +1,11 @@
 # %%
 import pandas as pd
+import os
 # %%
+BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+print(BASE)
 exp_name = 'prel_explanationsDMA30-InputXGradient-full_model-feb02-10000.tsv'
-df = pd.read_csv(exp_name, sep='\t')
+df = pd.read_csv(os.path.join(BASE, 'explanations', exp_name), sep='\t')
 print(df.shape)
 print(df['occ'].max())
 # %%

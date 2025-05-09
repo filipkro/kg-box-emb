@@ -4,9 +4,9 @@ import os
 import matplotlib.pyplot as plt
 import seaborn as sns
 # %%
-BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # %%
-df = pd.read_csv(os.path.join(BASE, 'src/prel_explanationsDMA30-InputXGradient-full_model-feb02-10000-cleaned-top10000.tsv'), sep = '\t', index_col = 0)
+df = pd.read_csv(os.path.join(BASE, 'explanations/prel_explanationsDMA30-InputXGradient-full_model-feb02-10000-cleaned-top10000.tsv'), sep = '\t', index_col = 0)
 # %%
 filtered_df = df[
     df['class1'].str.contains("APO_0000096", na=False) | # General nutrient utilization
@@ -72,8 +72,8 @@ plt.xlabel('')
 plt.xlabel('Importance', fontsize=14)
 plt.ylabel('Feature', fontsize=14)
 plt.tight_layout()
-plt.savefig(os.path.join(BASE, 'paper/figs/feature_importance.eps'),
-            format='eps', bbox_inches='tight')
+# plt.savefig(os.path.join(BASE, 'paper/figs/feature_importance.eps'),
+#             format='eps', bbox_inches='tight')
 plt.show()
 
 # %%

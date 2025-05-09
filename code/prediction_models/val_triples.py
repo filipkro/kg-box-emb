@@ -7,6 +7,12 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import r2_score
 import matplotlib.pyplot as plt
+
+class RenamingUnpickler(pickle.Unpickler):
+    def find_class(self, module, name):
+        if module == 'simple_gnn':
+            module = 'model'
+        return super().find_class(module, name)
 # %%
 def get_data_from_idx(data, idx, transform):
     new_data = data.clone()
@@ -27,7 +33,7 @@ def node_split(data, split_transform, v_idx, t_idx=None, device='cpu'):
     train_data = get_data_from_idx(data, t_mask, split_transform)
     return train_data, val_data
 # %%
-BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 device = 'cpu'
 # %%
 with open(os.path.join(BASE, 'datasets/split_datasets/'
@@ -54,9 +60,9 @@ print(data['genes','rev_catalyzedByGene', 'reactions'])
 print(data['genes','rev_catalyzedByGene', 'reactions'].edge_index.shape)
 data = data.contiguous()
 # %%
-with open(os.path.join(BASE, 'trained_gnns/20250221-165714-reg.pkl'),
+with open(os.path.join(BASE, 'large_files/20250221-165714-reg.pkl'),
           'rb') as fi:
-    model = pickle.load(fi)['model']
+    model = RenamingUnpickler(fi).load()['model']
 
 # %%
 with open(os.path.join(BASE, 'datasets/split_datasets/genes.pkl'), 'rb') as fi:
@@ -64,7 +70,7 @@ with open(os.path.join(BASE, 'datasets/split_datasets/genes.pkl'), 'rb') as fi:
 rev_gene = {v: k for k,v in gene_index.items()}
 
 # %%
-df = pd.read_csv(os.path.join(BASE, 'interaction_data/unique_triples.tsv'),
+df = pd.read_csv(os.path.join(BASE, 'data/interaction_data/unique_triples.tsv'),
                  sep='\t')
 
 df['g1_i'] = df.apply(lambda x: gene_index['http://sgd-kg.project-genesis.io#'
@@ -140,6 +146,8 @@ plt.xlabel("Target fitness", size=13)
 plt.ylabel("Predicted fitness", size=13)
 plt.xticks(fontsize=11)
 plt.yticks(fontsize=11)
-plt.savefig(os.path.join(BASE, 'paper/figs/triple-parity.eps'),
-            format='eps', bbox_inches='tight')
+# plt.savefig(os.path.join(BASE, 'paper/figs/triple-parity.eps'),
+#             format='eps', bbox_inches='tight')
 plt.show()
+
+# %%

@@ -30,7 +30,7 @@ def node_split(data, split_transform, v_idx, t_idx=None, device='cpu'):
     train_data = get_data_from_idx(data, t_mask, split_transform)
     return train_data, val_data
 # %%
-BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DATASET = 'pyg_graph_c_DMA30_fitness'
 device = 'cuda'
 

@@ -1,11 +1,20 @@
 # %%
 import os, pickle
 from sklearn.model_selection import KFold
-from instantiation_model import InstantiationModelLight
+
 import torch as th
 import torch_geometric.transforms as T
 import numpy as np
 from sklearn.metrics import r2_score
+
+# %%
+BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+device = 'cpu'
+# %%
+with open(os.path.join(BASE, 'datasets/split_datasets/pyg_graph_c_DMA30_fitness.pkl'), 'rb') as fi:
+    data = pickle.load(fi).contiguous()
+
+from instantiation_model import InstantiationModelLight
 # %%
 def get_data_from_idx(data, idx, transform):
     new_data = data.clone()
@@ -25,12 +34,7 @@ def node_split(data, split_transform, v_idx, t_idx=None, device='cpu'):
     val_data = get_data_from_idx(data, v_mask, split_transform)
     train_data = get_data_from_idx(data, t_mask, split_transform)
     return train_data, val_data
-# %%
-BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-device = 'cpu'
-# %%
-with open(os.path.join(BASE, 'datasets/split_datasets/pyg_graph_c_DMA30_fitness.pkl'), 'rb') as fi:
-    data = pickle.load(fi).contiguous()
+
 # %%
 kf = KFold(n_splits=10, shuffle=True, random_state=42)
 split_transform = T.RandomLinkSplit(

@@ -2,14 +2,20 @@
 import os, pickle
 import numpy as np
 from scipy.stats import binomtest, wilcoxon, shapiro, ttest_rel
-BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+class RenamingUnpickler(pickle.Unpickler):
+    def find_class(self, module, name):
+        if module == 'simple_gnn':
+            module = 'model'
+        return super().find_class(module, name)
 # %%
 with open(os.path.join(BASE, 'large_files/20250211-123659-reg.pkl'),
           'rb') as fi:
-    results_wo_boxes = pickle.load(fi)['metrics']
+    results_wo_boxes = RenamingUnpickler(fi).load()['metrics']
 with open(os.path.join(BASE, 'large_files/20250202-102800-reg.pkl'),
           'rb') as fi:
-    results_boxes = pickle.load(fi)['metrics']
+    results_boxes = RenamingUnpickler(fi).load()['metrics']
 # %%
 r2_wo_boxes = np.array([r['best_metric'] for r in results_wo_boxes])
 r2_boxes = np.array([r['best_metric'] for r in results_boxes])

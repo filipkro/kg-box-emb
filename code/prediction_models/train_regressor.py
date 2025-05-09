@@ -18,7 +18,7 @@ if is_available():
 else:
     device = 'cpu'
 print(device)
-BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 with open(os.path.join(BASE, f'datasets/split_datasets/{DATASET}.pkl'),
           'rb') as fi:
     data = pickle.load(fi).contiguous()
@@ -80,6 +80,6 @@ for m in models:
     m.to('cpu')
 # file_name = time.strftime("%Y%m%d-%H%M%S") + '-DummyReg.pkl'
 file_name = time.strftime("%Y%m%d-%H%M%S") + '-reg.pkl'
-with open(os.path.join(BASE, 'trained_gnns', file_name), 'wb') as fo:
+with open(os.path.join(BASE, 'large_files', file_name), 'wb') as fo:
     pickle.dump({'models': models, 'metrics': metrics}, fo)
     #pickle.dump({'models': models, 'metrics': metrics, 'data': data_splits}, fo)

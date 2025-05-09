@@ -10,6 +10,12 @@ import itertools
 import warnings
 import tqdm
 warnings.filterwarnings("ignore")
+
+class RenamingUnpickler(pickle.Unpickler):
+    def find_class(self, module, name):
+        if module == 'simple_gnn':
+            module = 'model'
+        return super().find_class(module, name)
 # %%
 def simplify_graph(graph, sampled_data):
     for k in graph.node_types:
@@ -147,12 +153,12 @@ class RegressorFromModel(Model):
         z = self._forward(data)
         return self.lin4(z).squeeze()
 # %%
-BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 device = 'cpu'
 # %%
-with open(os.path.join(BASE, 'trained_gnns/20250205-102437-reg.pkl'),
+with open(os.path.join(BASE, 'large_files/20250221-165714-reg.pkl'),
           'rb') as fi:
-    m = pickle.load(fi)['model']
+    m = RenamingUnpickler(fi).load()['model']
 m.to(device)
 # print(models[0])
 # %%
@@ -375,8 +381,8 @@ for sampled_val_data in tqdm.tqdm(data_loader):
         if len(df1) > 0 and len(df2) > 0:
             dfp = pd.DataFrame()
             dfp['idx'], dfp['rel'], dfp['dom'], dfp['imp'] \
-                    = zip(*pd.merge(df1, df2,
-                                    how='cross').apply(collaps_columns, axis=1))
+                = zip(*pd.merge(df1, df2,
+                                how='cross').apply(collaps_columns, axis=1))
         
             dfp['occ'] = [1] * len(dfp)
             df_fold = pd.concat([df_fold, dfp])
@@ -397,6 +403,6 @@ df_pairs['class1'], df_pairs['rel1'], df_pairs['class2'], df_pairs['rel2'] \
 print(df_pairs.head(10))
 # %%
 
-df_pairs.to_csv('prel_explanationsDMA30-InputXGradient-full_model-XX-10000.tsv',
+df_pairs.to_csv(os.path.join(BASE, 'explanations/DMA30-InputXGradient-full_model-XX-10000.tsv'),
                 sep='\t')
 # %%

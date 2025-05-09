@@ -12,6 +12,12 @@ import pandas as pd
 import itertools
 import warnings
 warnings.filterwarnings("ignore")
+
+class RenamingUnpickler(pickle.Unpickler):
+    def find_class(self, module, name):
+        if module == 'simple_gnn':
+            module = 'model'
+        return super().find_class(module, name)
 # %%
 def simplify_graph(graph, sampled_data):
     for k in graph.node_types:
@@ -147,7 +153,7 @@ class RegressorFromModel(Model):
         z = self._forward(data)
         return self.lin4(z).squeeze()
 # %%
-BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 device = 'cpu'
 # %%
 rev_dicts = {}
@@ -281,9 +287,9 @@ print(data['genes','rev_catalyzedByGene', 'reactions'])
 print(data['genes','rev_catalyzedByGene', 'reactions'].edge_index.shape)
 data = data.contiguous()
 # %%
-with open(os.path.join(BASE, 'trained_gnns/20250202-102800-reg.pkl'),
+with open(os.path.join(BASE, 'large_files/20250202-102800-reg.pkl'),
           'rb') as fi:
-    models = pickle.load(fi)['models']
+    models = RenamingUnpickler(fi).load()['models']
 print(models[0])
 
 # %%
@@ -425,6 +431,6 @@ df_pairs['class1'], df_pairs['rel1'], df_pairs['class2'], df_pairs['rel2'] \
             = zip(*df_pairs.apply(get_class_names, axis=1))
 print(df_pairs.head(10))
 # %%
-df_pairs.to_csv('prel_explanationsDMA30-InputXGradient-febXX-1000.tsv',
+df_pairs.to_csv(os.path.join(BASE, 'explanations/DMA30-InputXGradient-febXX-1000.tsv'),
                 sep='\t')
 # %%

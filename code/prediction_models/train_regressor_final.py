@@ -24,7 +24,7 @@ else:
     device = 'cpu'
     # EPOCHS = 10
 print(device)
-BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 with open(os.path.join(BASE, f'datasets/split_datasets/{DATASET}.pkl'),
           'rb') as fi:
     data = pickle.load(fi).contiguous()
@@ -84,6 +84,6 @@ else:
 # %%
 model.to('cpu')
 file_name = time.strftime("%Y%m%d-%H%M%S") + '-reg.pkl'
-with open(os.path.join(BASE, 'trained_gnns', file_name), 'wb') as fo:
+with open(os.path.join(BASE, 'large_files', file_name), 'wb') as fo:
     pickle.dump({'model': model, 'metrics': metric}, fo)
 # %%

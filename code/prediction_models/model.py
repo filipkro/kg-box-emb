@@ -6,7 +6,6 @@ from parameters import LINKS, BOX_EMBEDDINGS, ONLY_GENE_BOXES
 class HeteroGNNCustom(th.nn.Module):
     def __init__(self, channels, edge_types, embeddings):
         super().__init__()
-        heads = 5
         self.layers = th.nn.ModuleList()
         prev_c = 0
         ed = {k: 0 for k in embeddings.keys()}

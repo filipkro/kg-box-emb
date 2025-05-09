@@ -8,8 +8,15 @@ from train_loop import link_split, node_split, get_targets_preds
 import torch_geometric.transforms as T
 from torch_geometric.loader import LinkNeighborLoader
 from sklearn.metrics import r2_score
+
 # %%
-BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+class RenamingUnpickler(pickle.Unpickler):
+    def find_class(self, module, name):
+        if module == 'simple_gnn':
+            module = 'model'
+        return super().find_class(module, name)
+# %%
+BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 device = 'cpu'
 # %%
 with open(os.path.join(BASE, 'datasets/split_datasets/'
@@ -18,13 +25,14 @@ with open(os.path.join(BASE, 'datasets/split_datasets/'
 # %%
 with open(os.path.join(BASE, 'large_files/20250202-102800-reg.pkl'),
           'rb') as fi:
-    l = pickle.load(fi)
+    # l = pickle.load(fi)
+    l = RenamingUnpickler(fi).load()
     models = l['models']
     results = l['metrics']
 
 with open(os.path.join(BASE, 'large_files/datasplit.pkl'),
           'rb') as fi:
-    d = pickle.load(fi)['data']
+    d = RenamingUnpickler(fi).load()['data']
 
 best = [r['best_metric'] for r in results]
 print(f"{np.mean(best)} +- {np.std(best)}")
@@ -85,48 +93,6 @@ for i, ((_, val_data), model) in enumerate(zip(d, models)):
         print(r2)
 
         r2s.append(r2)
-        if False:
-            abs_preds = np.abs(pred_errors)
-            plt.hist(pred_errors, bins=20)
-            plt.show()
-            plt.figure()
-            plt.hist(val_preds, bins=40, range=(0.0, 1.50), density=True)
-            plt.hist(val_labels, bins=40, range=(0.0, 1.50), alpha=0.5,
-                     density=True)
-            plt.show()
-            errors = abs_preds
-            sorted_errors = np.sort(errors)
-            # Set up the figure and gridspec
-            fig = plt.figure(figsize=(8, 4))
-            gs = fig.add_gridspec(1, 2, width_ratios=[6, 1], wspace=0.01)
-
-            # Plot the sorted prediction errors
-            ax1 = fig.add_subplot(gs[0])
-            ax1.plot(sorted_errors, label="Sorted Errors", color='blue')
-            ax1.set_xticks([])
-            ax1.set_ylabel("|Prediction Error|")
-            # ax1.legend()
-            plt.axhline(0.0, xmax=len(errors)-30000,  c='b', alpha=0.2,
-                        linestyle=':')
-
-            # Plot the histogram of errors
-            ax2 = fig.add_subplot(gs[1], sharey=ax1)
-            ax2.hist(errors, bins=80, orientation='horizontal', color='b',
-                     alpha=0.2, rwidth=0.8)
-            ax1.set_xlim((-1000, len(errors)))
-            ax2.set_xlabel("")
-            ax2.set_xticks([])
-            ax2.set_ylabel("")  # Remove redundant y-label
-            ax2.axis('off')
-            ax2.grid(False)
-            ax1.spines['top'].set_visible(False)
-            ax1.spines['right'].set_visible(False)
-            ax1.spines['bottom'].set_visible(False)
-
-            # Adjust axis visibility for the histogram plot
-            ax2.tick_params(left=False)  # Disable y-ticks on the histogram
-
-            plt.show()
 print(f"{np.mean(r2s)} +- {np.std(r2s)}")
 # %%
 heatmap, xedges, yedges = np.histogram2d(all_labels, all_preds,
@@ -150,5 +116,5 @@ plt.xlabel("Target fitness", size=13)
 plt.ylabel("Predicted fitness", size=13)
 plt.xticks(fontsize=11)
 plt.yticks(fontsize=11)
-plt.savefig(os.path.join(BASE, 'paper/figs/double-parity.eps'),
-            format='eps', bbox_inches='tight')
+# plt.savefig(os.path.join(BASE, 'paper/figs/double-parity.eps'),
+            # format='eps', bbox_inches='tight')

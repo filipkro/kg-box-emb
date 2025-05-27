@@ -2,11 +2,18 @@ import torch as th
 from torch import nn
 from torch.utils.data import DataLoader
 from tqdm import trange
-from boxGumbelModule_gci0 import BoxGumbelModule
+from .boxGumbelModule_gci0 import BoxGumbelModule
 import pickle, os
 import tempfile
 import time
 from box_embeddings.modules.regularization import L2SideBoxRegularizer
+
+class RenameUnpickler(pickle.Unpickler):
+    def find_class(self, module, name):
+        if module == "embeddings.boxGumbelModule_gci0" and name == "BoxRelELModule":
+            from embeddings.boxGumbelModule_gci0 import BoxGumbelModule
+            return BoxGumbelModule
+        return super().find_class(module, name)
 
 def boxRel_to_cpu(fp):
     model = BoxGumbelModel(None, from_file=fp)
@@ -21,8 +28,8 @@ class BoxGumbelModel:
                  batch_size=4096 * 8, model_filepath=None, intersect_temp=0.5,
                  vol_temp=0.5, device='cpu', neg_ratio=1.0, copy_dest='',
                  from_file=None, bot_factor=1.0, reg_factor=1e-5,
-                 dataset_label='full', best_loss=float('inf'),
-                 load_epoch=-1, params_from_file=0) -> None:
+                 dataset_label='full', best_loss=float('inf'), load_epoch=-1,
+                 params_from_file=0, init_for_train=True) -> None:
   
         self._extended = True
         self.embed_dims = embed_dims
@@ -37,6 +44,7 @@ class BoxGumbelModel:
 
         self.save_all_epochs = False
         self.load_epoch = load_epoch
+        self.init_for_train = init_for_train
 
         self.box_regularizer = L2SideBoxRegularizer(weight=reg_factor,
                                                     log_scale=True)
@@ -83,17 +91,18 @@ class BoxGumbelModel:
                         if 'dataset_label' in l:
                             self.dataset_label = l.split('\t')[-1]
             self.load_best_model()
-            time_str = time.strftime("%Y%m%d-%H%M%S")
-            model_dir = f"{from_file}--{time_str}"
-            if self.load_epoch > -1:
-                self._model_filepath = os.path.join(model_dir,
-                                                    f'model_{self.load_epoch}.pkl')
-            else:
-                self._model_filepath = os.path.join(model_dir, 'model.pkl')
-            self.best_loss_path = os.path.join(model_dir, 'best_loss.txt')
-            os.makedirs(model_dir)
-            with open(os.path.join(model_dir, 'hyper_params.txt'), 'w') as fo:
-                fo.write(self.params_str())
+            if init_for_train:
+                time_str = time.strftime("%Y%m%d-%H%M%S")
+                model_dir = f"{from_file}--{time_str}"
+                if self.load_epoch > -1:
+                    self._model_filepath = os.path.join(model_dir,
+                                                        f'model_{self.load_epoch}.pkl')
+                else:
+                    self._model_filepath = os.path.join(model_dir, 'model.pkl')
+                self.best_loss_path = os.path.join(model_dir, 'best_loss.txt')
+                os.makedirs(model_dir)
+                with open(os.path.join(model_dir, 'hyper_params.txt'), 'w') as fo:
+                    fo.write(self.params_str())
         else:
             self.init_module()
             if self._model_filepath is not None:
@@ -310,7 +319,9 @@ class BoxGumbelModel:
         # self.module.load_state_dict(th.load(self.model_filepath,
         #                                 map_location=th.device(self.device)))
         with open(self.model_filepath, 'rb') as fi:
-            self.module = pickle.load(fi)
+            self.module = RenameUnpickler(fi).load()
+        # with open(self.model_filepath, 'rb') as fi:
+        #     self.module = pickle.load(fi)
         
         # self.module.set_device(self.device)
         self.module.to(self.device)

@@ -6,6 +6,6 @@ Unprocessed data is found in `data`, KGs and class hierarchies found in `graphs`
 
 To run the code install the packages (with Python 3.10.15) in the requirements files, `requirements.txt` and `requirements_torch.txt`. The second file contain torch requirements and can be installed after `requirements.txt`.
 
-Some large files, not stored on this git are needed as well. Begin by downloading the content in this Zenodo: https://zenodo.org/records/15373187
+Some large files, not stored on this git are needed as well. Begin by downloading the content in this Zenodo: https://zenodo.org/records/15526046
 
 Then unzip the file and put the directory, called `large_files` in this directory, and run `move_files.sh`

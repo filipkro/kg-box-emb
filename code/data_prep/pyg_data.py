@@ -56,7 +56,8 @@ for k,v in box_models.items():
                                  v.module.class_boxes.all_boxes.z).abs()],
                                  dim=-1)
         case 'box':
-            data[k].x = v.module.class_boxes.all_boxes.data
+            boxes = v.module.class_boxes.all_boxes.data
+            data[k].x = boxes.reshape((len(boxes), -1))
         case _:
             raise NotImplementedError('Only implemented for zZ, c, and box. '
                                       f'Not for {FEATURE_REPRESENTATION}')

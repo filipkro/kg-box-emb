@@ -17,6 +17,7 @@ interactions.pkl
 interactions_DMA30.pkl
 pyg_graph_c_DMA30_fitness.pkl
 refined_interactions_DMA30.pkl
+refined_interactions.pkl
 
 all_graphs-no-int.ttl
 all_graphs.ttl

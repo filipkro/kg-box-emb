@@ -12,6 +12,7 @@ mv large_files/kg-nf.ttl graphs/
 mv large_files/interactions_DMA30.pkl datasets/split_datasets/
 mv large_files/interactions.pkl datasets/split_datasets/
 mv large_files/refined_interactions_DMA30.pkl datasets/split_datasets/
+mv large_files/refined_interactions.pkl datasets/split_datasets/
 mv large_files/pyg_graph_c_DMA30_fitness.pkl datasets/split_datasets/
 
 mv large_files/prel_explanationsDMA30-InputXGradient-full_model-feb02-10000-cleaned.tsv explanations/

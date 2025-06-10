@@ -43,6 +43,14 @@ class HeteroGNNCustom(th.nn.Module):
             x_dict = conv(x_dict, edge_index_dict)
             x_dict = {key: x for key, x in x_dict.items()}
         return x_dict
+    
+    def all_embeddings(self, x_dict, edge_index_dict):
+        ret_embs = []
+        for conv in self.layers:
+            x_dict = conv(x_dict, edge_index_dict)
+            x_dict = {key: x for key, x in x_dict.items()}
+            ret_embs.append(x_dict)
+        return ret_embs
 
 class HeteroGNN(th.nn.Module):
     def __init__(self, channels, edge_types, embeddings):

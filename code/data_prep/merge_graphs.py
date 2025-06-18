@@ -12,7 +12,9 @@ CHEBI = rdflib.Namespace('http://purl.obolibrary.org/obo/CHEBI_')
 GO = rdflib.Namespace('http://purl.obolibrary.org/obo/GO_')
 
 
-def generate_merged(BASE, bc, cco, chebi, go_ext, kg_nf, pathways,
+# def generate_merged(BASE, bc, cco, chebi, go_ext, kg_nf, pathways,
+#                     proteins, reactions, sgd_kg_fix, go_kg=None, cat_kg=None):
+def generate_merged(BASE, bc, chebi, go_ext, kg_nf, pathways,
                     proteins, reactions, sgd_kg_fix, go_kg=None, cat_kg=None):
     GRAPHS = os.path.join(BASE, 'graphs')
 # %%
@@ -32,9 +34,9 @@ def generate_merged(BASE, bc, cco, chebi, go_ext, kg_nf, pathways,
     g += bc
     del bc
     print(len(g))
-    g += cco
-    del cco
-    print(len(g))
+    # g += cco
+    # del cco
+    # print(len(g))
     g += chebi
     del chebi
     print(len(g))
@@ -88,8 +90,8 @@ if __name__ == '__main__':
     GRAPHS = os.path.join(BASE, 'graphs')
     bc = rdflib.Graph()
     bc.parse(os.path.join(GRAPHS, 'bc.ttl'))
-    cco = rdflib.Graph()
-    cco.parse(os.path.join(GRAPHS, 'cco.ttl'))
+    # cco = rdflib.Graph()
+    # cco.parse(os.path.join(GRAPHS, 'cco.ttl'))
     chebi = rdflib.Graph()
     chebi.parse(os.path.join(GRAPHS, 'chebi.ttl'))
     go_ext = rdflib.Graph()
@@ -105,6 +107,8 @@ if __name__ == '__main__':
     sgd_kg_fix = rdflib.Graph()
     sgd_kg_fix.parse(os.path.join(GRAPHS, 'sgd_kg_fix.ttl'))
 
-    generate_merged(BASE, bc, cco, chebi, go_ext, kg_nf, pathways,
+    generate_merged(BASE, bc, chebi, go_ext, kg_nf, pathways,
                     proteins, reactions, sgd_kg_fix)
+    # generate_merged(BASE, bc, cco, chebi, go_ext, kg_nf, pathways,
+    #                 proteins, reactions, sgd_kg_fix)
 # %%

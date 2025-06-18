@@ -131,8 +131,8 @@ def generate_proteins(BASE, kg):
                 #     id_dict[l[1]] = [curr]
             case '//':
                 # gene_types[curr] = types
-                for t in types:
-                    prot_kg.add((KG[curr], RDFS.subClassOf, BC[t]))
+                # for t in types:
+                #     prot_kg.add((KG[curr], RDFS.subClassOf, BC[t]))
                 curr = None
     # %%
     with open(os.path.join(BASE, 'data/id_dict_ext.pkl'), 'wb') as fo:
@@ -218,7 +218,7 @@ def generate_proteins(BASE, kg):
                     prot_kg.add(t)
 
     # %%
-    prot_kg.serialize(os.path.join(BASE, 'graphs/proteins.ttl'))
+    prot_kg.serialize(os.path.join(BASE, 'graphs/proteins_new.ttl'))
     # %%
     with open(os.path.join(BASE, 'data/sys_name_dict.pkl'), 'wb') as fo:
         pickle.dump(sys_dict, fo)

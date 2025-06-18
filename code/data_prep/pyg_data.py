@@ -6,10 +6,11 @@ import torch_geometric.transforms as T
 import torch.nn.functional as F
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../embeddings')))
 
 from embeddings.boxGumbel_gci0 import BoxGumbelModel
 # %%
-BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 with open(os.path.join(BASE, 'datasets/split_datasets/split_gci2.pkl'), 'rb') as fi:
     dataset = pickle.load(fi)
 
@@ -25,17 +26,18 @@ with open(os.path.join(BASE, f'datasets/split_datasets/{INTERACT_DATA}.pkl'),
     interactions = pickle.load(fi)
 
 # %%
-model_dir = os.path.join(BASE, 'large_files')
+# model_dir = os.path.join(BASE, 'large_files')
+model_dir = os.path.join(BASE, 'trained_models')
 box_dirs = {
-    'mat_ent': '20250110-192405-mat_ent--20250110-221512--20250110-232045',
-    'genes': '20250110-192529-genes--20250110-194714--20250110-200406--20250110-201617--20250110-202609--20250110-203226',
-    'root': '20250110-192626-root--20250110-193340',
-    'quality': '20250110-192713-quality--20250110-200051--20250110-203129--20250110-204549--20250110-205647',
-    'reactions': '20250110-192751-reactions--20250110-194606--20250110-195357--20250110-200211',
-    'cell_comp': '20250110-192823-cell_comp--20250110-195704--20250110-201413--20250110-202426',
-    'reguls': '20250110-192928-reguls--20250110-201108--20250110-203357',
-    'mol_func': '20250110-192957-mol_func--20250110-195819--20250110-201814--20250110-203037',
-    'bio_proc': '20250110-193049-bio_proc--20250110-212952--20250110-221236'}
+    'mat_ent': '20250617-141221-mat_ent',
+    'genes': '20250617-141028-genes',
+    # 'root': None,
+    'quality': '20250617-142123-quality',
+    'reactions': '20250617-142351-reactions',
+    'cell_comp': '20250617-141851-cell_comp',
+    'reguls': '20250617-142314-reguls',
+    'mol_func': '20250617-141725-mol_func--20250617-144156',
+    'bio_proc': '20250617-141633-bio_proc--20250617-151352'}
 
 box_models = {}
 
@@ -70,6 +72,8 @@ reg = []
 for r,v in dataset['gci2'].items():
     r = r.split('/')[-1].split('#')[-1]
     for nodes, rels in v.items():
+        if 'root' in nodes:
+            continue
         if nodes[0] == 'genes' and nodes[1] == 'genes' and 'regul' in r:
             # print((nodes, r))
             regulating.extend(rels)

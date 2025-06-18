@@ -1,7 +1,7 @@
 # %%
 import rdflib
 from rdflib.namespace import RDFS, RDF, OWL
-import os
+import os, json
 
 KG = rdflib.Namespace('http://sgd-kg.project-genesis.io#')
 BC = rdflib.Namespace('http://biocyc.project-genesis.io#')
@@ -34,6 +34,12 @@ def generate_pathways(BASE):
     with open(os.path.join(BASE, 'data/pathways.dat'), 'r') as fi:
         lines = fi.read().splitlines()
 
+    with open(os.path.join(BASE, 'data/cco_map.json'), 'r') as fi:
+        cco_map = json.load(fi)
+
+    with open(os.path.join(BASE, 'data/chebi_map.json'), 'r') as fi:
+        chebi_map = json.load(fi)
+
     # %%
     kg = rdflib.Graph()
 
@@ -45,7 +51,7 @@ def generate_pathways(BASE):
     kg.bind('owl', OWL)
 
     super_pathways = set()
-
+    used_chemicals = []
     for l in lines:
         if l[0] == '#':
             continue
@@ -69,7 +75,8 @@ def generate_pathways(BASE):
                     kg.add(t)
                 left = l[1].split(':LEFT-PRIMARIES ')[1].split(')')[0].split(' ')
                 right = l[1].split(':RIGHT-PRIMARIES ')[1].split(')')[0].split(' ')
-
+                used_chemicals.extend(left)
+                used_chemicals.extend(right)
                 if 'L2R' in l[1]:
                     inputs.update(left)
                     outputs.update(right)
@@ -85,9 +92,11 @@ def generate_pathways(BASE):
 
                     trips = []
                     for c in start:
-                        trips.extend(role2class(KG[curr], BC[c], OBO.RO_0002233))
+                        # trips.extend(role2class(KG[curr], BC[c], OBO.RO_0002233))
+                        trips.extend(role2class(KG[curr], OBO[chebi_map[c]], OBO.RO_0002233))
                     for c in end:
-                        trips.extend(role2class(KG[curr], BC[c], OBO.RO_0002234))
+                        # trips.extend(role2class(KG[curr], BC[c], OBO.RO_0002234))
+                        trips.extend(role2class(KG[curr], OBO[chebi_map[c]], OBO.RO_0002234))
 
                     for t in trips:
                         kg.add(t)
@@ -141,15 +150,30 @@ def generate_pathways(BASE):
 
                     trips = []
                     for c in start:
-                        trips.extend(role2class(KG[curr], BC[c], OBO.RO_0002233))
+                        if 'CHEBI' not in str(c):
+                            c = OBO[chebi_map[c]]
+                        else:
+                            c = rdflib.URIRef(c)
+                        # trips.extend(role2class(KG[curr], BC[c], OBO.RO_0002233))
+                        trips.extend(role2class(KG[curr], c, OBO.RO_0002233))
                     for c in end:
-                        trips.extend(role2class(KG[curr], BC[c], OBO.RO_0002234))
+                        if 'CHEBI' not in str(c):
+                            c = OBO[chebi_map[c]]
+                        else:
+                            c = rdflib.URIRef(c)
+                        # trips.extend(role2class(KG[curr], BC[c], OBO.RO_0002234))
+                        trips.extend(role2class(KG[curr], c, OBO.RO_0002234))
 
                     for t in trips:
                         kg.add(t)
 
                     super_pathways.remove(curr)
     # %%
+    print(f'number of chems used: {len(used_chemicals)}')
+    used_chemicals = list(set(used_chemicals))
+    print(f'number of unique chems used: {len(used_chemicals)}')
+    # with open(os.path.join(BASE, 'data/chems_in_paths.pkl'), 'w') as fo:
+    #     json.dump(used_chemicals, fo)
     kg.serialize(os.path.join(BASE, 'graphs/pathways.ttl'))
     print('pathways.ttl saved')
     return kg

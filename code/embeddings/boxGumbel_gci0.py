@@ -2,7 +2,7 @@ import torch as th
 from torch import nn
 from torch.utils.data import DataLoader
 from tqdm import trange
-from .boxGumbelModule_gci0 import BoxGumbelModule
+from boxGumbelModule_gci0 import BoxGumbelModule
 import pickle, os
 import tempfile
 import time

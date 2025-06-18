@@ -2,7 +2,7 @@
 __pycache__
 
 OPENAI_KEY.py
-
+catalog-v001.xml
 # large files
 prel_explanationsDMA30-InputXGradient-full_model-feb02-10000-cleaned.tsv
 prel_explanationsDMA30-InputXGradient-full_model-feb02-10000.tsv

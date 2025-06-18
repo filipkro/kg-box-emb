@@ -17,6 +17,8 @@ aao1729_data_s1.tsv
 interactions.pkl
 interactions_DMA30.pkl
 pyg_graph_c_DMA30_fitness.pkl
+pyg_graph_c_interactions_DMA30.pkl
+pyg_graph_box_interactions_DMA30.pkl
 refined_interactions_DMA30.pkl
 refined_interactions.pkl
 

@@ -10,7 +10,8 @@ from itertools import chain
 
 from sklearn.model_selection import KFold
 from parameters import (LR_DECAY, SCHEDULE_RATE, TRAIN_EMBEDDING_EPOCH,
-                        TRAIN_GENES, BOX_WEIGHT, REGULARIZATION, DATASET)
+                        TRAIN_GENES, BOX_WEIGHT, REGULARIZATION, DATASET,
+                        MIN_NBR_EDGES)
 
 seed_everything(42)
 
@@ -166,7 +167,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
                device, model_kwargs, lr=0.001, gci0_data=None):
     
     skip_edge = [e for e in train_data.edge_types if
-                 train_data[e].edge_index.shape[1] < 1000]
+                 train_data[e].edge_index.shape[1] < MIN_NBR_EDGES]
     skip_edge.append(('genes', 'interacts', 'genes'))
     for e in train_data.edge_types:
         if ('reg' in e[1] and e[1] not in [
@@ -359,7 +360,7 @@ def continue_final_training(model, data, epochs, loss_function, metric, device,
 def train_final_model(model_type, model_kwargs, data, epochs, loss_function,
                       metric, device, lr=0.001, gci0_data=None):
     skip_edge = [e for e in data.edge_types
-                 if data[e].edge_index.shape[1] < 1000]
+                 if data[e].edge_index.shape[1] < MIN_NBR_EDGES]
     skip_edge.append(('genes', 'interacts', 'genes'))
     for e in data.edge_types:
          if ('reg' in e[1] and e[1] not in [

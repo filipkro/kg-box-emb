@@ -1,359 +1,6 @@
-@prefix bc: <http://biocyc.project-genesis.io#> .
 @prefix obo: <http://purl.obolibrary.org/obo/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-
-bc:CCI-GOLGI-LUM-FUN-CCO-CYTOSOL rdfs:subClassOf bc:CCO-CYTOSOL,
-        bc:CCO-GOLGI-LUM .
-
-bc:CCO-ACIDCALC-LUM rdfs:subClassOf bc:CCO-SPACE .
-
-bc:CCO-ACIDCALC-MEM rdfs:subClassOf bc:CCO-MEMBRANE .
-
-bc:CCO-ACIDOCALCISOME rdfs:subClassOf bc:CCO-MEM-ORG,
-        obo:GO_0020022 .
-
-bc:CCO-AMYLOPLAST rdfs:subClassOf bc:CCO-LEUCOPLAST,
-        obo:GO_0009501 .
-
-bc:CCO-BAC-NUCLEOID rdfs:subClassOf bc:CCO-NUCLEOID,
-        obo:GO_0043590 .
-
-bc:CCO-CARBOXYSOME rdfs:subClassOf bc:CCO-NON-MEM-ORG,
-        obo:GO_0031470 .
-
-bc:CCO-CARBOXYSOME-SHELL rdfs:subClassOf bc:CCO-NON-MEMBRANE-BARRIER .
-
-bc:CCO-CARBOXYSOME-SPC rdfs:subClassOf bc:CCO-SPACE .
-
-bc:CCO-CE-BAC-NEG rdfs:subClassOf bc:CCO-CE-BAC .
-
-bc:CCO-CE-BAC-POS rdfs:subClassOf bc:CCO-CE-BAC .
-
-bc:CCO-CENTRAL-VACUOLE rdfs:subClassOf bc:CCO-VACUOLE,
-        obo:GO_0042807 .
-
-bc:CCO-CHL-IM-SPC rdfs:subClassOf bc:CCO-PLAST-IM-SPC,
-        obo:GO_0031972 .
-
-bc:CCO-CHL-STKD-THY rdfs:subClassOf bc:CCO-CHLOR-THY,
-        obo:GO_0009515 .
-
-bc:CCO-CHL-STR-THY rdfs:subClassOf bc:CCO-CHLOR-THY,
-        obo:GO_0009533 .
-
-bc:CCO-CHL-THY-LUM rdfs:subClassOf bc:CCO-THY-LUM,
-        obo:GO_0009543 .
-
-bc:CCO-CHL-THY-MEM rdfs:subClassOf bc:CCO-THY-MEM,
-        obo:GO_0009535 .
-
-bc:CCO-CHLOR-ENV rdfs:subClassOf bc:CCO-PLASTID-ENV,
-        obo:GO_0009941 .
-
-bc:CCO-CHLOR-IMEM rdfs:subClassOf bc:CCO-CHLOR-MEM,
-        bc:CCO-PLAST-IMEM,
-        obo:GO_0009706 .
-
-bc:CCO-CHLOR-OMEM rdfs:subClassOf bc:CCO-CHLOR-MEM,
-        bc:CCO-PLAST-OMEM,
-        obo:GO_0009707 .
-
-bc:CCO-CHLOR-STR rdfs:subClassOf bc:CCO-PLASTID-STR,
-        obo:GO_0009570 .
-
-bc:CCO-CHLOROPLAST rdfs:subClassOf bc:CCO-PLASTID,
-        obo:GO_0009507 .
-
-bc:CCO-CHR-IM-SPC rdfs:subClassOf bc:CCO-PLAST-IM-SPC,
-        obo:GO_0031973 .
-
-bc:CCO-CHROM-ENV rdfs:subClassOf bc:CCO-PLASTID-ENV,
-        obo:GO_0031898 .
-
-bc:CCO-CHROM-IMEM rdfs:subClassOf bc:CCO-CHROM-MEM,
-        bc:CCO-PLAST-IMEM,
-        obo:GO_0031899 .
-
-bc:CCO-CHROM-OMEM rdfs:subClassOf bc:CCO-CHROM-MEM,
-        bc:CCO-PLAST-OMEM,
-        obo:GO_0031900 .
-
-bc:CCO-CHROM-STR rdfs:subClassOf bc:CCO-PLASTID-STR,
-        obo:GO_0009575 .
-
-bc:CCO-CHROMOPLAST rdfs:subClassOf bc:CCO-PLASTID,
-        obo:GO_0009509 .
-
-bc:CCO-CONTRACTILE-VACUOLE rdfs:subClassOf bc:CCO-VACUOLE,
-        obo:GO_0000331 .
-
-bc:CCO-CONTRCTVAC-LUM rdfs:subClassOf bc:CCO-VAC-LUM .
-
-bc:CCO-CONTRCTVAC-MEM rdfs:subClassOf bc:CCO-VAC-MEM,
-        obo:GO_0031164 .
-
-bc:CCO-CW-BAC-ACT rdfs:subClassOf bc:CCO-CW-BAC .
-
-bc:CCO-CW-BAC-NEG rdfs:subClassOf bc:CCO-CW-BAC .
-
-bc:CCO-CW-BAC-POS rdfs:subClassOf bc:CCO-CW-BAC .
-
-bc:CCO-CW-FUNGI rdfs:subClassOf bc:CCO-CELLWALL .
-
-bc:CCO-CW-PL-PRIM rdfs:subClassOf bc:CCO-CW-PLANT .
-
-bc:CCO-CW-PL-SEC rdfs:subClassOf bc:CCO-CW-PLANT .
-
-bc:CCO-CYTOPLASM rdfs:subClassOf bc:CCO-SUPER-COMP,
-        obo:GO_0005737 .
-
-bc:CCO-CYTOSKELETON rdfs:subClassOf bc:CCO-NON-MEM-ORG,
-        obo:GO_0005856 .
-
-bc:CCO-CYTOSOL-CCO-MIT-LUM rdfs:subClassOf bc:CCO-CYTOSOL,
-        bc:CCO-MIT-LUM .
-
-bc:CCO-EARLY-END-LUM rdfs:subClassOf bc:CCO-ENDO-LUM,
-        obo:GO_0031905 .
-
-bc:CCO-EARLY-ENDO rdfs:subClassOf bc:CCO-ENDOSOME,
-        obo:GO_0005769 .
-
-bc:CCO-EARLY-ENDO-MEM rdfs:subClassOf bc:CCO-ENDO-MEM,
-        obo:GO_0031901 .
-
-bc:CCO-ELAIOPLAST rdfs:subClassOf bc:CCO-LEUCOPLAST,
-        obo:GO_0009545 .
-
-bc:CCO-ENDOCYT-VES rdfs:subClassOf bc:CCO-VESICLE,
-        obo:GO_0030139 .
-
-bc:CCO-ENDOCYT-VES-LUM-CCO-CYTOSOL rdfs:subClassOf bc:CCO-CYTOSOL,
-        bc:CCO-ENDOCYT-VES-LUM .
-
-bc:CCO-ENDOCYT-VES-MEM rdfs:subClassOf bc:CCO-VESICLE-MEM,
-        obo:GO_0030666 .
-
-bc:CCO-ER-GOLGI-VES rdfs:subClassOf bc:CCO-GOLGI-VES .
-
-bc:CCO-ETIOPLAST rdfs:subClassOf bc:CCO-PLASTID,
-        obo:GO_0009513 .
-
-bc:CCO-EXTRACELL-MAT rdfs:subClassOf bc:CCO-SURFACE-MAT .
-
-bc:CCO-EXTRACELLULAR-CCO-CYTOSOL rdfs:subClassOf bc:CCO-CYTOSOL,
-        bc:CCO-EXTRACELLULAR .
-
-bc:CCO-FLAGELLUM rdfs:subClassOf bc:CCO-CELL-PROJECTION .
-
-bc:CCO-GG-CIS-CIST rdfs:subClassOf bc:CCO-GOLGI-CIST,
-        obo:GO_0000137 .
-
-bc:CCO-GG-MED-CIST rdfs:subClassOf bc:CCO-GOLGI-CIST,
-        obo:GO_0005797 .
-
-bc:CCO-GG-TR-CIST rdfs:subClassOf bc:CCO-GOLGI-CIST,
-        obo:GO_0000138 .
-
-bc:CCO-GLYCO-LUM rdfs:subClassOf bc:CCO-MICRO-LUM .
-
-bc:CCO-GLYCO-MEM rdfs:subClassOf bc:CCO-MBODY-MEM .
-
-bc:CCO-GLYCOSOME rdfs:subClassOf bc:CCO-MICROBODY,
-        obo:GO_0020015 .
-
-bc:CCO-GLYOX-LUM rdfs:subClassOf bc:CCO-MICRO-LUM,
-        obo:GO_0031908 .
-
-bc:CCO-GLYOX-MEM rdfs:subClassOf bc:CCO-MBODY-MEM,
-        obo:GO_0046861 .
-
-bc:CCO-GLYOXYSOME rdfs:subClassOf bc:CCO-MICROBODY,
-        obo:GO_0009514 .
-
-bc:CCO-GOLGI rdfs:subClassOf bc:CCO-MEM-ORG,
-        obo:GO_0005794 .
-
-bc:CCO-GOLGI-CIST-MEM rdfs:subClassOf bc:CCO-GOLGI-MEM,
-        obo:GO_0032580 .
-
-bc:CCO-GOLGI-ER-VES rdfs:subClassOf bc:CCO-GOLGI-VES,
-        obo:GO_0030142 .
-
-bc:CCO-GOLGI-VES-MEM rdfs:subClassOf bc:CCO-GOLGI-MEM,
-        bc:CCO-VESICLE-MEM,
-        obo:GO_0030660 .
-
-bc:CCO-INTER-GOLGI-VES rdfs:subClassOf bc:CCO-GOLGI-VES .
-
-bc:CCO-LATE-END-LUM rdfs:subClassOf bc:CCO-ENDO-LUM,
-        obo:GO_0031906 .
-
-bc:CCO-LATE-ENDO rdfs:subClassOf bc:CCO-ENDOSOME,
-        obo:GO_0005770 .
-
-bc:CCO-LATE-ENDO-MEM rdfs:subClassOf bc:CCO-ENDO-MEM,
-        obo:GO_0031902 .
-
-bc:CCO-LYS-LUM rdfs:subClassOf bc:CCO-SPACE .
-
-bc:CCO-LYS-MEM rdfs:subClassOf bc:CCO-MEMBRANE,
-        obo:GO_0005765 .
-
-bc:CCO-LYSOSOME rdfs:subClassOf bc:CCO-MEM-ORG,
-        obo:GO_0005764 .
-
-bc:CCO-MIT rdfs:subClassOf bc:CCO-MEM-ORG,
-        obo:GO_0005739 .
-
-bc:CCO-MIT-ENV rdfs:subClassOf bc:CCO-ORGANEL-ENV,
-        obo:GO_0005740 .
-
-bc:CCO-MIT-IM-SPC rdfs:subClassOf bc:CCO-SPACE,
-        obo:GO_0005758 .
-
-bc:CCO-MIT-IMEM rdfs:subClassOf bc:CCO-MIT-MEM,
-        obo:GO_0005743 .
-
-bc:CCO-MIT-NUCLEOID rdfs:subClassOf bc:CCO-NUCLEOID,
-        obo:GO_0042645 .
-
-bc:CCO-MIT-OMEM rdfs:subClassOf bc:CCO-MIT-MEM,
-        obo:GO_0005741 .
-
-bc:CCO-NUC-ENV rdfs:subClassOf bc:CCO-ORGANEL-ENV,
-        obo:GO_0005635 .
-
-bc:CCO-NUC-IMEM rdfs:subClassOf bc:CCO-NUC-MEM,
-        obo:GO_0005637 .
-
-bc:CCO-NUC-LUM rdfs:subClassOf bc:CCO-SPACE,
-        obo:GO_0031981 .
-
-bc:CCO-NUC-OMEM rdfs:subClassOf bc:CCO-NUC-MEM,
-        obo:GO_0005640 .
-
-bc:CCO-NUCLEOLUS rdfs:subClassOf bc:CCO-NON-MEM-ORG,
-        obo:GO_0005730 .
-
-bc:CCO-NUCLEUS rdfs:subClassOf bc:CCO-MEM-ORG,
-        obo:GO_0005634 .
-
-bc:CCO-OILBODY rdfs:subClassOf bc:CCO-MEM-ORG,
-        obo:GO_0012511 .
-
-bc:CCO-OUT-CCO-IN rdfs:subClassOf bc:CCO-IN,
-        bc:CCO-OUT .
-
-bc:CCO-OUTER-MEM rdfs:subClassOf bc:CCO-OUTER-MEM-DIDERM .
-
-bc:CCO-OUTER-MEM-ACT rdfs:subClassOf bc:CCO-OUTER-MEM-DIDERM,
-        obo:GO_0036407 .
-
-bc:CCO-PERI-ACT rdfs:subClassOf bc:CCO-PERIPLASM .
-
-bc:CCO-PERI-BAC rdfs:subClassOf bc:CCO-PERIPLASM .
-
-bc:CCO-PERI-FUNGI rdfs:subClassOf bc:CCO-PERIPLASM .
-
-bc:CCO-PERINUC-SPC rdfs:subClassOf bc:CCO-SPACE,
-        obo:GO_0005641 .
-
-bc:CCO-PEROX-LUM rdfs:subClassOf bc:CCO-MICRO-LUM,
-        obo:GO_0005782 .
-
-bc:CCO-PEROX-MEM rdfs:subClassOf bc:CCO-MBODY-MEM,
-        obo:GO_0005778 .
-
-bc:CCO-PEROXISOME rdfs:subClassOf bc:CCO-MICROBODY,
-        obo:GO_0005777 .
-
-bc:CCO-PILUS rdfs:subClassOf bc:CCO-CELL-PROJECTION,
-        obo:GO_0009289 .
-
-bc:CCO-PLAST-NUCLEOID rdfs:subClassOf bc:CCO-NUCLEOID,
-        obo:GO_0042646 .
-
-bc:CCO-PM-ANIMAL rdfs:subClassOf bc:CCO-PLASMA-MEM .
-
-bc:CCO-PM-BAC-ACT rdfs:subClassOf bc:CCO-PM-BACTERIA .
-
-bc:CCO-PM-BAC-NEG rdfs:subClassOf bc:CCO-PM-BACTERIA,
-        obo:GO_0005886 .
-
-bc:CCO-PM-BAC-POS rdfs:subClassOf bc:CCO-PM-BACTERIA .
-
-bc:CCO-PM-FUNGI rdfs:subClassOf bc:CCO-PLASMA-MEM .
-
-bc:CCO-PM-PLANT rdfs:subClassOf bc:CCO-PLASMA-MEM .
-
-bc:CCO-PROT-PLAST rdfs:subClassOf bc:CCO-LEUCOPLAST,
-        obo:GO_0031986 .
-
-bc:CCO-RGH-ER-LUM rdfs:subClassOf bc:CCO-ER-LUM,
-        obo:GO_0048237 .
-
-bc:CCO-RGH-ER-MEM rdfs:subClassOf bc:CCO-ER-MEM,
-        obo:GO_0030867 .
-
-bc:CCO-RIBOSOME rdfs:subClassOf bc:CCO-NON-MEM-ORG,
-        obo:GO_0005840 .
-
-bc:CCO-ROUGH-ER rdfs:subClassOf bc:CCO-ER,
-        obo:GO_0005791 .
-
-bc:CCO-S-LAYER rdfs:subClassOf bc:CCO-SURFACE-MAT,
-        obo:GO_0030115 .
-
-bc:CCO-SEC-GRANULE rdfs:subClassOf bc:CCO-VESICLE,
-        obo:GO_0030141,
-        obo:GO_0099503 .
-
-bc:CCO-SEC-GRANULE-LUM rdfs:subClassOf bc:CCO-VES-LUM,
-        obo:GO_0034774 .
-
-bc:CCO-SEC-GRANULE-MEM rdfs:subClassOf bc:CCO-VESICLE-MEM,
-        obo:GO_0030667 .
-
-bc:CCO-SENESC-VACUOLE rdfs:subClassOf bc:CCO-VACUOLE,
-        obo:GO_0010282 .
-
-bc:CCO-SMOOTH-ER rdfs:subClassOf bc:CCO-ER,
-        obo:GO_0005790 .
-
-bc:CCO-SMTH-ER-LUM rdfs:subClassOf bc:CCO-ER-LUM,
-        obo:GO_0048238 .
-
-bc:CCO-SMTH-ER-MEM rdfs:subClassOf bc:CCO-ER-MEM,
-        obo:GO_0030868 .
-
-bc:CCO-SPORE rdfs:subClassOf bc:CCO-SUPER-COMP .
-
-bc:CCO-STORAGE-VAC rdfs:subClassOf bc:CCO-VACUOLE,
-        obo:GO_0000322 .
-
-bc:CCO-SYN-VES rdfs:subClassOf bc:CCO-VESICLE,
-        obo:GO_0008021 .
-
-bc:CCO-SYN-VES-LUM rdfs:subClassOf bc:CCO-VES-LUM,
-        obo:GO_0034592 .
-
-bc:CCO-SYN-VES-MEM rdfs:subClassOf bc:CCO-VESICLE-MEM,
-        obo:GO_0030672 .
-
-bc:CCO-THY-CYA rdfs:subClassOf bc:CCO-MEM-ORG .
-
-bc:CCO-THY-LUM-CYA rdfs:subClassOf bc:CCO-THY-LUM .
-
-bc:CCO-THY-MEM-CYA rdfs:subClassOf bc:CCO-THY-MEM .
-
-bc:CCO-TOGA rdfs:subClassOf bc:CCO-OUTER-MEM-DIDERM .
-
-bc:CCO-TR-GOLGI-VES rdfs:subClassOf bc:CCO-GOLGI-VES,
-        obo:GO_0030140 .
-
-bc:CCO-UNKNOWN-SPACE rdfs:subClassOf bc:CCO-SPACE .
 
 obo:GO_0000015 rdfs:subClassOf obo:GO_1902494 .
 
@@ -371,6 +18,12 @@ obo:GO_0000124 rdfs:subClassOf obo:GO_0070461,
 obo:GO_0000127 rdfs:subClassOf obo:GO_0090576 .
 
 obo:GO_0000131 rdfs:subClassOf obo:GO_0140535 .
+
+obo:GO_0000137 rdfs:subClassOf obo:GO_0031985 .
+
+obo:GO_0000138 rdfs:subClassOf obo:GO_0031985 .
+
+obo:GO_0000139 rdfs:subClassOf obo:GO_0098588 .
 
 obo:GO_0000142 rdfs:subClassOf obo:GO_0110085 .
 
@@ -427,6 +80,9 @@ obo:GO_0000327 rdfs:subClassOf obo:GO_0000323 .
 obo:GO_0000328 rdfs:subClassOf obo:GO_0005775 .
 
 obo:GO_0000329 rdfs:subClassOf obo:GO_0098852 .
+
+obo:GO_0000331 rdfs:subClassOf obo:GO_0005773,
+        obo:GO_0031410 .
 
 obo:GO_0000333 rdfs:subClassOf obo:GO_0005697,
         obo:GO_0061695 .
@@ -720,6 +376,8 @@ obo:GO_0005612 rdfs:subClassOf obo:GO_0043256 .
 
 obo:GO_0005614 rdfs:subClassOf obo:GO_0062023 .
 
+obo:GO_0005615 rdfs:subClassOf obo:GO_0110165 .
+
 obo:GO_0005616 rdfs:subClassOf obo:GO_0032991 .
 
 obo:GO_0005619 rdfs:subClassOf obo:GO_0009277,
@@ -737,10 +395,20 @@ obo:GO_0005632 rdfs:subClassOf obo:GO_0110165 .
 
 obo:GO_0005633 rdfs:subClassOf obo:GO_0005811 .
 
+obo:GO_0005635 rdfs:subClassOf obo:GO_0031967 .
+
+obo:GO_0005637 rdfs:subClassOf obo:GO_0019866,
+        obo:GO_0031965 .
+
 obo:GO_0005638 rdfs:subClassOf obo:GO_0005882 .
 
 obo:GO_0005639 rdfs:subClassOf obo:GO_0031229,
         obo:GO_0031301 .
+
+obo:GO_0005640 rdfs:subClassOf obo:GO_0031965,
+        obo:GO_0031968 .
+
+obo:GO_0005641 rdfs:subClassOf obo:GO_0031970 .
 
 obo:GO_0005642 rdfs:subClassOf obo:GO_0016020 .
 
@@ -834,9 +502,21 @@ obo:GO_0005728 rdfs:subClassOf obo:GO_0005727 .
 
 obo:GO_0005729 rdfs:subClassOf obo:GO_0005727 .
 
+obo:GO_0005730 rdfs:subClassOf obo:GO_0043232 .
+
 obo:GO_0005731 rdfs:subClassOf obo:GO_0030874 .
 
 obo:GO_0005736 rdfs:subClassOf obo:GO_0055029 .
+
+obo:GO_0005739 rdfs:subClassOf obo:GO_0043231 .
+
+obo:GO_0005740 rdfs:subClassOf obo:GO_0031967 .
+
+obo:GO_0005741 rdfs:subClassOf obo:GO_0031966,
+        obo:GO_0031968 .
+
+obo:GO_0005743 rdfs:subClassOf obo:GO_0019866,
+        obo:GO_0031966 .
 
 obo:GO_0005744 rdfs:subClassOf obo:GO_0098800 .
 
@@ -870,6 +550,10 @@ obo:GO_0005756 rdfs:subClassOf obo:GO_0045269,
 obo:GO_0005757 rdfs:subClassOf obo:GO_0046930,
         obo:GO_0098798 .
 
+obo:GO_0005758 rdfs:subClassOf obo:GO_0031970 .
+
+obo:GO_0005759 rdfs:subClassOf obo:GO_0070013 .
+
 obo:GO_0005760 rdfs:subClassOf obo:GO_0042575,
         obo:GO_0098798 .
 
@@ -899,9 +583,15 @@ obo:GO_0005787 rdfs:subClassOf obo:GO_0098796,
         obo:GO_0140534,
         obo:GO_1905368 .
 
+obo:GO_0005790 rdfs:subClassOf obo:GO_0005783 .
+
+obo:GO_0005791 rdfs:subClassOf obo:GO_0005783 .
+
 obo:GO_0005793 rdfs:subClassOf obo:GO_0043231 .
 
 obo:GO_0005795 rdfs:subClassOf obo:GO_0098791 .
+
+obo:GO_0005797 rdfs:subClassOf obo:GO_0031985 .
 
 obo:GO_0005801 rdfs:subClassOf obo:GO_0043231 .
 
@@ -1238,13 +928,25 @@ obo:GO_0009431 rdfs:subClassOf obo:GO_0110165 .
 
 obo:GO_0009433 rdfs:subClassOf obo:GO_0110165 .
 
+obo:GO_0009501 rdfs:subClassOf obo:GO_0009536 .
+
 obo:GO_0009504 rdfs:subClassOf obo:GO_0110165 .
+
+obo:GO_0009507 rdfs:subClassOf obo:GO_0009536 .
+
+obo:GO_0009509 rdfs:subClassOf obo:GO_0009536 .
 
 obo:GO_0009510 rdfs:subClassOf obo:GO_0110165 .
 
 obo:GO_0009511 rdfs:subClassOf obo:GO_0005783 .
 
 obo:GO_0009512 rdfs:subClassOf obo:GO_0070069 .
+
+obo:GO_0009513 rdfs:subClassOf obo:GO_0009536 .
+
+obo:GO_0009514 rdfs:subClassOf obo:GO_0005777 .
+
+obo:GO_0009515 rdfs:subClassOf obo:GO_0009534 .
 
 obo:GO_0009517 rdfs:subClassOf obo:GO_0009503 .
 
@@ -1258,6 +960,10 @@ obo:GO_0009530 rdfs:subClassOf obo:GO_0009505 .
 
 obo:GO_0009531 rdfs:subClassOf obo:GO_0009505 .
 
+obo:GO_0009533 rdfs:subClassOf obo:GO_0009534 .
+
+obo:GO_0009535 rdfs:subClassOf obo:GO_0055035 .
+
 obo:GO_0009537 rdfs:subClassOf obo:GO_0009536 .
 
 obo:GO_0009538 rdfs:subClassOf obo:GO_0098796 .
@@ -1268,7 +974,11 @@ obo:GO_0009541 rdfs:subClassOf obo:GO_0110165 .
 
 obo:GO_0009542 rdfs:subClassOf obo:GO_0110165 .
 
+obo:GO_0009543 rdfs:subClassOf obo:GO_0031978 .
+
 obo:GO_0009544 rdfs:subClassOf obo:GO_0098807 .
+
+obo:GO_0009545 rdfs:subClassOf obo:GO_0009516 .
 
 obo:GO_0009546 rdfs:subClassOf obo:GO_0110165 .
 
@@ -1284,11 +994,15 @@ obo:GO_0009568 rdfs:subClassOf obo:GO_0043036 .
 
 obo:GO_0009569 rdfs:subClassOf obo:GO_0043036 .
 
+obo:GO_0009570 rdfs:subClassOf obo:GO_0009532 .
+
 obo:GO_0009571 rdfs:subClassOf obo:GO_0009532 .
 
 obo:GO_0009573 rdfs:subClassOf obo:GO_0048492 .
 
 obo:GO_0009574 rdfs:subClassOf obo:GO_0110165 .
+
+obo:GO_0009575 rdfs:subClassOf obo:GO_0009532 .
 
 obo:GO_0009576 rdfs:subClassOf obo:GO_0009532 .
 
@@ -1302,6 +1016,12 @@ obo:GO_0009654 rdfs:subClassOf obo:GO_0098796,
 obo:GO_0009655 rdfs:subClassOf obo:GO_0098807 .
 
 obo:GO_0009656 rdfs:subClassOf obo:GO_0098807 .
+
+obo:GO_0009706 rdfs:subClassOf obo:GO_0009528,
+        obo:GO_0031969 .
+
+obo:GO_0009707 rdfs:subClassOf obo:GO_0009527,
+        obo:GO_0031969 .
 
 obo:GO_0009782 rdfs:subClassOf obo:GO_0098796 .
 
@@ -1326,6 +1046,8 @@ obo:GO_0009925 rdfs:subClassOf obo:GO_0098590 .
 
 obo:GO_0009930 rdfs:subClassOf obo:GO_0110165 .
 
+obo:GO_0009941 rdfs:subClassOf obo:GO_0009526 .
+
 obo:GO_0009986 rdfs:subClassOf obo:GO_0110165 .
 
 obo:GO_0010005 rdfs:subClassOf obo:GO_0055028 .
@@ -1344,6 +1066,9 @@ obo:GO_0010170 rdfs:subClassOf obo:GO_0140535,
 obo:GO_0010240 rdfs:subClassOf obo:GO_0045254 .
 
 obo:GO_0010278 rdfs:subClassOf obo:GO_0098796 .
+
+obo:GO_0010282 rdfs:subClassOf obo:GO_0000323,
+        obo:GO_0000325 .
 
 obo:GO_0010287 rdfs:subClassOf obo:GO_0110165 .
 
@@ -1379,6 +1104,8 @@ obo:GO_0012509 rdfs:subClassOf obo:GO_0030658,
 obo:GO_0012510 rdfs:subClassOf obo:GO_0030658,
         obo:GO_0030660,
         obo:GO_0030665 .
+
+obo:GO_0012511 rdfs:subClassOf obo:GO_0005811 .
 
 obo:GO_0014701 rdfs:subClassOf obo:GO_0033017 .
 
@@ -1621,11 +1348,15 @@ obo:GO_0020010 rdfs:subClassOf obo:GO_0110165 .
 
 obo:GO_0020011 rdfs:subClassOf obo:GO_0009536 .
 
+obo:GO_0020015 rdfs:subClassOf obo:GO_0005777 .
+
 obo:GO_0020016 rdfs:subClassOf obo:GO_0110165 .
 
 obo:GO_0020018 rdfs:subClassOf obo:GO_0060170 .
 
 obo:GO_0020020 rdfs:subClassOf obo:GO_0032010 .
+
+obo:GO_0020022 rdfs:subClassOf obo:GO_0043231 .
 
 obo:GO_0020025 rdfs:subClassOf obo:GO_0005874 .
 
@@ -1707,6 +1438,8 @@ obo:GO_0030096 rdfs:subClassOf obo:GO_0009523,
 
 obo:GO_0030114 rdfs:subClassOf obo:GO_0030112 .
 
+obo:GO_0030115 rdfs:subClassOf obo:GO_0030312 .
+
 obo:GO_0030121 rdfs:subClassOf obo:GO_0030131 .
 
 obo:GO_0030122 rdfs:subClassOf obo:GO_0030131,
@@ -1730,6 +1463,13 @@ obo:GO_0030132 rdfs:subClassOf obo:GO_0030118,
         obo:GO_0098797 .
 
 obo:GO_0030134 rdfs:subClassOf obo:GO_0030135 .
+
+obo:GO_0030140 rdfs:subClassOf obo:GO_0005798,
+        obo:GO_0030133,
+        obo:GO_0030136 .
+
+obo:GO_0030142 rdfs:subClassOf obo:GO_0030133,
+        obo:GO_0030137 .
 
 obo:GO_0030143 rdfs:subClassOf obo:GO_0030133,
         obo:GO_0030137 .
@@ -1787,6 +1527,8 @@ obo:GO_0030668 rdfs:subClassOf obo:GO_0030659,
 obo:GO_0030671 rdfs:subClassOf obo:GO_0030669,
         obo:GO_0030670 .
 
+obo:GO_0030672 rdfs:subClassOf obo:GO_0099501 .
+
 obo:GO_0030673 rdfs:subClassOf obo:GO_0032589 .
 
 obo:GO_0030678 rdfs:subClassOf obo:GO_0030677,
@@ -1816,6 +1558,12 @@ obo:GO_0030694 rdfs:subClassOf obo:GO_0110165 .
 obo:GO_0030700 rdfs:subClassOf obo:GO_1990204 .
 
 obo:GO_0030849 rdfs:subClassOf obo:GO_0005694 .
+
+obo:GO_0030867 rdfs:subClassOf obo:GO_0005789,
+        obo:GO_0098588 .
+
+obo:GO_0030868 rdfs:subClassOf obo:GO_0005789,
+        obo:GO_0098588 .
 
 obo:GO_0030869 rdfs:subClassOf obo:GO_0005677 .
 
@@ -1918,6 +1666,9 @@ obo:GO_0031096 rdfs:subClassOf obo:GO_0070013 .
 obo:GO_0031097 rdfs:subClassOf obo:GO_0099738 .
 
 obo:GO_0031143 rdfs:subClassOf obo:GO_0120025 .
+
+obo:GO_0031164 rdfs:subClassOf obo:GO_0005774,
+        obo:GO_0030659 .
 
 obo:GO_0031165 rdfs:subClassOf obo:GO_0031166,
         obo:GO_0031311 .
@@ -2044,6 +1795,8 @@ obo:GO_0031464 rdfs:subClassOf obo:GO_0080008 .
 obo:GO_0031466 rdfs:subClassOf obo:GO_0031461 .
 
 obo:GO_0031467 rdfs:subClassOf obo:GO_0031461 .
+
+obo:GO_0031470 rdfs:subClassOf obo:GO_0031469 .
 
 obo:GO_0031471 rdfs:subClassOf obo:GO_0031469 .
 
@@ -2173,6 +1926,18 @@ obo:GO_0031838 rdfs:subClassOf obo:GO_0032991 .
 
 obo:GO_0031897 rdfs:subClassOf obo:GO_0098796 .
 
+obo:GO_0031898 rdfs:subClassOf obo:GO_0009526 .
+
+obo:GO_0031899 rdfs:subClassOf obo:GO_0009528,
+        obo:GO_0046862 .
+
+obo:GO_0031900 rdfs:subClassOf obo:GO_0009527,
+        obo:GO_0046862 .
+
+obo:GO_0031905 rdfs:subClassOf obo:GO_0031904 .
+
+obo:GO_0031908 rdfs:subClassOf obo:GO_0005782 .
+
 obo:GO_0031910 rdfs:subClassOf obo:GO_0110165 .
 
 obo:GO_0031911 rdfs:subClassOf obo:GO_0110165 .
@@ -2191,8 +1956,16 @@ obo:GO_0031941 rdfs:subClassOf obo:GO_0032991 .
 
 obo:GO_0031942 rdfs:subClassOf obo:GO_0098800 .
 
+obo:GO_0031972 rdfs:subClassOf obo:GO_0009529 .
+
+obo:GO_0031973 rdfs:subClassOf obo:GO_0009529 .
+
 obo:GO_0031979 rdfs:subClassOf obo:GO_0031977,
         obo:GO_0060205 .
+
+obo:GO_0031981 rdfs:subClassOf obo:GO_0070013 .
+
+obo:GO_0031986 rdfs:subClassOf obo:GO_0009516 .
 
 obo:GO_0032002 rdfs:subClassOf obo:GO_0098802 .
 
@@ -2677,6 +2450,8 @@ obo:GO_0034519 rdfs:subClassOf obo:GO_0034518 .
 
 obo:GO_0034591 rdfs:subClassOf obo:GO_0043233 .
 
+obo:GO_0034592 rdfs:subClassOf obo:GO_0060205 .
+
 obo:GO_0034615 rdfs:subClassOf obo:GO_0140535,
         obo:GO_1902494 .
 
@@ -3040,6 +2815,8 @@ obo:GO_0036398 rdfs:subClassOf obo:GO_0032991 .
 obo:GO_0036406 rdfs:subClassOf obo:GO_0031246,
         obo:GO_0036405 .
 
+obo:GO_0036407 rdfs:subClassOf obo:GO_0009279 .
+
 obo:GO_0036410 rdfs:subClassOf obo:GO_0036409 .
 
 obo:GO_0036411 rdfs:subClassOf obo:GO_0017053 .
@@ -3219,6 +2996,9 @@ obo:GO_0042642 rdfs:subClassOf obo:GO_0016459 .
 
 obo:GO_0042644 rdfs:subClassOf obo:GO_0042646 .
 
+obo:GO_0042645 rdfs:subClassOf obo:GO_0009295,
+        obo:GO_0043232 .
+
 obo:GO_0042647 rdfs:subClassOf obo:GO_0042646 .
 
 obo:GO_0042648 rdfs:subClassOf obo:GO_0009508 .
@@ -3257,6 +3037,8 @@ obo:GO_0042765 rdfs:subClassOf obo:GO_0008303,
         obo:GO_0140534 .
 
 obo:GO_0042788 rdfs:subClassOf obo:GO_0005840 .
+
+obo:GO_0042807 rdfs:subClassOf obo:GO_0000325 .
 
 obo:GO_0042824 rdfs:subClassOf obo:GO_0098796,
         obo:GO_0140534 .
@@ -3376,6 +3158,9 @@ obo:GO_0043541 rdfs:subClassOf obo:GO_0098796,
         obo:GO_0140534 .
 
 obo:GO_0043564 rdfs:subClassOf obo:GO_0140513 .
+
+obo:GO_0043590 rdfs:subClassOf obo:GO_0009295,
+        obo:GO_0043232 .
 
 obo:GO_0043591 rdfs:subClassOf obo:GO_0031160 .
 
@@ -3848,6 +3633,8 @@ obo:GO_0046859 rdfs:subClassOf obo:GO_0098588 .
 
 obo:GO_0046860 rdfs:subClassOf obo:GO_0005778 .
 
+obo:GO_0046861 rdfs:subClassOf obo:GO_0005778 .
+
 obo:GO_0046868 rdfs:subClassOf obo:GO_0110165 .
 
 obo:GO_0048046 rdfs:subClassOf obo:GO_0005576 .
@@ -3872,6 +3659,10 @@ obo:GO_0048224 rdfs:subClassOf obo:GO_0110165 .
 obo:GO_0048225 rdfs:subClassOf obo:GO_0110165 .
 
 obo:GO_0048226 rdfs:subClassOf obo:GO_0110165 .
+
+obo:GO_0048237 rdfs:subClassOf obo:GO_0005788 .
+
+obo:GO_0048238 rdfs:subClassOf obo:GO_0005788 .
 
 obo:GO_0048269 rdfs:subClassOf obo:GO_0140535,
         obo:GO_1990234 .
@@ -7161,36 +6952,6 @@ obo:GO_1990972 rdfs:subClassOf obo:GO_0098637 .
 
 obo:GO_1990973 rdfs:subClassOf obo:GO_0043232 .
 
-bc:CCO-ENDOCYT-VES-LUM rdfs:subClassOf bc:CCO-VES-LUM,
-        obo:GO_0071682 .
-
-bc:CCO-EXTRACELLULAR rdfs:subClassOf bc:CCO-SPACE,
-        obo:GO_0005615 .
-
-bc:CCO-GOLGI-LUM rdfs:subClassOf bc:CCO-SPACE,
-        obo:GO_0005796 .
-
-bc:CCO-IN rdfs:subClassOf obo:GO_0110165 .
-
-bc:CCO-MIT-LUM rdfs:subClassOf bc:CCO-SPACE,
-        obo:GO_0005759 .
-
-bc:CCO-NON-MEMBRANE-BARRIER rdfs:subClassOf bc:CCO-BARRIER .
-
-bc:CCO-OUT rdfs:subClassOf obo:GO_0110165 .
-
-bc:CCO-VAC-LUM rdfs:subClassOf bc:CCO-SPACE,
-        obo:GO_0005775 .
-
-bc:CCO-VAC-MEM rdfs:subClassOf bc:CCO-MEMBRANE,
-        obo:GO_0005774 .
-
-obo:GO_0000137 rdfs:subClassOf obo:GO_0031985 .
-
-obo:GO_0000138 rdfs:subClassOf obo:GO_0031985 .
-
-obo:GO_0000139 rdfs:subClassOf obo:GO_0098588 .
-
 obo:GO_0000176 rdfs:subClassOf obo:GO_0000178,
         obo:GO_0140513 .
 
@@ -7203,9 +6964,6 @@ obo:GO_0000311 rdfs:subClassOf obo:GO_0000315 .
 obo:GO_0000312 rdfs:subClassOf obo:GO_0000314 .
 
 obo:GO_0000330 rdfs:subClassOf obo:GO_0005775 .
-
-obo:GO_0000331 rdfs:subClassOf obo:GO_0005773,
-        obo:GO_0031410 .
 
 obo:GO_0000444 rdfs:subClassOf obo:GO_0032991 .
 
@@ -7225,46 +6983,18 @@ obo:GO_0001739 rdfs:subClassOf obo:GO_0000792 .
 
 obo:GO_0002178 rdfs:subClassOf obo:GO_1990234 .
 
-obo:GO_0005615 rdfs:subClassOf obo:GO_0110165 .
-
-obo:GO_0005635 rdfs:subClassOf obo:GO_0031967 .
-
-obo:GO_0005637 rdfs:subClassOf obo:GO_0019866,
-        obo:GO_0031965 .
-
-obo:GO_0005640 rdfs:subClassOf obo:GO_0031965,
-        obo:GO_0031968 .
-
-obo:GO_0005641 rdfs:subClassOf obo:GO_0031970 .
-
 obo:GO_0005669 rdfs:subClassOf obo:GO_0090575 .
 
 obo:GO_0005697 rdfs:subClassOf obo:GO_0140513,
         obo:GO_1990904 .
 
-obo:GO_0005730 rdfs:subClassOf obo:GO_0043232 .
-
-obo:GO_0005739 rdfs:subClassOf obo:GO_0043231 .
-
-obo:GO_0005740 rdfs:subClassOf obo:GO_0031967 .
-
-obo:GO_0005741 rdfs:subClassOf obo:GO_0031966,
-        obo:GO_0031968 .
-
-obo:GO_0005743 rdfs:subClassOf obo:GO_0019866,
-        obo:GO_0031966 .
-
-obo:GO_0005758 rdfs:subClassOf obo:GO_0031970 .
-
-obo:GO_0005759 rdfs:subClassOf obo:GO_0070013 .
-
 obo:GO_0005766 rdfs:subClassOf obo:GO_0005764 .
 
-obo:GO_0005790 rdfs:subClassOf obo:GO_0005783 .
+obo:GO_0005769 rdfs:subClassOf obo:GO_0005768 .
 
-obo:GO_0005791 rdfs:subClassOf obo:GO_0005783 .
+obo:GO_0005770 rdfs:subClassOf obo:GO_0005768 .
 
-obo:GO_0005797 rdfs:subClassOf obo:GO_0031985 .
+obo:GO_0005794 rdfs:subClassOf obo:GO_0043231 .
 
 obo:GO_0005813 rdfs:subClassOf obo:GO_0005815 .
 
@@ -7284,6 +7014,8 @@ obo:GO_0005825 rdfs:subClassOf obo:GO_0110165 .
 obo:GO_0005827 rdfs:subClassOf obo:GO_0005876 .
 
 obo:GO_0005828 rdfs:subClassOf obo:GO_0005876 .
+
+obo:GO_0005829 rdfs:subClassOf obo:GO_0110165 .
 
 obo:GO_0005861 rdfs:subClassOf obo:GO_0032991 .
 
@@ -7311,52 +7043,17 @@ obo:GO_0009329 rdfs:subClassOf obo:GO_1990234 .
 
 obo:GO_0009343 rdfs:subClassOf obo:GO_1902494 .
 
-obo:GO_0009501 rdfs:subClassOf obo:GO_0009536 .
-
-obo:GO_0009507 rdfs:subClassOf obo:GO_0009536 .
-
 obo:GO_0009508 rdfs:subClassOf obo:GO_0005694 .
-
-obo:GO_0009509 rdfs:subClassOf obo:GO_0009536 .
-
-obo:GO_0009513 rdfs:subClassOf obo:GO_0009536 .
-
-obo:GO_0009514 rdfs:subClassOf obo:GO_0005777 .
-
-obo:GO_0009515 rdfs:subClassOf obo:GO_0009534 .
-
-obo:GO_0009533 rdfs:subClassOf obo:GO_0009534 .
-
-obo:GO_0009535 rdfs:subClassOf obo:GO_0055035 .
-
-obo:GO_0009543 rdfs:subClassOf obo:GO_0031978 .
-
-obo:GO_0009545 rdfs:subClassOf obo:GO_0009516 .
 
 obo:GO_0009547 rdfs:subClassOf obo:GO_0000313 .
 
-obo:GO_0009570 rdfs:subClassOf obo:GO_0009532 .
-
-obo:GO_0009575 rdfs:subClassOf obo:GO_0009532 .
-
 obo:GO_0009705 rdfs:subClassOf obo:GO_0005774 .
-
-obo:GO_0009706 rdfs:subClassOf obo:GO_0009528,
-        obo:GO_0031969 .
-
-obo:GO_0009707 rdfs:subClassOf obo:GO_0009527,
-        obo:GO_0031969 .
-
-obo:GO_0009941 rdfs:subClassOf obo:GO_0009526 .
-
-obo:GO_0010282 rdfs:subClassOf obo:GO_0000323,
-        obo:GO_0000325 .
 
 obo:GO_0010339 rdfs:subClassOf obo:GO_0110165 .
 
 obo:GO_0010598 rdfs:subClassOf obo:GO_0032991 .
 
-obo:GO_0012511 rdfs:subClassOf obo:GO_0005811 .
+obo:GO_0012506 rdfs:subClassOf obo:GO_0031090 .
 
 obo:GO_0014069 rdfs:subClassOf obo:GO_0099572 .
 
@@ -7370,35 +7067,14 @@ obo:GO_0016471 rdfs:subClassOf obo:GO_0033176 .
 
 obo:GO_0016607 rdfs:subClassOf obo:GO_0016604 .
 
-obo:GO_0020015 rdfs:subClassOf obo:GO_0005777 .
-
-obo:GO_0020022 rdfs:subClassOf obo:GO_0043231 .
-
 obo:GO_0020023 rdfs:subClassOf obo:GO_0110165 .
 
 obo:GO_0030027 rdfs:subClassOf obo:GO_0120025 .
 
-obo:GO_0030115 rdfs:subClassOf obo:GO_0030312 .
-
-obo:GO_0030140 rdfs:subClassOf obo:GO_0005798,
-        obo:GO_0030133,
-        obo:GO_0030136 .
-
-obo:GO_0030142 rdfs:subClassOf obo:GO_0030133,
-        obo:GO_0030137 .
-
 obo:GO_0030669 rdfs:subClassOf obo:GO_0030665,
         obo:GO_0030666 .
 
-obo:GO_0030672 rdfs:subClassOf obo:GO_0099501 .
-
 obo:GO_0030864 rdfs:subClassOf obo:GO_0030863 .
-
-obo:GO_0030867 rdfs:subClassOf obo:GO_0005789,
-        obo:GO_0098588 .
-
-obo:GO_0030868 rdfs:subClassOf obo:GO_0005789,
-        obo:GO_0098588 .
 
 obo:GO_0030892 rdfs:subClassOf obo:GO_0008278 .
 
@@ -7411,9 +7087,6 @@ obo:GO_0031002 rdfs:subClassOf obo:GO_0032432 .
 obo:GO_0031027 rdfs:subClassOf obo:GO_0031026 .
 
 obo:GO_0031045 rdfs:subClassOf obo:GO_0030141 .
-
-obo:GO_0031164 rdfs:subClassOf obo:GO_0005774,
-        obo:GO_0030659 .
 
 obo:GO_0031211 rdfs:subClassOf obo:GO_0098796,
         obo:GO_0140534,
@@ -7463,31 +7136,20 @@ obo:GO_0031360 rdfs:subClassOf obo:GO_0031224 .
 
 obo:GO_0031465 rdfs:subClassOf obo:GO_0080008 .
 
-obo:GO_0031470 rdfs:subClassOf obo:GO_0031469 .
-
 obo:GO_0031528 rdfs:subClassOf obo:GO_0031253 .
 
 obo:GO_0031597 rdfs:subClassOf obo:GO_0000502 .
 
-obo:GO_0031898 rdfs:subClassOf obo:GO_0009526 .
+obo:GO_0031901 rdfs:subClassOf obo:GO_0010008 .
 
-obo:GO_0031899 rdfs:subClassOf obo:GO_0009528,
-        obo:GO_0046862 .
+obo:GO_0031902 rdfs:subClassOf obo:GO_0010008 .
 
-obo:GO_0031900 rdfs:subClassOf obo:GO_0009527,
-        obo:GO_0046862 .
+obo:GO_0031903 rdfs:subClassOf obo:GO_0042579,
+        obo:GO_0098588 .
 
-obo:GO_0031905 rdfs:subClassOf obo:GO_0031904 .
+obo:GO_0031906 rdfs:subClassOf obo:GO_0031904 .
 
-obo:GO_0031908 rdfs:subClassOf obo:GO_0005782 .
-
-obo:GO_0031972 rdfs:subClassOf obo:GO_0009529 .
-
-obo:GO_0031973 rdfs:subClassOf obo:GO_0009529 .
-
-obo:GO_0031981 rdfs:subClassOf obo:GO_0070013 .
-
-obo:GO_0031986 rdfs:subClassOf obo:GO_0009516 .
+obo:GO_0031907 rdfs:subClassOf obo:GO_0070013 .
 
 obo:GO_0032010 rdfs:subClassOf obo:GO_0005767,
         obo:GO_0045335 .
@@ -7512,8 +7174,6 @@ obo:GO_0033651 rdfs:subClassOf obo:GO_0033648,
 obo:GO_0033652 rdfs:subClassOf obo:GO_0033651 .
 
 obo:GO_0033653 rdfs:subClassOf obo:GO_0033652 .
-
-obo:GO_0034592 rdfs:subClassOf obo:GO_0060205 .
 
 obo:GO_0034993 rdfs:subClassOf obo:GO_0106094 .
 
@@ -7541,8 +7201,6 @@ obo:GO_0036125 rdfs:subClassOf obo:GO_0032991 .
 obo:GO_0036405 rdfs:subClassOf obo:GO_0031225,
         obo:GO_0031230 .
 
-obo:GO_0036407 rdfs:subClassOf obo:GO_0009279 .
-
 obo:GO_0036409 rdfs:subClassOf obo:GO_0070775 .
 
 obo:GO_0036418 rdfs:subClassOf obo:GO_0031230 .
@@ -7557,22 +7215,14 @@ obo:GO_0042555 rdfs:subClassOf obo:GO_0032991 .
 
 obo:GO_0042641 rdfs:subClassOf obo:GO_0110165 .
 
-obo:GO_0042645 rdfs:subClassOf obo:GO_0009295,
-        obo:GO_0043232 .
-
 obo:GO_0042716 rdfs:subClassOf obo:GO_0110165 .
 
 obo:GO_0042717 rdfs:subClassOf obo:GO_0034357 .
-
-obo:GO_0042807 rdfs:subClassOf obo:GO_0000325 .
 
 obo:GO_0043189 rdfs:subClassOf obo:GO_1902562 .
 
 obo:GO_0043197 rdfs:subClassOf obo:GO_0044309,
         obo:GO_0098794 .
-
-obo:GO_0043590 rdfs:subClassOf obo:GO_0009295,
-        obo:GO_0043232 .
 
 obo:GO_0043658 rdfs:subClassOf obo:GO_0033648,
         obo:GO_0033655 .
@@ -7628,12 +7278,6 @@ obo:GO_0045334 rdfs:subClassOf obo:GO_0030136,
 obo:GO_0045495 rdfs:subClassOf obo:GO_0005737 .
 
 obo:GO_0046536 rdfs:subClassOf obo:GO_0140513 .
-
-obo:GO_0046861 rdfs:subClassOf obo:GO_0005778 .
-
-obo:GO_0048237 rdfs:subClassOf obo:GO_0005788 .
-
-obo:GO_0048238 rdfs:subClassOf obo:GO_0005788 .
 
 obo:GO_0048471 rdfs:subClassOf obo:GO_0110165 .
 
@@ -7834,83 +7478,6 @@ obo:GO_1990777 rdfs:subClassOf obo:GO_0032994 .
 
 obo:GO_1990907 rdfs:subClassOf obo:GO_0090575 .
 
-bc:CCO-BARRIER rdfs:subClassOf obo:GO_0110165 .
-
-bc:CCO-CE-BAC rdfs:subClassOf bc:CCO-ENVELOPE .
-
-bc:CCO-CELL-PROJECTION rdfs:subClassOf bc:CCO-NON-MEM-ORG,
-        obo:GO_0042995 .
-
-bc:CCO-CHLOR-MEM rdfs:subClassOf bc:CCO-PLASTID-MEM,
-        obo:GO_0031969 .
-
-bc:CCO-CHLOR-THY rdfs:subClassOf bc:CCO-SUBORG-CMPT,
-        obo:GO_0009534 .
-
-bc:CCO-CHROM-MEM rdfs:subClassOf bc:CCO-PLASTID-MEM,
-        obo:GO_0046862 .
-
-bc:CCO-CW-PLANT rdfs:subClassOf bc:CCO-CELLWALL .
-
-bc:CCO-ENDO-LUM rdfs:subClassOf bc:CCO-SPACE,
-        obo:GO_0031904 .
-
-bc:CCO-ENDO-MEM rdfs:subClassOf bc:CCO-MEMBRANE,
-        obo:GO_0010008 .
-
-bc:CCO-ENDOSOME rdfs:subClassOf bc:CCO-MEM-ORG,
-        obo:GO_0005768 .
-
-bc:CCO-ENVELOPE rdfs:subClassOf obo:GO_0031975,
-        obo:GO_0110165 .
-
-bc:CCO-ER rdfs:subClassOf bc:CCO-MEM-ORG,
-        obo:GO_0005783 .
-
-bc:CCO-ER-LUM rdfs:subClassOf bc:CCO-SPACE,
-        obo:GO_0005788 .
-
-bc:CCO-ER-MEM rdfs:subClassOf bc:CCO-MEMBRANE,
-        obo:GO_0005789 .
-
-bc:CCO-GOLGI-MEM rdfs:subClassOf bc:CCO-MEMBRANE,
-        obo:GO_0000139 .
-
-bc:CCO-MIT-MEM rdfs:subClassOf bc:CCO-MEMBRANE,
-        obo:GO_0031966 .
-
-bc:CCO-NUC-MEM rdfs:subClassOf bc:CCO-MEMBRANE,
-        obo:GO_0031965 .
-
-bc:CCO-ORGANELLE rdfs:subClassOf obo:GO_0043226,
-        obo:GO_0110165 .
-
-bc:CCO-PLAST-IM-SPC rdfs:subClassOf bc:CCO-SPACE,
-        obo:GO_0009529 .
-
-bc:CCO-PLAST-IMEM rdfs:subClassOf bc:CCO-PLASTID-MEM,
-        obo:GO_0009528 .
-
-bc:CCO-PLAST-OMEM rdfs:subClassOf bc:CCO-PLASTID-MEM,
-        obo:GO_0009527 .
-
-bc:CCO-PLASTID-ENV rdfs:subClassOf bc:CCO-ORGANEL-ENV,
-        obo:GO_0009526 .
-
-bc:CCO-PLASTID-STR rdfs:subClassOf bc:CCO-SPACE,
-        obo:GO_0009532 .
-
-bc:CCO-SUBORG-CMPT rdfs:subClassOf obo:GO_0031984,
-        obo:GO_0110165 .
-
-bc:CCO-SUPER-COMP rdfs:subClassOf obo:GO_0110165 .
-
-bc:CCO-THY-LUM rdfs:subClassOf bc:CCO-SPACE,
-        obo:GO_0031977 .
-
-bc:CCO-THY-MEM rdfs:subClassOf bc:CCO-MEMBRANE,
-        obo:GO_0042651 .
-
 obo:GO_0000126 rdfs:subClassOf obo:GO_0090576 .
 
 obo:GO_0000136 rdfs:subClassOf obo:GO_0031501,
@@ -7981,13 +7548,15 @@ obo:GO_0005727 rdfs:subClassOf obo:GO_0005622 .
 
 obo:GO_0005767 rdfs:subClassOf obo:GO_0005764 .
 
-obo:GO_0005769 rdfs:subClassOf obo:GO_0005768 .
-
-obo:GO_0005770 rdfs:subClassOf obo:GO_0005768 .
-
 obo:GO_0005776 rdfs:subClassOf obo:GO_0005773 .
 
-obo:GO_0005794 rdfs:subClassOf obo:GO_0043231 .
+obo:GO_0005778 rdfs:subClassOf obo:GO_0031903 .
+
+obo:GO_0005782 rdfs:subClassOf obo:GO_0031907 .
+
+obo:GO_0005796 rdfs:subClassOf obo:GO_0070013 .
+
+obo:GO_0005798 rdfs:subClassOf obo:GO_0031410 .
 
 obo:GO_0005811 rdfs:subClassOf obo:GO_0043232 .
 
@@ -7996,8 +7565,6 @@ obo:GO_0005816 rdfs:subClassOf obo:GO_0005815 .
 obo:GO_0005819 rdfs:subClassOf obo:GO_0043232 .
 
 obo:GO_0005826 rdfs:subClassOf obo:GO_0070938 .
-
-obo:GO_0005829 rdfs:subClassOf obo:GO_0110165 .
 
 obo:GO_0005838 rdfs:subClassOf obo:GO_0032991 .
 
@@ -8045,6 +7612,8 @@ obo:GO_0009505 rdfs:subClassOf obo:GO_0005618 .
 
 obo:GO_0009506 rdfs:subClassOf obo:GO_0005911 .
 
+obo:GO_0009516 rdfs:subClassOf obo:GO_0009536 .
+
 obo:GO_0009518 rdfs:subClassOf obo:GO_0009503 .
 
 obo:GO_0009521 rdfs:subClassOf obo:GO_0098796 .
@@ -8053,6 +7622,8 @@ obo:GO_0009522 rdfs:subClassOf obo:GO_0009521 .
 
 obo:GO_0009523 rdfs:subClassOf obo:GO_0009521 .
 
+obo:GO_0009534 rdfs:subClassOf obo:GO_0031976 .
+
 obo:GO_0009897 rdfs:subClassOf obo:GO_0098552 .
 
 obo:GO_0010009 rdfs:subClassOf obo:GO_0098562 .
@@ -8060,8 +7631,6 @@ obo:GO_0010009 rdfs:subClassOf obo:GO_0098562 .
 obo:GO_0010330 rdfs:subClassOf obo:GO_1990234 .
 
 obo:GO_0010369 rdfs:subClassOf obo:GO_0043232 .
-
-obo:GO_0012506 rdfs:subClassOf obo:GO_0031090 .
 
 obo:GO_0015629 rdfs:subClassOf obo:GO_0005856 .
 
@@ -8105,6 +7674,9 @@ obo:GO_0030286 rdfs:subClassOf obo:GO_0005875,
         obo:GO_1902494 .
 
 obo:GO_0030426 rdfs:subClassOf obo:GO_0030427 .
+
+obo:GO_0030660 rdfs:subClassOf obo:GO_0030659,
+        obo:GO_0098588 .
 
 obo:GO_0030663 rdfs:subClassOf obo:GO_0030660,
         obo:GO_0030662 .
@@ -8162,20 +7734,21 @@ obo:GO_0031514 rdfs:subClassOf obo:GO_0005929 .
 
 obo:GO_0031520 rdfs:subClassOf obo:GO_0098590 .
 
-obo:GO_0031901 rdfs:subClassOf obo:GO_0010008 .
+obo:GO_0031965 rdfs:subClassOf obo:GO_0031090 .
 
-obo:GO_0031902 rdfs:subClassOf obo:GO_0010008 .
+obo:GO_0031966 rdfs:subClassOf obo:GO_0031090 .
 
-obo:GO_0031903 rdfs:subClassOf obo:GO_0042579,
-        obo:GO_0098588 .
-
-obo:GO_0031906 rdfs:subClassOf obo:GO_0031904 .
-
-obo:GO_0031907 rdfs:subClassOf obo:GO_0070013 .
+obo:GO_0031969 rdfs:subClassOf obo:GO_0042170 .
 
 obo:GO_0031974 rdfs:subClassOf obo:GO_0110165 .
 
+obo:GO_0031975 rdfs:subClassOf obo:GO_0110165 .
+
 obo:GO_0031978 rdfs:subClassOf obo:GO_0031977 .
+
+obo:GO_0031982 rdfs:subClassOf obo:GO_0043227 .
+
+obo:GO_0031983 rdfs:subClassOf obo:GO_0043233 .
 
 obo:GO_0032045 rdfs:subClassOf obo:GO_0140535 .
 
@@ -8271,6 +7844,9 @@ obo:GO_0039713 rdfs:subClassOf obo:GO_0033643 .
 obo:GO_0042101 rdfs:subClassOf obo:GO_0098802 .
 
 obo:GO_0042627 rdfs:subClassOf obo:GO_0034358 .
+
+obo:GO_0042646 rdfs:subClassOf obo:GO_0009295,
+        obo:GO_0043232 .
 
 obo:GO_0042709 rdfs:subClassOf obo:GO_0045239,
         obo:GO_1902494 .
@@ -8373,6 +7949,8 @@ obo:GO_0045283 rdfs:subClassOf obo:GO_0098803 .
 
 obo:GO_0046727 rdfs:subClassOf obo:GO_0044423 .
 
+obo:GO_0046862 rdfs:subClassOf obo:GO_0042170 .
+
 obo:GO_0048492 rdfs:subClassOf obo:GO_1902494 .
 
 obo:GO_0051233 rdfs:subClassOf obo:GO_0110165 .
@@ -8421,6 +7999,8 @@ obo:GO_0071256 rdfs:subClassOf obo:GO_0098796,
         obo:GO_0140534 .
 
 obo:GO_0071664 rdfs:subClassOf obo:GO_0140513 .
+
+obo:GO_0071682 rdfs:subClassOf obo:GO_0070013 .
 
 obo:GO_0071735 rdfs:subClassOf obo:GO_0019814 .
 
@@ -8582,6 +8162,8 @@ obo:GO_0099166 rdfs:subClassOf obo:GO_0098948 .
 
 obo:GO_0099243 rdfs:subClassOf obo:GO_0019897 .
 
+obo:GO_0099503 rdfs:subClassOf obo:GO_0031410 .
+
 obo:GO_0099522 rdfs:subClassOf obo:GO_0005829 .
 
 obo:GO_0099568 rdfs:subClassOf obo:GO_0005737 .
@@ -8625,46 +8207,6 @@ obo:GO_1990635 rdfs:subClassOf obo:GO_0030425 .
 
 obo:GO_1990684 rdfs:subClassOf obo:GO_0032991 .
 
-bc:CCO-CELLWALL rdfs:subClassOf bc:CCO-SURFACE-MAT,
-        obo:GO_0005618 .
-
-bc:CCO-CW-BAC rdfs:subClassOf bc:CCO-CELLWALL .
-
-bc:CCO-GOLGI-CIST rdfs:subClassOf bc:CCO-SUBORG-CMPT,
-        obo:GO_0031985 .
-
-bc:CCO-LEUCOPLAST rdfs:subClassOf bc:CCO-PLASTID,
-        obo:GO_0009516 .
-
-bc:CCO-MBODY-MEM rdfs:subClassOf bc:CCO-MEMBRANE,
-        obo:GO_0031903 .
-
-bc:CCO-MICRO-LUM rdfs:subClassOf bc:CCO-SPACE,
-        obo:GO_0031907 .
-
-bc:CCO-MICROBODY rdfs:subClassOf bc:CCO-MEM-ORG,
-        obo:GO_0042579 .
-
-bc:CCO-NUCLEOID rdfs:subClassOf bc:CCO-NON-MEM-ORG,
-        obo:GO_0009295 .
-
-bc:CCO-ORGANEL-ENV rdfs:subClassOf bc:CCO-ENVELOPE,
-        obo:GO_0031967 .
-
-bc:CCO-OUTER-MEM-DIDERM rdfs:subClassOf bc:CCO-MEMBRANE .
-
-bc:CCO-PERIPLASM rdfs:subClassOf bc:CCO-SPACE,
-        obo:GO_0042597 .
-
-bc:CCO-PM-BACTERIA rdfs:subClassOf bc:CCO-PLASMA-MEM,
-        obo:GO_0005886 .
-
-bc:CCO-SURFACE-MAT rdfs:subClassOf obo:GO_0031012,
-        obo:GO_0110165 .
-
-bc:CCO-VES-LUM rdfs:subClassOf bc:CCO-SPACE,
-        obo:GO_0031983 .
-
 obo:GO_0000120 rdfs:subClassOf obo:GO_0005667,
         obo:GO_0140513 .
 
@@ -8674,6 +8216,8 @@ obo:GO_0000123 rdfs:subClassOf obo:GO_0031248,
 obo:GO_0000153 rdfs:subClassOf obo:GO_0000151 .
 
 obo:GO_0000306 rdfs:subClassOf obo:GO_0031312 .
+
+obo:GO_0000322 rdfs:subClassOf obo:GO_0005773 .
 
 obo:GO_0000325 rdfs:subClassOf obo:GO_0005773 .
 
@@ -8696,21 +8240,19 @@ obo:GO_0005732 rdfs:subClassOf obo:GO_1990904 .
 
 obo:GO_0005742 rdfs:subClassOf obo:GO_0098799 .
 
-obo:GO_0005778 rdfs:subClassOf obo:GO_0031903 .
-
-obo:GO_0005782 rdfs:subClassOf obo:GO_0031907 .
-
-obo:GO_0005796 rdfs:subClassOf obo:GO_0070013 .
-
-obo:GO_0005798 rdfs:subClassOf obo:GO_0031410 .
+obo:GO_0005840 rdfs:subClassOf obo:GO_0043232 .
 
 obo:GO_0005881 rdfs:subClassOf obo:GO_0005874 .
+
+obo:GO_0005886 rdfs:subClassOf obo:GO_0016020 .
 
 obo:GO_0005942 rdfs:subClassOf obo:GO_0061695,
         obo:GO_0098796 .
 
 obo:GO_0005963 rdfs:subClassOf obo:GO_0008287,
         obo:GO_0140535 .
+
+obo:GO_0008021 rdfs:subClassOf obo:GO_0070382 .
 
 obo:GO_0008250 rdfs:subClassOf obo:GO_0098796,
         obo:GO_0140534,
@@ -8723,9 +8265,14 @@ obo:GO_0008328 rdfs:subClassOf obo:GO_0034702,
 
 obo:GO_0009277 rdfs:subClassOf obo:GO_0005618 .
 
-obo:GO_0009516 rdfs:subClassOf obo:GO_0009536 .
+obo:GO_0009289 rdfs:subClassOf obo:GO_0042995 .
 
-obo:GO_0009534 rdfs:subClassOf obo:GO_0031976 .
+obo:GO_0009295 rdfs:subClassOf obo:GO_0110165 .
+
+obo:GO_0009527 rdfs:subClassOf obo:GO_0031968,
+        obo:GO_0042170 .
+
+obo:GO_0009529 rdfs:subClassOf obo:GO_0031970 .
 
 obo:GO_0009579 rdfs:subClassOf obo:GO_0005622 .
 
@@ -8779,10 +8326,10 @@ obo:GO_0030532 rdfs:subClassOf obo:GO_0120114,
         obo:GO_0140513,
         obo:GO_1990904 .
 
-obo:GO_0030660 rdfs:subClassOf obo:GO_0030659,
+obo:GO_0030662 rdfs:subClassOf obo:GO_0030659,
         obo:GO_0098588 .
 
-obo:GO_0030662 rdfs:subClassOf obo:GO_0030659,
+obo:GO_0030666 rdfs:subClassOf obo:GO_0030659,
         obo:GO_0098588 .
 
 obo:GO_0030670 rdfs:subClassOf obo:GO_0030666 .
@@ -8824,28 +8371,22 @@ obo:GO_0031501 rdfs:subClassOf obo:GO_0140535,
 
 obo:GO_0031519 rdfs:subClassOf obo:GO_0140513 .
 
-obo:GO_0031965 rdfs:subClassOf obo:GO_0031090 .
-
-obo:GO_0031966 rdfs:subClassOf obo:GO_0031090 .
-
 obo:GO_0031968 rdfs:subClassOf obo:GO_0019867,
         obo:GO_0098588 .
 
-obo:GO_0031969 rdfs:subClassOf obo:GO_0042170 .
-
 obo:GO_0031970 rdfs:subClassOf obo:GO_0070013 .
-
-obo:GO_0031975 rdfs:subClassOf obo:GO_0110165 .
 
 obo:GO_0031976 rdfs:subClassOf obo:GO_0009579,
         obo:GO_0031984 .
 
-obo:GO_0031982 rdfs:subClassOf obo:GO_0043227 .
+obo:GO_0031977 rdfs:subClassOf obo:GO_0110165 .
 
-obo:GO_0031983 rdfs:subClassOf obo:GO_0043233 .
+obo:GO_0031985 rdfs:subClassOf obo:GO_0098791 .
 
 obo:GO_0032279 rdfs:subClassOf obo:GO_0098984 ;
     owl:disjointWith obo:GO_0032280 .
+
+obo:GO_0032580 rdfs:subClassOf obo:GO_0031090 .
 
 obo:GO_0032806 rdfs:subClassOf obo:GO_0140513,
         obo:GO_1902554 .
@@ -8861,12 +8402,15 @@ obo:GO_0036454 rdfs:subClassOf obo:GO_0032991 .
 
 obo:GO_0039715 rdfs:subClassOf obo:GO_0039713 .
 
+obo:GO_0042579 rdfs:subClassOf obo:GO_0043231 .
+
+obo:GO_0042597 rdfs:subClassOf obo:GO_0110165 .
+
 obo:GO_0042599 rdfs:subClassOf obo:GO_0030141 .
 
 obo:GO_0042611 rdfs:subClassOf obo:GO_0098797 .
 
-obo:GO_0042646 rdfs:subClassOf obo:GO_0009295,
-        obo:GO_0043232 .
+obo:GO_0042651 rdfs:subClassOf obo:GO_0034357 .
 
 obo:GO_0043076 rdfs:subClassOf obo:GO_0005634 .
 
@@ -8895,8 +8439,6 @@ obo:GO_0045293 rdfs:subClassOf obo:GO_0032991 .
 obo:GO_0046658 rdfs:subClassOf obo:GO_0031225,
         obo:GO_0031226 .
 
-obo:GO_0046862 rdfs:subClassOf obo:GO_0042170 .
-
 obo:GO_0046930 rdfs:subClassOf obo:GO_0098796 .
 
 obo:GO_0048180 rdfs:subClassOf obo:GO_0032991 .
@@ -8921,8 +8463,6 @@ obo:GO_0070382 rdfs:subClassOf obo:GO_0030133,
         obo:GO_0099503 .
 
 obo:GO_0070822 rdfs:subClassOf obo:GO_0000118 .
-
-obo:GO_0071682 rdfs:subClassOf obo:GO_0070013 .
 
 obo:GO_0071738 rdfs:subClassOf obo:GO_0019814 .
 
@@ -8955,8 +8495,6 @@ obo:GO_0098859 rdfs:subClassOf obo:GO_0097518 .
 
 obo:GO_0098984 rdfs:subClassOf obo:GO_0045202 .
 
-obo:GO_0099503 rdfs:subClassOf obo:GO_0031410 .
-
 obo:GO_0099569 rdfs:subClassOf obo:GO_0005856 .
 
 obo:GO_0099572 rdfs:subClassOf obo:GO_0043226 .
@@ -8973,40 +8511,15 @@ obo:GO_1905354 rdfs:subClassOf obo:GO_1902494 .
 
 obo:GO_1990104 rdfs:subClassOf obo:GO_0032991 .
 
-bc:CCO-CYTOSOL rdfs:subClassOf bc:CCO-SPACE,
-        obo:GO_0005829 .
-
-bc:CCO-GOLGI-VES rdfs:subClassOf bc:CCO-VESICLE,
-        obo:GO_0005798 .
-
-bc:CCO-PLASMA-MEM rdfs:subClassOf bc:CCO-MEMBRANE,
-        obo:GO_0005886 .
-
-bc:CCO-PLASTID rdfs:subClassOf bc:CCO-MEM-ORG,
-        obo:GO_0009536 .
-
-bc:CCO-PLASTID-MEM rdfs:subClassOf bc:CCO-MEMBRANE,
-        obo:GO_0042170 .
-
-bc:CCO-VACUOLE rdfs:subClassOf bc:CCO-MEM-ORG,
-        obo:GO_0005773 .
-
-bc:CCO-VESICLE rdfs:subClassOf bc:CCO-MEM-ORG,
-        obo:GO_0031410,
-        obo:GO_0031982 .
-
-bc:CCO-VESICLE-MEM rdfs:subClassOf bc:CCO-MEMBRANE,
-        obo:GO_0012506 .
-
 obo:GO_0000133 rdfs:subClassOf obo:GO_0032991 .
-
-obo:GO_0000322 rdfs:subClassOf obo:GO_0005773 .
 
 obo:GO_0000428 rdfs:subClassOf obo:GO_0030880 .
 
 obo:GO_0005576 rdfs:subClassOf obo:GO_0110165 .
 
-obo:GO_0005840 rdfs:subClassOf obo:GO_0043232 .
+obo:GO_0005774 rdfs:subClassOf obo:GO_0098588 .
+
+obo:GO_0005789 rdfs:subClassOf obo:GO_0031090 .
 
 obo:GO_0005871 rdfs:subClassOf obo:GO_0005875 .
 
@@ -9017,16 +8530,8 @@ obo:GO_0005879 rdfs:subClassOf obo:GO_0005881 .
 obo:GO_0005891 rdfs:subClassOf obo:GO_0034704,
         obo:GO_0098797 .
 
-obo:GO_0008021 rdfs:subClassOf obo:GO_0070382 .
-
-obo:GO_0009289 rdfs:subClassOf obo:GO_0042995 .
-
-obo:GO_0009295 rdfs:subClassOf obo:GO_0110165 .
-
-obo:GO_0009527 rdfs:subClassOf obo:GO_0031968,
+obo:GO_0009528 rdfs:subClassOf obo:GO_0019866,
         obo:GO_0042170 .
-
-obo:GO_0009529 rdfs:subClassOf obo:GO_0031970 .
 
 obo:GO_0019898 rdfs:subClassOf obo:GO_0110165 .
 
@@ -9034,8 +8539,7 @@ obo:GO_0030119 rdfs:subClassOf obo:GO_0098796 .
 
 obo:GO_0030136 rdfs:subClassOf obo:GO_0030135 .
 
-obo:GO_0030666 rdfs:subClassOf obo:GO_0030659,
-        obo:GO_0098588 .
+obo:GO_0030139 rdfs:subClassOf obo:GO_0031410 .
 
 obo:GO_0031160 rdfs:subClassOf obo:GO_0005618 .
 
@@ -9049,13 +8553,13 @@ obo:GO_0031371 rdfs:subClassOf obo:GO_0140535,
 
 obo:GO_0031594 rdfs:subClassOf obo:GO_0045202 .
 
-obo:GO_0031977 rdfs:subClassOf obo:GO_0110165 .
+obo:GO_0031904 rdfs:subClassOf obo:GO_0070013 .
 
-obo:GO_0031985 rdfs:subClassOf obo:GO_0098791 .
+obo:GO_0031967 rdfs:subClassOf obo:GO_0031975 .
+
+obo:GO_0031984 rdfs:subClassOf obo:GO_0110165 .
 
 obo:GO_0032432 rdfs:subClassOf obo:GO_0110165 .
-
-obo:GO_0032580 rdfs:subClassOf obo:GO_0031090 .
 
 obo:GO_0032589 rdfs:subClassOf obo:GO_0031253,
         obo:GO_0031256 .
@@ -9069,12 +8573,6 @@ obo:GO_0034702 rdfs:subClassOf obo:GO_1902495 .
 obo:GO_0034705 rdfs:subClassOf obo:GO_0034703 .
 
 obo:GO_0038037 rdfs:subClassOf obo:GO_0097648 .
-
-obo:GO_0042579 rdfs:subClassOf obo:GO_0043231 .
-
-obo:GO_0042597 rdfs:subClassOf obo:GO_0110165 .
-
-obo:GO_0042651 rdfs:subClassOf obo:GO_0034357 .
 
 obo:GO_0043228 rdfs:subClassOf obo:GO_0043226 .
 
@@ -9137,21 +8635,24 @@ obo:GO_1990752 rdfs:subClassOf obo:GO_0110165 .
 
 obo:GO_0000323 rdfs:subClassOf obo:GO_0005773 .
 
-obo:GO_0005774 rdfs:subClassOf obo:GO_0098588 .
+obo:GO_0005618 rdfs:subClassOf obo:GO_0030312 .
 
-obo:GO_0005789 rdfs:subClassOf obo:GO_0031090 .
+obo:GO_0005737 rdfs:subClassOf obo:GO_0110165 .
+
+obo:GO_0005765 rdfs:subClassOf obo:GO_0098852 .
+
+obo:GO_0005783 rdfs:subClassOf obo:GO_0043231 .
+
+obo:GO_0005788 rdfs:subClassOf obo:GO_0070013 .
 
 obo:GO_0005815 rdfs:subClassOf obo:GO_0110165 .
 
 obo:GO_0005882 rdfs:subClassOf obo:GO_0099513 .
 
-obo:GO_0009528 rdfs:subClassOf obo:GO_0019866,
-        obo:GO_0042170 .
+obo:GO_0009526 rdfs:subClassOf obo:GO_0031967 .
 
 obo:GO_0019815 rdfs:subClassOf obo:GO_0019814,
         obo:GO_0098802 .
-
-obo:GO_0030139 rdfs:subClassOf obo:GO_0031410 .
 
 obo:GO_0030684 rdfs:subClassOf obo:GO_1990904 .
 
@@ -9163,12 +8664,6 @@ obo:GO_0031230 rdfs:subClassOf obo:GO_0031224 .
 obo:GO_0031502 rdfs:subClassOf obo:GO_0031501,
         obo:GO_0098796,
         obo:GO_0140534 .
-
-obo:GO_0031904 rdfs:subClassOf obo:GO_0070013 .
-
-obo:GO_0031967 rdfs:subClassOf obo:GO_0031975 .
-
-obo:GO_0031984 rdfs:subClassOf obo:GO_0110165 .
 
 obo:GO_0032161 rdfs:subClassOf obo:GO_0110165 .
 
@@ -9182,6 +8677,8 @@ obo:GO_0039714 rdfs:subClassOf obo:GO_0033655,
         obo:GO_0039713 .
 
 obo:GO_0042571 rdfs:subClassOf obo:GO_0019814 .
+
+obo:GO_0043226 rdfs:subClassOf obo:GO_0110165 .
 
 obo:GO_0043227 rdfs:subClassOf obo:GO_0043226 .
 
@@ -9205,25 +8702,16 @@ obo:GO_0150005 rdfs:subClassOf obo:GO_0032991 .
 
 obo:GO_1990077 rdfs:subClassOf obo:GO_0032993 .
 
-bc:CCO-NON-MEM-ORG rdfs:subClassOf bc:CCO-ORGANELLE .
-
-obo:GO_0005618 rdfs:subClassOf obo:GO_0030312 .
-
 obo:GO_0005689 rdfs:subClassOf obo:GO_0005681 .
 
-obo:GO_0005737 rdfs:subClassOf obo:GO_0110165 .
+obo:GO_0005764 rdfs:subClassOf obo:GO_0000323 .
 
-obo:GO_0005765 rdfs:subClassOf obo:GO_0098852 .
-
-obo:GO_0005783 rdfs:subClassOf obo:GO_0043231 .
-
-obo:GO_0005788 rdfs:subClassOf obo:GO_0070013 .
-
-obo:GO_0005886 rdfs:subClassOf obo:GO_0016020 .
+obo:GO_0005773 rdfs:subClassOf obo:GO_0043231 .
 
 obo:GO_0008287 rdfs:subClassOf obo:GO_1903293 .
 
-obo:GO_0009526 rdfs:subClassOf obo:GO_0031967 .
+obo:GO_0010008 rdfs:subClassOf obo:GO_0030659,
+        obo:GO_0098588 .
 
 obo:GO_0016021 rdfs:subClassOf obo:GO_0031224 .
 
@@ -9244,7 +8732,7 @@ obo:GO_0033061 rdfs:subClassOf obo:GO_0032991 .
 obo:GO_0035097 rdfs:subClassOf obo:GO_0034708,
         obo:GO_0140513 .
 
-obo:GO_0043226 rdfs:subClassOf obo:GO_0110165 .
+obo:GO_0042995 rdfs:subClassOf obo:GO_0110165 .
 
 obo:GO_0060187 rdfs:subClassOf obo:GO_0110165 .
 
@@ -9270,10 +8758,6 @@ obo:GO_0005684 rdfs:subClassOf obo:GO_0005681 .
 
 obo:GO_0005694 rdfs:subClassOf obo:GO_0043232 .
 
-obo:GO_0005764 rdfs:subClassOf obo:GO_0000323 .
-
-obo:GO_0005773 rdfs:subClassOf obo:GO_0043231 .
-
 obo:GO_0005874 rdfs:subClassOf obo:GO_0099513 .
 
 obo:GO_0005875 rdfs:subClassOf obo:GO_0032991 .
@@ -9282,9 +8766,6 @@ obo:GO_0005887 rdfs:subClassOf obo:GO_0016021,
         obo:GO_0031226 .
 
 obo:GO_0005940 rdfs:subClassOf obo:GO_0032156 .
-
-obo:GO_0010008 rdfs:subClassOf obo:GO_0030659,
-        obo:GO_0098588 .
 
 obo:GO_0030112 rdfs:subClassOf obo:GO_0030312 .
 
@@ -9297,10 +8778,10 @@ obo:GO_0032300 rdfs:subClassOf obo:GO_1990391 .
 obo:GO_0033202 rdfs:subClassOf obo:GO_0044815,
         obo:GO_1902494 .
 
+obo:GO_0034774 rdfs:subClassOf obo:GO_0060205 .
+
 obo:GO_0042575 rdfs:subClassOf obo:GO_0061695,
         obo:GO_0140535 .
-
-obo:GO_0042995 rdfs:subClassOf obo:GO_0110165 .
 
 obo:GO_0055029 rdfs:subClassOf obo:GO_0000428,
         obo:GO_0140513 .
@@ -9326,7 +8807,13 @@ obo:GO_0005593 rdfs:subClassOf obo:GO_0005581 .
 
 obo:GO_0005622 rdfs:subClassOf obo:GO_0110165 .
 
+obo:GO_0005768 rdfs:subClassOf obo:GO_0031410 .
+
+obo:GO_0005775 rdfs:subClassOf obo:GO_0070013 .
+
 obo:GO_0008023 rdfs:subClassOf obo:GO_0140513 .
+
+obo:GO_0009532 rdfs:subClassOf obo:GO_0110165 .
 
 obo:GO_0017053 rdfs:subClassOf obo:GO_0005667 .
 
@@ -9339,11 +8826,13 @@ obo:GO_0030658 rdfs:subClassOf obo:GO_0030659,
 
 obo:GO_0031010 rdfs:subClassOf obo:GO_0070603 .
 
+obo:GO_0031012 rdfs:subClassOf obo:GO_0030312 .
+
 obo:GO_0031461 rdfs:subClassOf obo:GO_0000151 .
 
 obo:GO_0034703 rdfs:subClassOf obo:GO_0034702 .
 
-obo:GO_0034774 rdfs:subClassOf obo:GO_0060205 .
+obo:GO_0042170 rdfs:subClassOf obo:GO_0031090 .
 
 obo:GO_0044094 rdfs:subClassOf obo:GO_0033646 .
 
@@ -9366,19 +8855,13 @@ obo:GO_0000109 rdfs:subClassOf obo:GO_0140513,
 
 obo:GO_0000792 rdfs:subClassOf obo:GO_0000785 .
 
-obo:GO_0005768 rdfs:subClassOf obo:GO_0031410 .
+obo:GO_0005777 rdfs:subClassOf obo:GO_0042579 .
 
-obo:GO_0005775 rdfs:subClassOf obo:GO_0070013 .
-
-obo:GO_0009532 rdfs:subClassOf obo:GO_0110165 .
-
-obo:GO_0031012 rdfs:subClassOf obo:GO_0030312 .
+obo:GO_0005856 rdfs:subClassOf obo:GO_0043232 .
 
 obo:GO_0034708 rdfs:subClassOf obo:GO_1990234 .
 
 obo:GO_0036064 rdfs:subClassOf obo:GO_0005815 .
-
-obo:GO_0042170 rdfs:subClassOf obo:GO_0031090 .
 
 obo:GO_0044232 rdfs:subClassOf obo:GO_0110165 .
 
@@ -9403,9 +8886,7 @@ obo:GO_0005581 rdfs:subClassOf obo:GO_0032991 .
 obo:GO_0005681 rdfs:subClassOf obo:GO_0140513,
         obo:GO_1990904 .
 
-obo:GO_0005777 rdfs:subClassOf obo:GO_0042579 .
-
-obo:GO_0005856 rdfs:subClassOf obo:GO_0043232 .
+obo:GO_0009536 rdfs:subClassOf obo:GO_0043231 .
 
 obo:GO_0036464 rdfs:subClassOf obo:GO_0035770 .
 
@@ -9413,9 +8894,12 @@ obo:GO_0043195 rdfs:subClassOf obo:GO_0098793 .
 
 obo:GO_0098807 rdfs:subClassOf obo:GO_0098796 .
 
+obo:GO_0005634 rdfs:subClassOf obo:GO_0043231 .
+
 obo:GO_0005667 rdfs:subClassOf obo:GO_0032991 .
 
-obo:GO_0009536 rdfs:subClassOf obo:GO_0043231 .
+obo:GO_0030667 rdfs:subClassOf obo:GO_0030659,
+        obo:GO_0098588 .
 
 obo:GO_0033648 rdfs:subClassOf obo:GO_0033647 .
 
@@ -9426,23 +8910,16 @@ obo:GO_0097180 rdfs:subClassOf obo:GO_0097179 .
 
 obo:GO_0097729 rdfs:subClassOf obo:GO_0031514 .
 
-obo:GO_0005634 rdfs:subClassOf obo:GO_0043231 .
-
 obo:GO_0016604 rdfs:subClassOf obo:GO_0110165 .
 
 obo:GO_0019030 rdfs:subClassOf obo:GO_0019028 .
 
 obo:GO_0019814 rdfs:subClassOf obo:GO_0032991 .
 
-obo:GO_0030667 rdfs:subClassOf obo:GO_0030659,
-        obo:GO_0098588 .
-
 obo:GO_0097136 rdfs:subClassOf obo:GO_0032991 .
 
 obo:GO_0099738 rdfs:subClassOf obo:GO_0005938,
         obo:GO_0099568 .
-
-bc:CCO-MEM-ORG rdfs:subClassOf bc:CCO-ORGANELLE .
 
 obo:GO_0005911 rdfs:subClassOf obo:GO_0070161 .
 
@@ -9458,18 +8935,17 @@ obo:GO_0070603 rdfs:subClassOf obo:GO_0140513,
 
 obo:GO_1902554 rdfs:subClassOf obo:GO_1902911 .
 
-bc:CCO-MEMBRANE rdfs:subClassOf bc:CCO-BARRIER,
-        obo:GO_0016020 .
-
 obo:GO_0016234 rdfs:subClassOf obo:GO_0005622 .
 
 obo:GO_0031312 rdfs:subClassOf obo:GO_0019898 .
+
+obo:GO_0016020 rdfs:subClassOf obo:GO_0110165 .
 
 obo:GO_0033644 rdfs:subClassOf obo:GO_0033643 .
 
 obo:GO_0097525 rdfs:subClassOf obo:GO_0030532 .
 
-obo:GO_0016020 rdfs:subClassOf obo:GO_0110165 .
+obo:GO_0030141 rdfs:subClassOf obo:GO_0099503 .
 
 obo:GO_0043235 rdfs:subClassOf obo:GO_0032991 .
 
@@ -9480,8 +8956,6 @@ obo:GO_0045202 rdfs:subClassOf obo:GO_0030054 .
 obo:GO_0061695 rdfs:subClassOf obo:GO_1990234 .
 
 obo:GO_0016461 rdfs:subClassOf obo:GO_0016459 .
-
-obo:GO_0030141 rdfs:subClassOf obo:GO_0099503 .
 
 obo:GO_0032993 rdfs:subClassOf obo:GO_0032991 .
 
@@ -9508,8 +8982,6 @@ obo:GO_0070013 rdfs:subClassOf obo:GO_0043233 .
 obo:GO_1902495 rdfs:subClassOf obo:GO_0098796,
         obo:GO_1990351 .
 
-bc:CCO-SPACE rdfs:subClassOf obo:GO_0110165 .
-
 obo:GO_0030659 rdfs:subClassOf obo:GO_0012506 .
 
 obo:GO_0000307 rdfs:subClassOf obo:GO_1902554 .
@@ -9528,12 +9000,12 @@ obo:GO_0033643 rdfs:subClassOf obo:GO_0018995 .
 
 obo:GO_0098798 rdfs:subClassOf obo:GO_0032991 .
 
+obo:GO_0031410 rdfs:subClassOf obo:GO_0097708 .
+
 obo:GO_0033655 rdfs:subClassOf obo:GO_0033646 .
 
 obo:GO_0098800 rdfs:subClassOf obo:GO_0098796,
         obo:GO_0098798 .
-
-obo:GO_0031410 rdfs:subClassOf obo:GO_0097708 .
 
 obo:GO_0098588 rdfs:subClassOf obo:GO_0031090 .
 

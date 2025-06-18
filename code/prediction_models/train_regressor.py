@@ -1,5 +1,5 @@
 # %%
-import pickle, os, time
+import pickle, os, time, sys
 import torch as th
 
 from sklearn.metrics import r2_score
@@ -12,6 +12,9 @@ from train_loop import cross_val
 from parameters import (EPOCHS, LR, GNN_CHANNELS, NN_CHANNELS, REGULARIZATION,
                         TRAIN_EMBEDDING_EPOCH, TRAIN_GENES, BOX_WEIGHT,
                         DATASET, BOX_EMBEDDINGS, ONLY_GENE_BOXES, SPLIT)
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../embeddings')))
 # %%
 if is_available():
     device = 'cuda'
@@ -23,17 +26,17 @@ with open(os.path.join(BASE, f'datasets/split_datasets/{DATASET}.pkl'),
           'rb') as fi:
     data = pickle.load(fi).contiguous()
 
-eb = data['mat_ent', 'encodedBy', 'genes']['edge_index']
-cb = data['reactions', 'catalyzedBy', 'mat_ent']['edge_index']
-cbg = []
-for r in cb.T:
-    if r[1] in eb[0,:]:
-        p = [r[0], eb[1,eb[0,:] == r[1]]]
-        cbg.append(p)
-cbgt = th.tensor(cbg).T
-data['reactions','catalyzedByGene', 'genes'].edge_index = cbgt
-data['genes','rev_catalyzedByGene', 'reactions'].edge_index \
-                    = cbgt.flip(dims=(0,))
+# eb = data['mat_ent', 'encodedBy', 'genes']['edge_index']
+# cb = data['reactions', 'catalyzedBy', 'mat_ent']['edge_index']
+# cbg = []
+# for r in cb.T:
+#     if r[1] in eb[0,:]:
+#         p = [r[0], eb[1,eb[0,:] == r[1]]]
+#         cbg.append(p)
+# cbgt = th.tensor(cbg).T
+# data['reactions','catalyzedByGene', 'genes'].edge_index = cbgt
+# data['genes','rev_catalyzedByGene', 'reactions'].edge_index \
+#                     = cbgt.flip(dims=(0,))
 
 data.to(device)
 

@@ -60,6 +60,8 @@ model_kwargs = {'gnn_channels': GNN_CHANNELS, 'nn_channels': NN_CHANNELS,
 if True:
     gci0 = {}
     for n in data.node_types:
+        if n in ['genes', 'root']:
+            continue
         with open(os.path.join(BASE, 'datasets/split_datasets/'
                                 f'collected_{n}.pkl'), 'rb') as fi:
             gci0[n] = \

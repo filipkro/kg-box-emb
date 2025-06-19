@@ -8,10 +8,14 @@ import torch_geometric.transforms as T
 import copy
 from itertools import chain
 
+from box_embeddings.parameterizations import MinDeltaBoxTensor, SigmoidBoxTensor#TanhBoxTensor
+from box_embeddings.modules.intersection import GumbelIntersection
+from box_embeddings.modules.volume import BesselApproxVolume
+
 from sklearn.model_selection import KFold
 from parameters import (LR_DECAY, SCHEDULE_RATE, TRAIN_EMBEDDING_EPOCH,
                         TRAIN_GENES, BOX_WEIGHT, REGULARIZATION, DATASET,
-                        MIN_NBR_EDGES)
+                        MIN_NBR_EDGES, SEMANTIC_WEIGHT)
 
 seed_everything(42)
 
@@ -163,6 +167,42 @@ def cross_val(model_type, model_kwargs, data, epochs, loss_function, metric,
 
     return metrics, best_models, data_splits
 
+def box_loss(embeddings, gci0, box_transform='mindelta', inter='gumbel',
+             inter_temp=0.1, vol='bessel', vol_temp=0.1):
+    match box_transform:
+        case 'mindelta':
+            box = MinDeltaBoxTensor
+        case 'sigmoid':
+            box = SigmoidBoxTensor
+        case _:
+            raise NotImplementedError()
+    
+    match inter:
+        case 'gumbel':
+            intersect = GumbelIntersection(intersection_temperature=inter_temp)
+        case _:
+            raise NotImplementedError()
+        
+    match vol:
+        case 'bessel':
+            volume = BesselApproxVolume(intersection_temperature=inter_temp,
+                                        volume_temperature=vol_temp, log_scale=False)
+    loss = 0 
+    for x_dict in embeddings:
+        for k, emb in x_dict.items():
+            if k == 'genes':
+                continue
+            box_emb = box.from_vector(emb)
+            
+            subclasses = box_emb[gci0[k][:,0], ...]
+            supclasses = box_emb[gci0[k][:,1], ...]
+
+            loss -= (volume(intersect(subclasses, supclasses)) / volume(subclasses)).clamp(min=1e-9, max=1).log().sum()
+
+    return loss
+
+
+
 def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
                device, model_kwargs, lr=0.001, gci0_data=None):
     
@@ -205,7 +245,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
                           train_data['genes', 'interacts',
                                      'genes'].edge_label_index),
         edge_label=train_data['genes', 'interacts', 'genes'].edge_label,
-        batch_size=2**19,
+        batch_size=2**25,
         shuffle=True,
     )
 
@@ -233,49 +273,32 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
     best_metric = -np.inf
     model.node_embeddings['genes'].requires_grad_(False)
     model.node_embeddings.requires_grad_(False)
+    
     for epoch in range(1, epochs+1):
-        if epoch > TRAIN_EMBEDDING_EPOCH:
-            model.node_embeddings.requires_grad_(True)
-            model.node_embeddings['genes'].requires_grad_(TRAIN_GENES)
+        # if epoch > TRAIN_EMBEDDING_EPOCH:
+        model.node_embeddings.requires_grad_(True)
+        model.node_embeddings['genes'].requires_grad_(TRAIN_GENES)
         total_loss = total_examples = 0
         all_labels = []
         all_preds = []
+        sem_loss = 0
         box_loss_epoch = {k: [] for k in model.node_embeddings.keys()}
         for sampled_data in tqdm.tqdm(train_loader):
             sampled_data.to(device)
             optimizer.zero_grad()
-            preds = model(sampled_data)
+            if gci0_data:
+                preds, x_dicts = model(train_data, return_embs=True)
+                sem_loss = box_loss(x_dicts, gci0_data)
+            else:
+                preds = model(sampled_data)
+            
             loss = loss_function(preds, sampled_data['genes', 'interacts',
                                                      'genes'].edge_label,
                                  reduction='sum')
-            
             total_loss += loss.detach().item()
-            if gci0_data:
-                # evaluate box losses as well
-                for node, gci0 in gci0_data.items():
-                    dims = int(model.node_embeddings[node].embedding_dim / 2)
-   
-                    r = model.node_embeddings[node](gci0)
-                    
-                    if '_c_' in DATASET:
-                        rc, ro = r[..., :dims], r[..., dims:]
-                        subl = rc[:, 0, :] - ro[:, 0, :]
-                        subh = rc[:, 0, :] + ro[:, 0, :]
-                        supl = rc[:, 1, :] - ro[:, 1, :]
-                        suph = rc[:, 1, :] + ro[:, 1, :]
-                    else:
-                        rl, rh = r[..., :dims], r[..., dims:]
-                        subl = rl[:, 0, :]
-                        subh = rh[:, 0, :]
-                        supl = rl[:, 1, :]
-                        suph = rh[:, 1, :]
-                    box_l = (F.relu(subh - suph) + F.relu(supl - subl) +
-                             F.relu(supl - suph) + F.relu(subl - subh)).norm()
-                    if epoch > TRAIN_EMBEDDING_EPOCH:
-                        loss += BOX_WEIGHT * box_l
-                    box_loss_epoch[node].append(box_l.detach().item())
+            combined_loss = loss + SEMANTIC_WEIGHT * sem_loss
 
-            loss.backward()
+            combined_loss.backward()
             optimizer.step()
             
             total_examples += preds.numel()
@@ -287,6 +310,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         tm = metric(all_labels, all_preds)
         print(f"Epoch: {epoch:04d}")
         print(f"train loss: {total_loss / total_examples}")
+        print(f"semantic loss: {sem_loss}")
         print(f"train metric: {tm}")
 
         with th.no_grad():

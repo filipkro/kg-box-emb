@@ -16,3 +16,4 @@ DATASET = 'pyg_graph_c_DMA30_fitness'
 LINKS = ('genes', 'interacts', 'genes')
 SPLIT = 'nodes'
 MIN_NBR_EDGES = 100
+SEMANTIC_WEIGHT = 1e0

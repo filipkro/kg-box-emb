@@ -3,7 +3,22 @@ from torch_geometric.data import HeteroData
 import torch as th
 from parameters import LINKS, BOX_EMBEDDINGS, ONLY_GENE_BOXES
 
-class HeteroGNNCustom(th.nn.Module):
+class GNNBase(th.nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, x_dict, edge_index_dict, return_embs=False):
+        embs = []
+        for conv in self.layers:
+            x_dict = conv(x_dict, edge_index_dict)
+            x_dict = {key: x for key, x in x_dict.items()}
+            if return_embs:
+                embs.append(x_dict)
+        if return_embs:
+            return embs
+        return x_dict
+
+class HeteroGNNCustom(GNNBase):
     def __init__(self, channels, edge_types, embeddings):
         super().__init__()
         self.layers = th.nn.ModuleList()
@@ -38,13 +53,7 @@ class HeteroGNNCustom(th.nn.Module):
             prev_c = c
             self.layers.append(conv)
 
-    def forward(self, x_dict, edge_index_dict):
-        for conv in self.layers:
-            x_dict = conv(x_dict, edge_index_dict)
-            x_dict = {key: x for key, x in x_dict.items()}
-        return x_dict
-
-class HeteroGNN(th.nn.Module):
+class HeteroGNN(GNNBase):
     def __init__(self, channels, edge_types, embeddings):
         super().__init__()
         self.layers = th.nn.ModuleList()
@@ -60,11 +69,6 @@ class HeteroGNN(th.nn.Module):
             prev_c = c
             self.layers.append(conv)
 
-    def forward(self, x_dict, edge_index_dict):
-        for conv in self.layers:
-            x_dict = conv(x_dict, edge_index_dict)
-            x_dict = {key: x for key, x in x_dict.items()}
-        return x_dict
 
 class Model(th.nn.Module):
     def __init__(self, gnn_channels: list, nn_channels: list, meta_data, embeddings, edge_types=[('genes', 'interacts', 'genes')], save_path=None, custom=True):
@@ -118,19 +122,25 @@ class Model(th.nn.Module):
     def forward(self, data: HeteroData):
         raise NotImplementedError()
         
-    def _forward(self, data: HeteroData) -> th.Tensor:
+    def _forward(self, data: HeteroData, return_embs=False) -> th.Tensor:
         links_to_pred = data[LINKS].edge_label_index
         x_dict = {k: self.node_embeddings[k](data[k].node_id)
                   for k in self.node_embeddings}
-        x_dict = self.gnn(x_dict, data.edge_index_dict)
-        z = x_dict[LINKS[0]][links_to_pred[0]] * \
-            x_dict[LINKS[2]][links_to_pred[1]]
+        x_dict = self.gnn(x_dict, data.edge_index_dict,
+                          return_embs=return_embs)
+        embs = x_dict[-1] if return_embs else x_dict
+
+        z = embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]]
         if self.lin_layers:
             for l in self.lin_layers:
                 z = l(z).relu()
         else:
             z = z.sum(dim=-1)
-        return z      
+        
+        if return_embs:
+            return z, x_dict
+        else:
+            return z
     
     def gene_embedding(self, data: HeteroData) -> th.Tensor:
         x_dict = {k: self.node_embeddings[k](data[k].node_id)
@@ -168,9 +178,13 @@ class Regressor(Model):
         else:
             self.lin4 = th.nn.Linear(1, 1)
 
-    def forward(self, data: HeteroData):
-        z = self._forward(data)
-        return self.lin4(z).squeeze()
+    def forward(self, data: HeteroData, return_embs=False):
+        if return_embs:
+            z, x_dicts = self._forward(data, return_embs=return_embs)
+            return self.lin4(z).squeeze(), x_dicts
+        else:
+            z = self._forward(data)
+            return self.lin4(z).squeeze()
     
     def predict_from_embedding(self, emb):
         if self.lin_layers:

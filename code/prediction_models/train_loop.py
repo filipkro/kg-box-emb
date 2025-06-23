@@ -160,7 +160,7 @@ def cross_val(model_type, model_kwargs, data, epochs, loss_function, metric,
         best_models.append(fold_model.cpu())
         best_metrics.append(fold_metrics['best_metric'])
         data_splits.append((train_data.to('cpu'), val_data.to('cpu')))
-        #break
+        break
 
     print(f"Average best metric over folds: {np.mean(best_metrics)}")
     print(f"Std best metric over folds: {np.std(best_metrics)}")
@@ -327,17 +327,21 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         sem_loss = 0
         box_loss_epoch = {k: [] for k in model.node_embeddings.keys()}
         for sampled_data in tqdm.tqdm(train_loader):
-            sampled_data.to(device)
             optimizer.zero_grad()
             if gci0_data:
                 preds, x_dicts = model(train_data, return_embs=True)
                 sem_loss = box_loss(x_dicts, gci0_data)
-            else:
-                preds = model(sampled_data)
-            
-            loss = loss_function(preds, sampled_data['genes', 'interacts',
+                loss = loss_function(preds, train_data['genes', 'interacts',
                                                      'genes'].edge_label,
                                  reduction='sum')
+            else:
+                sampled_data.to(device)
+                preds = model(sampled_data)
+                loss = loss_function(preds, sampled_data['genes', 'interacts',
+                                                     'genes'].edge_label,
+                                 reduction='sum')
+            
+            
             total_loss += loss.detach().item()
             combined_loss = loss + SEMANTIC_WEIGHT * sem_loss
 

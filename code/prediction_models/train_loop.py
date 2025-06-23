@@ -169,15 +169,15 @@ def cross_val(model_type, model_kwargs, data, epochs, loss_function, metric,
 
 def box_loss(embeddings, gci0, loss_type='inclusion', box_transform='mindelta',
              inter='gumbel', inter_temp=0.1, vol='bessel', vol_temp=0.1,
-             debug=False, **kwargs):
+             **kwargs):
     if loss_type == 'inclusion':
         return box_loss_inclusion(embeddings, gci0, box_transform=box_transform,
                                   inter=inter, inter_temp=inter_temp, vol=vol,
-                                  vol_temp=vol_temp, debug=debug)
+                                  vol_temp=vol_temp)
     pass
 
 def box_loss_inclusion(embeddings, gci0, box_transform='mindelta', inter='gumbel',
-             inter_temp=0.1, vol='bessel', vol_temp=0.1, debug=False, **kwargs):
+             inter_temp=0.1, vol='bessel', vol_temp=0.1, **kwargs):
     match box_transform:
         case 'mindelta':
             box = MinDeltaBoxTensor
@@ -208,14 +208,6 @@ def box_loss_inclusion(embeddings, gci0, box_transform='mindelta', inter='gumbel
             supclasses = box_emb[gci0[k][:,1], ...]
 
             loss -= (volume(intersect(subclasses, supclasses)) / volume(subclasses)).clamp(min=1e-9, max=1).log().sum()
-            if debug:
-                print('box loss')
-                print(emb.device)
-                print(gci0[k].device)
-                print(box_emb.data.device)
-                print(subclasses.z.device)
-                print(loss.device)
-
 
     return loss
 
@@ -290,16 +282,16 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         
     model.set_neighbors_to_sample(neighbors, val_neighbors)
     
-    train_loader = LinkNeighborLoader(
-        data=train_data,
-        num_neighbors=neighbors,
-        edge_label_index=(('genes', 'interacts', 'genes'),
-                          train_data['genes', 'interacts',
-                                     'genes'].edge_label_index),
-        edge_label=train_data['genes', 'interacts', 'genes'].edge_label,
-        batch_size=2**25,
-        shuffle=True,
-    )
+    # train_loader = LinkNeighborLoader(
+    #     data=train_data,
+    #     num_neighbors=neighbors,
+    #     edge_label_index=(('genes', 'interacts', 'genes'),
+    #                       train_data['genes', 'interacts',
+    #                                  'genes'].edge_label_index),
+    #     edge_label=train_data['genes', 'interacts', 'genes'].edge_label,
+    #     batch_size=2**25,
+    #     shuffle=True,
+    # )
 
     val_loader = LinkNeighborLoader(
         data=val_data,
@@ -319,9 +311,9 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
             {'params': chain(model.gnn.parameters(), model.lin4.parameters(),
                              model.lin_layers.parameters())}
                               ], lr=lr, weight_decay=REGULARIZATION)
-    scheduler = th.optim.lr_scheduler.MultiplicativeLR(optimizer,
-                                                       lambda epoch: 0.1)
-    decreased = False
+    # scheduler = th.optim.lr_scheduler.MultiplicativeLR(optimizer,
+    #                                                    lambda epoch: 0.1)
+    # decreased = False
     best_metric = -np.inf
     model.node_embeddings['genes'].requires_grad_(False)
     model.node_embeddings.requires_grad_(False)
@@ -337,23 +329,15 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         all_labels = []
         all_preds = []
         sem_loss = 0
-        box_loss_epoch = {k: [] for k in model.node_embeddings.keys()}
+        # box_loss_epoch = {k: [] for k in model.node_embeddings.keys()}
         # for sampled_data in tqdm.tqdm(train_loader):
         optimizer.zero_grad()
         if gci0_data:
             preds, x_dicts = model(train_data, return_embs=True)
-            sem_loss = box_loss(x_dicts, gci0_data, debug=epoch==1)
+            sem_loss = box_loss(x_dicts, gci0_data)
             loss = loss_function(preds, train_data['genes', 'interacts',
                                                 'genes'].edge_label,
                             reduction='sum')
-            if epoch == 1:
-                print('check data in train loop')
-                print(train_data['mat_ent'].x.device)
-                print(preds.device)
-                print(x_dicts[0]['mat_ent'].device)
-                print(gci0_data['mat_ent'].device)
-                print(sem_loss.device)
-                print(loss.device)
             
         else:
             sampled_data.to(device)
@@ -366,9 +350,6 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         total_loss += loss.detach().item()
 
         combined_loss = loss + SEMANTIC_WEIGHT * sem_loss
-        if epoch == 1:
-            print('combined loss')
-            print(combined_loss.device)
         combined_loss.backward()
         optimizer.step()
         

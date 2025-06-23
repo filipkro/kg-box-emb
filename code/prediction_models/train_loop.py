@@ -169,15 +169,7 @@ def cross_val(model_type, model_kwargs, data, epochs, loss_function, metric,
 
 def box_loss(embeddings, gci0, loss_type='inclusion', box_transform='mindelta',
              inter='gumbel', inter_temp=0.1, vol='bessel', vol_temp=0.1,
-             **kwargs):
-    if loss_type == 'inclusion':
-        return box_loss_inclusion(embeddings, gci0, box_transform=box_transform,
-                                  inter=inter, inter_temp=inter_temp, vol=vol,
-                                  vol_temp=vol_temp)
-    pass
-
-def box_loss_inclusion(embeddings, gci0, box_transform='mindelta', inter='gumbel',
-             inter_temp=0.1, vol='bessel', vol_temp=0.1, **kwargs):
+             gamma=0.0, **kwargs):
     match box_transform:
         case 'mindelta':
             box = MinDeltaBoxTensor
@@ -185,6 +177,16 @@ def box_loss_inclusion(embeddings, gci0, box_transform='mindelta', inter='gumbel
             box = SigmoidBoxTensor
         case _:
             raise NotImplementedError()
+    if loss_type == 'inclusion':
+        return box_loss_inclusion(embeddings, gci0, box=box, inter=inter,
+                                  inter_temp=inter_temp, vol=vol,
+                                  vol_temp=vol_temp)
+    if loss_type == 'distance':
+        return box_loss_distance(embeddings, gci0, box=box, gamma=gamma)
+    pass
+
+def box_loss_inclusion(embeddings, gci0, box=MinDeltaBoxTensor, inter='gumbel',
+             inter_temp=0.1, vol='bessel', vol_temp=0.1, **kwargs):
     
     match inter:
         case 'gumbel':
@@ -211,26 +213,9 @@ def box_loss_inclusion(embeddings, gci0, box_transform='mindelta', inter='gumbel
 
     return loss
 
-def box_loss_distance(embeddings, gci0, box_transform='mindelta', inter='gumbel',
-             inter_temp=0.1, vol='bessel', vol_temp=0.1):
-    match box_transform:
-        case 'mindelta':
-            box = MinDeltaBoxTensor
-        case 'sigmoid':
-            box = SigmoidBoxTensor
-        case _:
-            raise NotImplementedError()
-    
-    match inter:
-        case 'gumbel':
-            intersect = GumbelIntersection(intersection_temperature=inter_temp)
-        case _:
-            raise NotImplementedError()
-        
-    match vol:
-        case 'bessel':
-            volume = BesselApproxVolume(intersection_temperature=inter_temp,
-                                        volume_temperature=vol_temp, log_scale=False)
+
+def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0):
+
     loss = 0 
     for x_dict in embeddings:
         for k, emb in x_dict.items():
@@ -239,9 +224,14 @@ def box_loss_distance(embeddings, gci0, box_transform='mindelta', inter='gumbel'
             box_emb = box.from_vector(emb)
             
             subclasses = box_emb[gci0[k][:,0], ...]
+            sub_c, sub_o = subclasses.centre, subclasses.Z - subclasses.centre
             supclasses = box_emb[gci0[k][:,1], ...]
+            sup_c, sup_o = supclasses.centre, supclasses.Z - supclasses.centre
 
-            loss -= (volume(intersect(subclasses, supclasses)) / volume(subclasses)).clamp(min=1e-9, max=1).log().sum()
+            loss += th.relu(th.abs(sub_c - sup_c) + sub_o - sup_o -
+                            gamma).norm(dim=-1).sum()
+
+            # loss -= (volume(intersect(subclasses, supclasses)) / volume(subclasses)).clamp(min=1e-9, max=1).log().sum()
 
     return loss
 
@@ -334,7 +324,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         optimizer.zero_grad()
         if gci0_data:
             preds, x_dicts = model(train_data, return_embs=True)
-            sem_loss = box_loss(x_dicts, gci0_data)
+            sem_loss = box_loss(x_dicts, gci0_data, loss_type='distance')
             loss = loss_function(preds, train_data['genes', 'interacts',
                                                 'genes'].edge_label,
                             reduction='sum')

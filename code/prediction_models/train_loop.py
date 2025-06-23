@@ -213,7 +213,7 @@ def box_loss_inclusion(embeddings, gci0, box_transform='mindelta', inter='gumbel
                 print(emb.device)
                 print(gci0[k].device)
                 print(box_emb.data.device)
-                print(subclasses.data.device)
+                print(subclasses.z.device)
                 print(loss.device)
 
 
@@ -328,6 +328,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
     train_data.to(device)
     # if gci0_data:
     #     gci0_da
+    train_data.cuda()
     for epoch in range(1, epochs+1):
         # if epoch > TRAIN_EMBEDDING_EPOCH:
         model.node_embeddings.requires_grad_(True)
@@ -347,7 +348,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
                             reduction='sum')
             if epoch == 1:
                 print('check data in train loop')
-                print(train_data.device)
+                print(train_data['mat_ent'].x.device)
                 print(preds.device)
                 print(x_dicts[0]['mat_ent'].device)
                 print(gci0_data['mat_ent'].device)

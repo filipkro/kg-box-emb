@@ -169,15 +169,15 @@ def cross_val(model_type, model_kwargs, data, epochs, loss_function, metric,
 
 def box_loss(embeddings, gci0, loss_type='inclusion', box_transform='mindelta',
              inter='gumbel', inter_temp=0.1, vol='bessel', vol_temp=0.1,
-             **kwargs):
+             debug=False, **kwargs):
     if loss_type == 'inclusion':
         return box_loss_inclusion(embeddings, gci0, box_transform=box_transform,
                                   inter=inter, inter_temp=inter_temp, vol=vol,
-                                  vol_temp=vol_temp)
+                                  vol_temp=vol_temp, debug=debug)
     pass
 
 def box_loss_inclusion(embeddings, gci0, box_transform='mindelta', inter='gumbel',
-             inter_temp=0.1, vol='bessel', vol_temp=0.1, **kwargs):
+             inter_temp=0.1, vol='bessel', vol_temp=0.1, debug=False, **kwargs):
     match box_transform:
         case 'mindelta':
             box = MinDeltaBoxTensor
@@ -199,6 +199,7 @@ def box_loss_inclusion(embeddings, gci0, box_transform='mindelta', inter='gumbel
     loss = 0 
     for x_dict in embeddings:
         for k, emb in x_dict.items():
+            
             if k == 'genes':
                 continue
             box_emb = box.from_vector(emb)
@@ -207,6 +208,14 @@ def box_loss_inclusion(embeddings, gci0, box_transform='mindelta', inter='gumbel
             supclasses = box_emb[gci0[k][:,1], ...]
 
             loss -= (volume(intersect(subclasses, supclasses)) / volume(subclasses)).clamp(min=1e-9, max=1).log().sum()
+            if debug:
+                print('box loss')
+                print(emb.device)
+                print(gci0[k].device)
+                print(box_emb.device)
+                print(subclasses.device)
+                print(loss.device)
+
 
     return loss
 
@@ -316,7 +325,9 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
     best_metric = -np.inf
     model.node_embeddings['genes'].requires_grad_(False)
     model.node_embeddings.requires_grad_(False)
-    
+    train_data.to(device)
+    # if gci0_data:
+    #     gci0_da
     for epoch in range(1, epochs+1):
         # if epoch > TRAIN_EMBEDDING_EPOCH:
         model.node_embeddings.requires_grad_(True)
@@ -326,33 +337,45 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         all_preds = []
         sem_loss = 0
         box_loss_epoch = {k: [] for k in model.node_embeddings.keys()}
-        for sampled_data in tqdm.tqdm(train_loader):
-            optimizer.zero_grad()
-            if gci0_data:
-                preds, x_dicts = model(train_data, return_embs=True)
-                sem_loss = box_loss(x_dicts, gci0_data)
-                loss = loss_function(preds, train_data['genes', 'interacts',
-                                                     'genes'].edge_label,
-                                 reduction='sum')
-            else:
-                sampled_data.to(device)
-                preds = model(sampled_data)
-                loss = loss_function(preds, sampled_data['genes', 'interacts',
-                                                     'genes'].edge_label,
-                                 reduction='sum')
+        # for sampled_data in tqdm.tqdm(train_loader):
+        optimizer.zero_grad()
+        if gci0_data:
+            preds, x_dicts = model(train_data, return_embs=True)
+            sem_loss = box_loss(x_dicts, gci0_data, debug=epoch==1)
+            loss = loss_function(preds, train_data['genes', 'interacts',
+                                                'genes'].edge_label,
+                            reduction='sum')
+            if epoch == 1:
+                print('check data in train loop')
+                print(train_data.device)
+                print(preds.device)
+                print(x_dicts[0]['mat_ent'].device)
+                print(gci0_data['mat_ent'].device)
+                print(sem_loss.device)
+                print(loss.device)
             
-            
-            total_loss += loss.detach().item()
-            combined_loss = loss + SEMANTIC_WEIGHT * sem_loss
+        else:
+            sampled_data.to(device)
+            preds = model(sampled_data)
+            loss = loss_function(preds, sampled_data['genes', 'interacts',
+                                                'genes'].edge_label,
+                            reduction='sum')
+        
+        
+        total_loss += loss.detach().item()
 
-            combined_loss.backward()
-            optimizer.step()
-            
-            total_examples += preds.numel()
+        combined_loss = loss + SEMANTIC_WEIGHT * sem_loss
+        if epoch == 1:
+            print('combined loss')
+            print(combined_loss.device)
+        combined_loss.backward()
+        optimizer.step()
+        
+        total_examples += preds.numel()
 
-            targets, preds = get_targets_preds(sampled_data, preds)
-            all_labels = np.concatenate((all_labels, targets))
-            all_preds = np.concatenate((all_preds, preds))
+        targets, preds = get_targets_preds(train_data, preds)
+        all_labels = np.concatenate((all_labels, targets))
+        all_preds = np.concatenate((all_preds, preds))
 
         tm = metric(all_labels, all_preds)
         print(f"Epoch: {epoch:04d}")

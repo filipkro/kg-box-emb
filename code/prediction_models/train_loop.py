@@ -212,8 +212,8 @@ def box_loss_inclusion(embeddings, gci0, box_transform='mindelta', inter='gumbel
                 print('box loss')
                 print(emb.device)
                 print(gci0[k].device)
-                print(box_emb.device)
-                print(subclasses.device)
+                print(box_emb.data.device)
+                print(subclasses.data.device)
                 print(loss.device)
 
 

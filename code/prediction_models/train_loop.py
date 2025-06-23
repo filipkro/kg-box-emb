@@ -169,7 +169,7 @@ def cross_val(model_type, model_kwargs, data, epochs, loss_function, metric,
 
 def box_loss(embeddings, gci0, loss_type='inclusion', box_transform='mindelta',
              inter='gumbel', inter_temp=0.1, vol='bessel', vol_temp=0.1,
-             gamma=0.0, **kwargs):
+             gamma=0.0, neg=False, **kwargs):
     match box_transform:
         case 'mindelta':
             box = MinDeltaBoxTensor
@@ -180,14 +180,16 @@ def box_loss(embeddings, gci0, loss_type='inclusion', box_transform='mindelta',
     if loss_type == 'inclusion':
         return box_loss_inclusion(embeddings, gci0, box=box, inter=inter,
                                   inter_temp=inter_temp, vol=vol,
-                                  vol_temp=vol_temp)
+                                  vol_temp=vol_temp, neg=neg)
     if loss_type == 'distance':
-        return box_loss_distance(embeddings, gci0, box=box, gamma=gamma)
+        return box_loss_distance(embeddings, gci0, box=box, gamma=gamma,
+                                 neg=neg)
     pass
 
 def box_loss_inclusion(embeddings, gci0, box=MinDeltaBoxTensor, inter='gumbel',
-             inter_temp=0.1, vol='bessel', vol_temp=0.1, **kwargs):
-    
+             inter_temp=0.1, vol='bessel', vol_temp=0.1, neg=False, **kwargs):
+    if neg:
+        raise NotImplementedError("Negative loss not yet implemented for inclusion loss")
     match inter:
         case 'gumbel':
             intersect = GumbelIntersection(intersection_temperature=inter_temp)
@@ -198,7 +200,8 @@ def box_loss_inclusion(embeddings, gci0, box=MinDeltaBoxTensor, inter='gumbel',
         case 'bessel':
             volume = BesselApproxVolume(intersection_temperature=inter_temp,
                                         volume_temperature=vol_temp, log_scale=False)
-    loss = 0 
+    loss = 0
+    
     for x_dict in embeddings:
         for k, emb in x_dict.items():
             
@@ -214,9 +217,15 @@ def box_loss_inclusion(embeddings, gci0, box=MinDeltaBoxTensor, inter='gumbel',
     return loss
 
 
-def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0):
+def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0,
+                      neg=False):
 
-    loss = 0 
+    def dist_inclusion(sub_c, sub_o, sup_c, sup_o, neg=False):
+        n = -1 if neg else 1
+        return th.relu(n*(th.abs(sub_c - sup_c) + sub_o - sup_o -
+                          gamma)).norm(dim=-1).sum()
+    loss = 0
+    neg_loss = 0
     for x_dict in embeddings:
         for k, emb in x_dict.items():
             if k == 'genes':
@@ -228,12 +237,40 @@ def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0):
             supclasses = box_emb[gci0[k][:,1], ...]
             sup_c, sup_o = supclasses.centre, supclasses.Z - supclasses.centre
 
-            loss += th.relu(th.abs(sub_c - sup_c) + sub_o - sup_o -
-                            gamma).norm(dim=-1).sum()
+            loss += dist_inclusion(sub_c, sub_o, sup_c, sup_o, neg=False)
+            
+            # th.relu(th.abs(sub_c - sup_c) + sub_o - sup_o -
+            #                 gamma).norm(dim=-1).sum()
+            
+            if neg:
+                max_i = len(emb)
+
+                rand_classes = th.randint(low=0, high=max_i, size=(len(gci0[k]),), device=gci0[k].device)
+                nsub = box_emb[rand_classes, ...]
+                nsub_c, nsub_o = nsub.centre, nsub.Z - nsub.centre
+                neg_loss += dist_inclusion(nsub_c, nsub_o, sup_c, sup_o, neg=True)
+
+                rand_classes = th.randint(low=0, high=max_i, size=(len(gci0[k]),), device=gci0[k].device)
+                nsup = box_emb[rand_classes, ...]
+                nsup_c, nsup_o = nsup.centre, nsup.Z - nsup.centre
+                neg_loss += dist_inclusion(sub_c, sub_o, nsup_c, nsup_o, neg=True)
+
+                rand_classes = th.randint(low=0, high=max_i, size=(len(gci0[k]),2), device=gci0[k].device)
+                nsub = box_emb[rand_classes[:,0], ...]
+                nsub_c, nsub_o = nsub.centre, nsub.Z - nsub.centre
+                nsup = box_emb[rand_classes[:,1], ...]
+                nsup_c, nsup_o = nsup.centre, nsup.Z - nsup.centre
+                neg_loss += dist_inclusion(nsub_c, nsub_o, nsup_c, nsup_o, neg=True)
+
+                
+
 
             # loss -= (volume(intersect(subclasses, supclasses)) / volume(subclasses)).clamp(min=1e-9, max=1).log().sum()
 
-    return loss
+    if neg:
+        return loss, neg_loss
+    else:
+        return loss
 
 
 
@@ -319,12 +356,13 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         all_labels = []
         all_preds = []
         sem_loss = 0
+        neg_sem_loss = 0
         # box_loss_epoch = {k: [] for k in model.node_embeddings.keys()}
         # for sampled_data in tqdm.tqdm(train_loader):
         optimizer.zero_grad()
         if gci0_data:
             preds, x_dicts = model(train_data, return_embs=True)
-            sem_loss = box_loss(x_dicts, gci0_data, loss_type='distance')
+            sem_loss, neg_sem_loss = box_loss(x_dicts, gci0_data, loss_type='distance', neg=True)
             loss = loss_function(preds, train_data['genes', 'interacts',
                                                 'genes'].edge_label,
                             reduction='sum')
@@ -339,7 +377,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         
         total_loss += loss.detach().item()
 
-        combined_loss = loss + SEMANTIC_WEIGHT * sem_loss
+        combined_loss = loss + SEMANTIC_WEIGHT * (sem_loss + neg_sem_loss)
         combined_loss.backward()
         optimizer.step()
         
@@ -353,6 +391,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         print(f"Epoch: {epoch:04d}")
         print(f"train loss: {total_loss / total_examples}")
         print(f"semantic loss: {sem_loss}")
+        print(f"neg semantic loss: {neg_sem_loss}")
         print(f"train metric: {tm}")
 
         with th.no_grad():

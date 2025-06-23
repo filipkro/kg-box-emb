@@ -339,9 +339,9 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         metrics['train_metrics'].append(tm)
         metrics['val_losses'].append(total_val_loss / val_examples)
         metrics['val_metrics'].append(vm)
-        if gci0_data:
-            for k,v in box_loss_epoch.items():
-                metrics['box_losses'][k].append(np.mean(v).item())
+        #if gci0_data:
+        #    for k,v in box_loss_epoch.items():
+        #        metrics['box_losses'][k].append(np.mean(v).item())
 
         # if vm > 0 and not decreased:
         #     scheduler.step()
@@ -354,7 +354,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         else:
             since_improved += 1
 
-        if since_improved >20:
+        if since_improved > 10:
             print('Model has not improved in 20 epochs, stopping training...')
             break
 

@@ -152,7 +152,7 @@ class Model(th.nn.Module):
 class DummyModel(Model):
     def __init__(self, gnn_channels, nn_channels, meta_data, embeddings, edge_types=[('genes', 'interacts', 'genes')], save_path=None):
         super().__init__(gnn_channels, nn_channels, meta_data, embeddings, edge_types, save_path)
-        self.transition_layer = th.nn.Linear(self.node_embeddings['genes'].embedding_dim, self.lin_layers[0].in_features, bias=True)
+        self.transition_layer = th.nn.Linear(2 * self.node_embeddings['genes'].embedding_dim, self.lin_layers[0].in_features, bias=True)
         self.lin4 = th.nn.Linear(self.lin_layers[-1].out_features, 1)
 
     def forward(self, data: HeteroData):
@@ -160,7 +160,9 @@ class DummyModel(Model):
         x_dict = {k: self.node_embeddings[k](data[k].node_id)
                   for k in self.node_embeddings}
         z = x_dict[LINKS[0]][links_to_pred[0]] * x_dict[LINKS[2]][links_to_pred[1]]
-        z = self.transition_layer(z).relu()
+        zz = (x_dict[LINKS[0]][links_to_pred[0]] - x_dict[LINKS[2]][links_to_pred[1]]).abs()
+        z = th.concat((z, zz))
+        z = self.transition_layer(z)#.relu()
         if self.lin_layers:
             for l in self.lin_layers:
                 z = l(z).relu()

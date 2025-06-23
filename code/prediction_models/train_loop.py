@@ -167,7 +167,50 @@ def cross_val(model_type, model_kwargs, data, epochs, loss_function, metric,
 
     return metrics, best_models, data_splits
 
-def box_loss(embeddings, gci0, box_transform='mindelta', inter='gumbel',
+def box_loss(embeddings, gci0, loss_type='inclusion', box_transform='mindelta',
+             inter='gumbel', inter_temp=0.1, vol='bessel', vol_temp=0.1,
+             **kwargs):
+    if loss_type == 'inclusion':
+        return box_loss_inclusion(embeddings, gci0, box_transform=box_transform,
+                                  inter=inter, inter_temp=inter_temp, vol=vol,
+                                  vol_temp=vol_temp)
+    pass
+
+def box_loss_inclusion(embeddings, gci0, box_transform='mindelta', inter='gumbel',
+             inter_temp=0.1, vol='bessel', vol_temp=0.1, **kwargs):
+    match box_transform:
+        case 'mindelta':
+            box = MinDeltaBoxTensor
+        case 'sigmoid':
+            box = SigmoidBoxTensor
+        case _:
+            raise NotImplementedError()
+    
+    match inter:
+        case 'gumbel':
+            intersect = GumbelIntersection(intersection_temperature=inter_temp)
+        case _:
+            raise NotImplementedError()
+        
+    match vol:
+        case 'bessel':
+            volume = BesselApproxVolume(intersection_temperature=inter_temp,
+                                        volume_temperature=vol_temp, log_scale=False)
+    loss = 0 
+    for x_dict in embeddings:
+        for k, emb in x_dict.items():
+            if k == 'genes':
+                continue
+            box_emb = box.from_vector(emb)
+            
+            subclasses = box_emb[gci0[k][:,0], ...]
+            supclasses = box_emb[gci0[k][:,1], ...]
+
+            loss -= (volume(intersect(subclasses, supclasses)) / volume(subclasses)).clamp(min=1e-9, max=1).log().sum()
+
+    return loss
+
+def box_loss_distance(embeddings, gci0, box_transform='mindelta', inter='gumbel',
              inter_temp=0.1, vol='bessel', vol_temp=0.1):
     match box_transform:
         case 'mindelta':

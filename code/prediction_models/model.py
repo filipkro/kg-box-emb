@@ -2,6 +2,7 @@ from torch_geometric.nn import SAGEConv, HeteroConv
 from torch_geometric.data import HeteroData
 import torch as th
 from parameters import LINKS, BOX_EMBEDDINGS, ONLY_GENE_BOXES
+from copy import deepcopy
 
 class GNNBase(th.nn.Module):
     def __init__(self):
@@ -174,6 +175,7 @@ class DummyModel(Model):
     
 class Regressor(Model):
     def __init__(self, gnn_channels: list, nn_channels: list, meta_data, embeddings, edge_types, save_path=None, custom=True):
+        embeddings = deepcopy(embeddings)
         super().__init__(gnn_channels, nn_channels, meta_data, embeddings, edge_types, save_path, custom)
         if len(nn_channels) > 0:
             self.lin4 = th.nn.Linear(nn_channels[-1], 1)
@@ -199,6 +201,7 @@ class Regressor(Model):
 
 class Classifier(Model):
     def __init__(self, gnn_channels: list, nn_channels: list, meta_data, embeddings, edge_types, nbr_classes=2, save_path=None):
+        embeddings = deepcopy(embeddings)
         super().__init__(gnn_channels, nn_channels, meta_data, embeddings, edge_types, save_path)
         self.activation = th.nn.Sigmoid()
 

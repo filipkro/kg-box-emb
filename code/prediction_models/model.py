@@ -94,7 +94,7 @@ class Model(th.nn.Module):
                  for k,v in embeddings.items()])
         else:
             self.node_embeddings = th.nn.ModuleDict([[k, th.nn.Embedding(num_embeddings=v.shape[0], embedding_dim=v.shape[1])] for k,v in embeddings.items()])
-        prev_width = max((1, int(2 * gnn_channels[-1] * self.gnn.es['genes'])))
+        prev_width = max((1, int(gnn_channels[-1] * self.gnn.es['genes'])))
         layers = []
         if len(nn_channels) > 0:
             for c in nn_channels:
@@ -131,27 +131,27 @@ class Model(th.nn.Module):
                           return_embs=return_embs)
         embs = x_dict[-1] if return_embs else x_dict
 
-        # z = embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]]
+        z = embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]]
         # zz = (embs[LINKS[0]][links_to_pred[0]] - embs[LINKS[2]][links_to_pred[1]]).abs()
         # z = th.concat((z, zz), dim=-1)
         # inter = th.tensor([])
-        for ii in range(2):
-            z = th.concat((embs[LINKS[0]][links_to_pred[ii % 2]], embs[LINKS[2]][links_to_pred[(ii + 1) % 2]]), dim=-1)
-            if self.lin_layers:
-                for i, l in enumerate(self.lin_layers):
-                    z = l(z)
-                    if i > 0:
-                        z = z.relu()
-            else:
-                z = z.sum(dim=-1)
-            
-            if ii > 0:
-                inter = th.stack((inter, z), dim=-1)
-            else:
-                inter = z
+        #for ii in range(2):
+        #    z = th.concat((embs[LINKS[0]][links_to_pred[ii % 2]], embs[LINKS[2]][links_to_pred[(ii + 1) % 2]]), dim=-1)
+        #    if self.lin_layers:
+        #        for i, l in enumerate(self.lin_layers):
+        #            z = l(z)
+        #            if i > 0:
+        #                z = z.relu()
+        #    else:
+        #        z = z.sum(dim=-1)
+        #    
+        #    if ii > 0:
+        #        inter = th.stack((inter, z), dim=-1)
+        #    else:
+        #        inter = z
 
             # inter = th.concat((inter, z), dim=-1)
-        z = inter.mean(dim=-1)
+        #z = inter.mean(dim=-1)
         if return_embs:
             return z, x_dict
         else:
@@ -190,7 +190,7 @@ class DummyModel(Model):
 class Regressor(Model):
     def __init__(self, gnn_channels: list, nn_channels: list, meta_data, embeddings, edge_types, save_path=None, custom=True):
         # embeddings = deepcopy(embeddings)
-        embeddings = {k: v.clone() for k,v in embeddings.items()}
+        embeddings = {k: v.detach().clone() for k,v in embeddings.items()}
         super().__init__(gnn_channels, nn_channels, meta_data, embeddings, edge_types, save_path, custom)
         if len(nn_channels) > 0:
             self.lin4 = th.nn.Linear(nn_channels[-1], 1)

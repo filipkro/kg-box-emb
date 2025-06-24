@@ -94,7 +94,7 @@ class Model(th.nn.Module):
                  for k,v in embeddings.items()])
         else:
             self.node_embeddings = th.nn.ModuleDict([[k, th.nn.Embedding(num_embeddings=v.shape[0], embedding_dim=v.shape[1])] for k,v in embeddings.items()])
-        prev_width = max((1, int(gnn_channels[-1] * self.gnn.es['genes'])))
+        prev_width = max((1, int(2 * gnn_channels[-1] * self.gnn.es['genes'])))
         layers = []
         if len(nn_channels) > 0:
             for c in nn_channels:
@@ -132,6 +132,8 @@ class Model(th.nn.Module):
         embs = x_dict[-1] if return_embs else x_dict
 
         z = embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]]
+        zz = (x_dict[LINKS[0]][links_to_pred[0]] - x_dict[LINKS[2]][links_to_pred[1]]).abs()
+        z = th.concat((z, zz))
         if self.lin_layers:
             for l in self.lin_layers:
                 z = l(z).relu()

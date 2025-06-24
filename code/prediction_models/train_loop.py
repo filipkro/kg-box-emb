@@ -153,7 +153,7 @@ def cross_val(model_type, model_kwargs, data, epochs, loss_function, metric,
         with open(os.path.join(BASE, f'datasets/split_datasets/{DATASET}.pkl'),
                   'rb') as fi:
             data = pickle.load(fi).contiguous().to(device)
-        gci0 = {}
+        gci0_data = {}
         for n in data.node_types:
             if n in ['genes', 'root']:
                 continue

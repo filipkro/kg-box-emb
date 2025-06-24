@@ -131,17 +131,22 @@ class Model(th.nn.Module):
                           return_embs=return_embs)
         embs = x_dict[-1] if return_embs else x_dict
 
-        z = embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]]
-        zz = (embs[LINKS[0]][links_to_pred[0]] - embs[LINKS[2]][links_to_pred[1]]).abs()
-        z = th.concat((z, zz), dim=-1)
-        if self.lin_layers:
-            for i, l in enumerate(self.lin_layers):
-                z = l(z)
-                if i > 0:
-                    z = z.relu()
-        else:
-            z = z.sum(dim=-1)
-        
+        # z = embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]]
+        # zz = (embs[LINKS[0]][links_to_pred[0]] - embs[LINKS[2]][links_to_pred[1]]).abs()
+        # z = th.concat((z, zz), dim=-1)
+        inter = th.tensor([])
+        for ii in range(2):
+            z = th.concat((embs[LINKS[0]][links_to_pred[ii % 2]], embs[LINKS[2]][links_to_pred[(ii + 1) % 2]]), dim=-1)
+            if self.lin_layers:
+                for i, l in enumerate(self.lin_layers):
+                    z = l(z)
+                    if i > 0:
+                        z = z.relu()
+            else:
+                z = z.sum(dim=-1)
+            
+            inter = th.concat((inter, z), dim=-1)
+        z = inter.mean(dim=-1)
         if return_embs:
             return z, x_dict
         else:

@@ -114,7 +114,7 @@ def val_model_params(model_type, model_kwargs, data, epochs, loss_function, metr
             metrics.append(fold_metrics)
             best_models.append(fold_model.cpu())
             best_metrics.append(fold_metrics['best_metric'])
-            break
+            #break
 
     print(f"Average best metric over folds: {np.mean(best_metrics)}")
     print(f"Std best metric over folds: {np.std(best_metrics)}")
@@ -148,9 +148,14 @@ def cross_val(model_type, model_kwargs, data, epochs, loss_function, metric,
     data_splits = []
     for i, (t_idx, v_idx) in enumerate(kf.split(data_to_split)):
         print(f"Fold: {i}")
+        if i == 3:
+            break
+        #continue
         train_data, val_data = split_data(data=data, t_idx=t_idx, v_idx=v_idx,
                                           split_transform=split_transform,
                                           device=device)
+        #if i == 0:
+        #    continue
         
         fold_metrics, fold_model = train_loop(model_type, train_data, val_data,
                                               epochs, loss_function, metric,
@@ -160,7 +165,7 @@ def cross_val(model_type, model_kwargs, data, epochs, loss_function, metric,
         best_models.append(fold_model.cpu())
         best_metrics.append(fold_metrics['best_metric'])
         data_splits.append((train_data.to('cpu'), val_data.to('cpu')))
-        break
+        #break
 
     print(f"Average best metric over folds: {np.mean(best_metrics)}")
     print(f"Std best metric over folds: {np.std(best_metrics)}")

@@ -161,6 +161,7 @@ def cross_val(model_type, model_kwargs, data, epochs, loss_function, metric,
                                 f'collected_{n}.pkl'), 'rb') as fi:
                 gci0_data[n] = \
                   pickle.load(fi).training_datasets.gci0_dataset.data.to(device)
+        model_kwargs['embeddings'] = data.x_dict
         if i == 3:
             break
         #continue

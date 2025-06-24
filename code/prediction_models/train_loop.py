@@ -347,7 +347,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
     train_data.to(device)
     # if gci0_data:
     #     gci0_da
-    train_data.cuda()
+    # train_data.cuda()
     for epoch in range(1, epochs+1):
         # if epoch > TRAIN_EMBEDDING_EPOCH:
         model.node_embeddings.requires_grad_(True)
@@ -360,7 +360,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         # box_loss_epoch = {k: [] for k in model.node_embeddings.keys()}
         # for sampled_data in tqdm.tqdm(train_loader):
         optimizer.zero_grad()
-        if gci0_data:
+        if gci0_data and False:
             preds, x_dicts = model(train_data, return_embs=True)
             sem_loss, neg_sem_loss = box_loss(x_dicts, gci0_data, loss_type='distance', neg=True)
             loss = loss_function(preds, train_data['genes', 'interacts',
@@ -368,9 +368,8 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
                             reduction='sum')
             
         else:
-            sampled_data.to(device)
-            preds = model(sampled_data)
-            loss = loss_function(preds, sampled_data['genes', 'interacts',
+            preds = model(train_data)
+            loss = loss_function(preds, train_data['genes', 'interacts',
                                                 'genes'].edge_label,
                             reduction='sum')
         

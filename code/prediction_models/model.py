@@ -132,7 +132,7 @@ class Model(th.nn.Module):
         embs = x_dict[-1] if return_embs else x_dict
 
         z = embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]]
-        zz = (x_dict[LINKS[0]][links_to_pred[0]] - x_dict[LINKS[2]][links_to_pred[1]]).abs()
+        zz = (embs[LINKS[0]][links_to_pred[0]] - embs[LINKS[2]][links_to_pred[1]]).abs()
         z = th.concat((z, zz))
         if self.lin_layers:
             for l in self.lin_layers:

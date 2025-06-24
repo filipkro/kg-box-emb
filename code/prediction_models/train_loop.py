@@ -17,7 +17,9 @@ from parameters import (LR_DECAY, SCHEDULE_RATE, TRAIN_EMBEDDING_EPOCH,
                         TRAIN_GENES, BOX_WEIGHT, REGULARIZATION, DATASET,
                         MIN_NBR_EDGES, SEMANTIC_WEIGHT)
 
+import os, pickle
 seed_everything(42)
+BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 def add_reverse_edges(data):
     data['genes','interacts','genes'].edge_index = \
@@ -148,6 +150,17 @@ def cross_val(model_type, model_kwargs, data, epochs, loss_function, metric,
     data_splits = []
     for i, (t_idx, v_idx) in enumerate(kf.split(data_to_split)):
         print(f"Fold: {i}")
+        with open(os.path.join(BASE, f'datasets/split_datasets/{DATASET}.pkl'),
+                  'rb') as fi:
+            data = pickle.load(fi).contiguous().to(device)
+        gci0 = {}
+        for n in data.node_types:
+            if n in ['genes', 'root']:
+                continue
+            with open(os.path.join(BASE, 'datasets/split_datasets/'
+                                f'collected_{n}.pkl'), 'rb') as fi:
+                gci0_data[n] = \
+                  pickle.load(fi).training_datasets.gci0_dataset.data.to(device)
         if i == 3:
             break
         #continue

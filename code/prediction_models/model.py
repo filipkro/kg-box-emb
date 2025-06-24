@@ -134,7 +134,7 @@ class Model(th.nn.Module):
         # z = embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]]
         # zz = (embs[LINKS[0]][links_to_pred[0]] - embs[LINKS[2]][links_to_pred[1]]).abs()
         # z = th.concat((z, zz), dim=-1)
-        inter = th.tensor([])
+        # inter = th.tensor([])
         for ii in range(2):
             z = th.concat((embs[LINKS[0]][links_to_pred[ii % 2]], embs[LINKS[2]][links_to_pred[(ii + 1) % 2]]), dim=-1)
             if self.lin_layers:
@@ -145,7 +145,12 @@ class Model(th.nn.Module):
             else:
                 z = z.sum(dim=-1)
             
-            inter = th.concat((inter, z), dim=-1)
+            if ii > 0:
+                inter = th.stack((inter, z), dim=-1)
+            else:
+                inter = z
+
+            # inter = th.concat((inter, z), dim=-1)
         z = inter.mean(dim=-1)
         if return_embs:
             return z, x_dict
@@ -212,7 +217,7 @@ class Regressor(Model):
 class Classifier(Model):
     def __init__(self, gnn_channels: list, nn_channels: list, meta_data, embeddings, edge_types, nbr_classes=2, save_path=None):
         # embeddings = deepcopy(embeddings)
-        embeddings = {k: v.clone() for k,v in embeddings.items()}
+        embeddings = {k: v.detach().clone() for k,v in embeddings.items()}
         super().__init__(gnn_channels, nn_channels, meta_data, embeddings, edge_types, save_path)
         self.activation = th.nn.Sigmoid()
 

@@ -46,13 +46,14 @@ def get_targets_preds(sampled_data, preds):
 
     return labels, preds
 
-def get_data_from_idx(data, idx, transform):
+def get_data_from_idx(data, idx, transform=None):
     new_data = data.clone()
     new_data['genes', 'interacts', 'genes'].edge_index = \
         new_data['genes', 'interacts', 'genes'].edge_index[:, idx]
     new_data['genes', 'interacts', 'genes'].edge_label = \
         new_data['genes', 'interacts', 'genes'].edge_label[idx]
-    new_data, _, _ = transform(new_data)
+    if transform != None:
+        new_data, _, _ = transform(new_data)
 
     new_data = add_reverse_edges(new_data)
     return new_data
@@ -62,7 +63,7 @@ def link_split(data, split_transform, v_idx, t_idx=None, device='cpu'):
     val_data = get_data_from_idx(data, v_idx, split_transform)
     return train_data, val_data
 
-def node_split(data, split_transform, v_idx, t_idx=None, device='cpu'):
+def node_split(data, v_idx, t_idx=None, split_transform=None, device='cpu'):
     cpu_data = data['genes', 'interacts', 'genes'].edge_index.to('cpu')
     idx_tensor = th.tensor(v_idx, device='cpu')
     mask = (cpu_data.unsqueeze(2) == idx_tensor).any(dim=2)
@@ -72,56 +73,6 @@ def node_split(data, split_transform, v_idx, t_idx=None, device='cpu'):
     train_data = get_data_from_idx(data, t_mask, split_transform)
     return train_data, val_data
 
-def val_model_params(model_type, model_kwargs, data, epochs, loss_function, metric,
-              device, folds=10, lr=0.001, split='nodes', gci0_data=None):
-    print(f"Splitting {split}")
-    kf = KFold(n_splits=folds, shuffle=True, random_state=42)
-    metrics = []
-    best_models = []
-    split_transform = T.RandomLinkSplit(
-        num_val=0.0,
-        num_test=0.0,
-        neg_sampling_ratio=0.0,
-        add_negative_train_samples=False,
-        edge_types=("genes", "interacts", "genes")
-    )
-    best_metrics = []
-    if split == 'nodes':
-        data_to_split = data['genes'].node_id
-        split_data = node_split
-    elif split == 'links':
-        data_to_split = data['genes', 'interacts', 'genes'].edge_index.T
-        split_data = link_split
-    else:
-        raise NotImplementedError(f"split for {split} is not implemented."
-                                  "Use nodes or links")
-    
-    for gnn, nn in zip([[16,32], [64,64], [32,32]], [[64], [64,8], [64, 16]]):
-        for i, (t_idx, v_idx) in enumerate(kf.split(data_to_split)):
-            print(f"Fold: {i}")
-            model_kwargs['gnn_channels'] = gnn
-            model_kwargs['nn_channels'] = nn
-            print(f"GNN channels: {gnn}")
-            print(f"NN : {nn}")
-            train_data, val_data = split_data(data=data, t_idx=t_idx,
-                                              v_idx=v_idx,
-                                              split_transform=split_transform,
-                                              device=device)
-
-
-            fold_metrics, fold_model = train_loop(model_type, train_data,
-                                                  val_data, epochs,
-                                                  loss_function, metric, device,
-                                                  model_kwargs, lr, gci0_data)
-            metrics.append(fold_metrics)
-            best_models.append(fold_model.cpu())
-            best_metrics.append(fold_metrics['best_metric'])
-            #break
-
-    print(f"Average best metric over folds: {np.mean(best_metrics)}")
-    print(f"Std best metric over folds: {np.std(best_metrics)}")
-
-    return metrics, best_models
 
 def cross_val(model_type, model_kwargs, data, epochs, loss_function, metric,
               device, folds=10, lr=0.001, split='nodes', gci0_data=None):

@@ -8,6 +8,9 @@ import torch_geometric.transforms as T
 import copy
 from itertools import chain
 
+from torch.nn.functional import mse_loss
+from sklearn.metrics import r2_score
+
 from box_embeddings.parameterizations import MinDeltaBoxTensor, SigmoidBoxTensor#TanhBoxTensor
 from box_embeddings.modules.intersection import GumbelIntersection
 from box_embeddings.modules.volume import BesselApproxVolume
@@ -244,6 +247,102 @@ def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0,
         return loss, neg_loss
     else:
         return loss
+
+
+def custom_train_loop(model, train_data, val_data, lr, epochs, gci0_data=None, device='cpu'):
+    optimizer = th.optim.Adam([
+            {'params': model.node_embeddings.parameters(), 'weight_decay': 0},
+            {'params': chain(model.gnn.parameters(), model.lin4.parameters(),
+                             model.lin_layers.parameters())}
+                              ], lr=lr, weight_decay=REGULARIZATION)
+
+    best_metric = -np.inf
+    model.node_embeddings['genes'].requires_grad_(False)
+    model.node_embeddings.requires_grad_(False)
+    train_data.to(device)
+    val_data.to(device)
+    model.to(device)
+    for epoch in range(1, epochs+1):
+        model.node_embeddings.requires_grad_(False)
+        model.node_embeddings['genes'].requires_grad_(TRAIN_GENES)
+        total_loss = total_examples = 0
+        all_labels = []
+        all_preds = []
+        sem_loss = 0
+        neg_sem_loss = 0
+ 
+        optimizer.zero_grad()
+        if gci0_data and False:
+            preds, x_dicts = model(train_data, return_embs=True)
+            sem_loss, neg_sem_loss = box_loss(x_dicts, gci0_data, loss_type='distance', neg=True)
+            loss = loss_function(preds, train_data['genes', 'interacts',
+                                                'genes'].edge_label,
+                            reduction='sum')
+            
+        else:
+            preds = model(train_data)
+            loss = mse_loss(preds, train_data['genes', 'interacts',
+                                                'genes'].edge_label,
+                            reduction='sum')
+        
+        
+        total_loss += loss.detach().item()
+
+        # combined_loss = loss + SEMANTIC_WEIGHT * (sem_loss + neg_sem_loss)
+        # combined_loss.backward()
+        loss.backward()
+        optimizer.step()
+        
+        total_examples += preds.numel()
+
+        targets, preds = get_targets_preds(train_data, preds)
+        all_labels = np.concatenate((all_labels, targets))
+        all_preds = np.concatenate((all_preds, preds))
+
+        tm = r2_score(all_labels, all_preds)
+        print(f"Epoch: {epoch:04d}")
+        print(f"train loss: {total_loss / total_examples}")
+        print(f"semantic loss: {sem_loss}")
+        print(f"neg semantic loss: {neg_sem_loss}")
+        print(f"train metric: {tm}")
+
+        with th.no_grad():
+            total_val_loss = val_examples = 0
+            val_labels = []
+            val_preds = []
+            
+            preds = model(val_data)
+            total_val_loss += mse_loss(
+                        preds,
+                        val_data['genes', 'interacts', 'genes'].edge_label,
+                        reduction='sum'
+                ).item()
+            val_examples += preds.numel()
+            targets, preds = get_targets_preds(val_data, preds)
+            val_labels = np.concatenate((val_labels, targets))
+            val_preds = np.concatenate((val_preds, preds))
+
+            vm = r2_score(val_labels, val_preds)
+            print(f"val loss: {total_val_loss / val_examples}")
+            print(f"val metric: {vm}")
+
+        if vm > best_metric:
+            since_improved = 0
+            best_metric = vm
+            print('copying model...')
+            # best_model = deepcopy(model)
+        else:
+            since_improved += 1
+
+        if since_improved > 10:
+            print('Model has not improved in 20 epochs, stopping training...')
+            break
+
+    th.cuda.empty_cache()
+    print(f'BEST METRIC FOR FOLD: {best_metric}')
+    return None, None#best_model
+
+
 
 
 

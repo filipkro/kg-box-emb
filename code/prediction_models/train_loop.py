@@ -300,8 +300,8 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
     #                                                    lambda epoch: 0.1)
     # decreased = False
     best_metric = -np.inf
+    model.node_embeddings.requires_grad_(True)
     model.node_embeddings['genes'].requires_grad_(False)
-    model.node_embeddings.requires_grad_(False)
     train_data.to(device)
     val_data.to(device)
     # if gci0_data:
@@ -326,7 +326,8 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         optimizer.zero_grad()
         if gci0_data and False:
             preds, x_dicts = model(td, return_embs=True)
-            sem_loss, neg_sem_loss = box_loss(x_dicts, gci0_data, loss_type='distance', neg=True)
+            sem_loss, neg_sem_loss = box_loss(x_dicts, gci0_data,
+                                              loss_type='distance', neg=True)
             
         else:
             preds = model(td)

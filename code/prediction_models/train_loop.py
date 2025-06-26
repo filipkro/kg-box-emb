@@ -295,7 +295,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
             {'params': model.node_embeddings.parameters(), 'weight_decay': 0},
             {'params': chain(model.gnn.parameters(), model.lin4.parameters(),
                              model.lin_layers.parameters())}
-                              ], lr=lr, weight_decay=REGULARIZATION)
+                              ], lr=0.1, weight_decay=REGULARIZATION)
     # scheduler = th.optim.lr_scheduler.MultiplicativeLR(optimizer,
     #                                                    lambda epoch: 0.1)
     # decreased = False
@@ -349,6 +349,10 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         preds = preds.detach().cpu().numpy()
 
         tm = metric(targets, preds)
+        if tm > -0.1:
+            for param_group in optimizer.param_groups:
+                param_group['lr'] = lr
+                
         print(f"Epoch: {epoch:04d}")
         print(f"train loss: {total_loss / total_examples}")
         print(f"semantic loss: {sem_loss}")

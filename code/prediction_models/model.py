@@ -2,7 +2,6 @@ from torch_geometric.nn import SAGEConv, HeteroConv
 from torch_geometric.data import HeteroData
 import torch as th
 from parameters import LINKS, BOX_EMBEDDINGS, ONLY_GENE_BOXES
-from copy import deepcopy
 
 class GNNBase(th.nn.Module):
     def __init__(self):
@@ -132,26 +131,12 @@ class Model(th.nn.Module):
         embs = x_dict[-1] if return_embs else x_dict
 
         z = embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]]
-        # zz = (embs[LINKS[0]][links_to_pred[0]] - embs[LINKS[2]][links_to_pred[1]]).abs()
-        # z = th.concat((z, zz), dim=-1)
-        # inter = th.tensor([])
-        #for ii in range(2):
-        #    z = th.concat((embs[LINKS[0]][links_to_pred[ii % 2]], embs[LINKS[2]][links_to_pred[(ii + 1) % 2]]), dim=-1)
         if self.lin_layers:
-            for i, l in enumerate(self.lin_layers):
-                z = l(z)
-                if i > 0:
-                    z = z.relu()
+            for l in self.lin_layers:
+                z = l(z).relu()
         else:
             z = z.sum(dim=-1)
-        #    
-        #    if ii > 0:
-        #        inter = th.stack((inter, z), dim=-1)
-        #    else:
-        #        inter = z
-
-            # inter = th.concat((inter, z), dim=-1)
-        #z = inter.mean(dim=-1)
+        
         if return_embs:
             return z, x_dict
         else:
@@ -167,7 +152,7 @@ class Model(th.nn.Module):
 class DummyModel(Model):
     def __init__(self, gnn_channels, nn_channels, meta_data, embeddings, edge_types=[('genes', 'interacts', 'genes')], save_path=None):
         super().__init__(gnn_channels, nn_channels, meta_data, embeddings, edge_types, save_path)
-        self.transition_layer = th.nn.Linear(2 * self.node_embeddings['genes'].embedding_dim, self.lin_layers[0].in_features, bias=True)
+        self.transition_layer = th.nn.Linear(self.node_embeddings['genes'].embedding_dim, self.lin_layers[0].in_features, bias=True)
         self.lin4 = th.nn.Linear(self.lin_layers[-1].out_features, 1)
 
     def forward(self, data: HeteroData):
@@ -175,9 +160,7 @@ class DummyModel(Model):
         x_dict = {k: self.node_embeddings[k](data[k].node_id)
                   for k in self.node_embeddings}
         z = x_dict[LINKS[0]][links_to_pred[0]] * x_dict[LINKS[2]][links_to_pred[1]]
-        zz = (x_dict[LINKS[0]][links_to_pred[0]] - x_dict[LINKS[2]][links_to_pred[1]]).abs()
-        z = th.concat((z, zz))
-        z = self.transition_layer(z)#.relu()
+        z = self.transition_layer(z).relu()
         if self.lin_layers:
             for l in self.lin_layers:
                 z = l(z).relu()
@@ -189,8 +172,6 @@ class DummyModel(Model):
     
 class Regressor(Model):
     def __init__(self, gnn_channels: list, nn_channels: list, meta_data, embeddings, edge_types, save_path=None, custom=True):
-        # embeddings = deepcopy(embeddings)
-        embeddings = {k: v.detach().clone() for k,v in embeddings.items()}
         super().__init__(gnn_channels, nn_channels, meta_data, embeddings, edge_types, save_path, custom)
         if len(nn_channels) > 0:
             self.lin4 = th.nn.Linear(nn_channels[-1], 1)
@@ -216,8 +197,6 @@ class Regressor(Model):
 
 class Classifier(Model):
     def __init__(self, gnn_channels: list, nn_channels: list, meta_data, embeddings, edge_types, nbr_classes=2, save_path=None):
-        # embeddings = deepcopy(embeddings)
-        embeddings = {k: v.detach().clone() for k,v in embeddings.items()}
         super().__init__(gnn_channels, nn_channels, meta_data, embeddings, edge_types, save_path)
         self.activation = th.nn.Sigmoid()
 

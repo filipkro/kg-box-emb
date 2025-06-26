@@ -24,15 +24,16 @@ import os, pickle
 seed_everything(42)
 BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from copy import deepcopy, copy
+
 def add_reverse_edges(data):
     data['genes','interacts','genes'].edge_index = \
         th.cat([data['genes', 'interacts', 'genes'].edge_index,
                 th.flip(data['genes', 'interacts', 'genes'].edge_index,
                         dims=(0,))], dim=1)
-    #data['genes','interacts','genes'].edge_index = \
-    #    th.cat([data['genes', 'interacts', 'genes'].edge_index,
-    #            th.flip(data['genes', 'interacts', 'genes'].edge_index,
-    #                    dims=(0,))], dim=1)
+    data['genes','interacts','genes'].edge_label_index = \
+        th.cat([data['genes', 'interacts', 'genes'].edge_label_index,
+                th.flip(data['genes', 'interacts', 'genes'].edge_label_index,
+                        dims=(0,))], dim=1)
     data['genes','interacts','genes'].edge_label = \
         th.cat([data['genes', 'interacts', 'genes'].edge_label,
                 data['genes', 'interacts', 'genes'].edge_label], dim=0)
@@ -49,7 +50,7 @@ def get_targets_preds(sampled_data, preds):
 
     return labels, preds
 
-def get_data_from_idx(data, idx, transform=None):
+def get_data_from_idx(data, idx, transform):
     new_data = data.clone()
     new_data['genes', 'interacts', 'genes'].edge_index = \
         new_data['genes', 'interacts', 'genes'].edge_index[:, idx]
@@ -57,6 +58,8 @@ def get_data_from_idx(data, idx, transform=None):
         new_data['genes', 'interacts', 'genes'].edge_label[idx]
     if transform != None:
         new_data, _, _ = transform(new_data)
+    else:
+        new_data['genes', 'interacts', 'genes'].edge_label_index = new_data['genes', 'interacts', 'genes'].edge_index
 
     new_data = add_reverse_edges(new_data)
     return new_data
@@ -83,13 +86,13 @@ def cross_val(model_type, model_kwargs, data, epochs, loss_function, metric,
     kf = KFold(n_splits=folds, shuffle=True, random_state=42)
     metrics = []
     best_models = []
-    #split_transform = T.RandomLinkSplit(
-    #    num_val=0.0,
-    #    num_test=0.0,
-    #    neg_sampling_ratio=0.0,
-    #    add_negative_train_samples=False,
-    #    edge_types=("genes", "interacts", "genes")
-    #)
+    # split_transform = T.RandomLinkSplit(
+    #     num_val=0.0,
+    #     num_test=0.0,
+    #     neg_sampling_ratio=0.0,
+    #     add_negative_train_samples=False,
+    #     edge_types=("genes", "interacts", "genes")
+    # )
     split_transform = None
     best_metrics = []
     if split == 'nodes':
@@ -105,35 +108,16 @@ def cross_val(model_type, model_kwargs, data, epochs, loss_function, metric,
     data_splits = []
     for i, (t_idx, v_idx) in enumerate(kf.split(data_to_split)):
         print(f"Fold: {i}")
-        if i not in [0,8]:
-            continue
-        #with open(os.path.join(BASE, f'datasets/split_datasets/{DATASET}.pkl'),
-        #          'rb') as fi:
-        #    data = pickle.load(fi).contiguous().to(device)
-        #gci0_data = {}
-        #for n in data.node_types:
-        #    if n in ['genes', 'root']:
-        #        continue
-        #    with open(os.path.join(BASE, 'datasets/split_datasets/'
-        #                        f'collected_{n}.pkl'), 'rb') as fi:
-        #        gci0_data[n] = \
-        #          pickle.load(fi).training_datasets.gci0_dataset.data.to(device)
-        #model_kwargs['embeddings'] = data.x_dict
-        if i == 3:
-            break
-        #continue
-        train_data, val_data = split_data(data=copy(data.detach().clone()), t_idx=t_idx, v_idx=v_idx,
+        train_data, val_data = split_data(data=data.clone(), t_idx=t_idx, v_idx=v_idx,
                                           split_transform=split_transform,
                                           device=device)
-        #if i == 0:
-        #    continue
         
         fold_metrics, fold_model = train_loop(model_type, train_data, val_data,
                                               epochs, loss_function, metric,
                                               device, model_kwargs, lr,
                                               gci0_data)
         metrics.append(fold_metrics)
-        #best_models.append(fold_model.cpu())
+        best_models.append(fold_model.cpu())
         best_metrics.append(fold_metrics['best_metric'])
         data_splits.append((train_data.to('cpu'), val_data.to('cpu')))
         #break
@@ -248,104 +232,6 @@ def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0,
     else:
         return loss
 
-
-def custom_train_loop(model, train_data, val_data, lr, epochs, gci0_data=None, device='cpu'):
-    optimizer = th.optim.Adam([
-            {'params': model.node_embeddings.parameters(), 'weight_decay': 0},
-            {'params': chain(model.gnn.parameters(), model.lin4.parameters(),
-                             model.lin_layers.parameters())}
-                              ], lr=lr, weight_decay=REGULARIZATION)
-
-    best_metric = -np.inf
-    model.node_embeddings['genes'].requires_grad_(False)
-    model.node_embeddings.requires_grad_(False)
-    train_data.to(device)
-    val_data.to(device)
-    model.to(device)
-    for epoch in range(1, epochs+1):
-        model.node_embeddings.requires_grad_(False)
-        model.node_embeddings['genes'].requires_grad_(TRAIN_GENES)
-        total_loss = total_examples = 0
-        all_labels = []
-        all_preds = []
-        sem_loss = 0
-        neg_sem_loss = 0
- 
-        optimizer.zero_grad()
-        if gci0_data and False:
-            preds, x_dicts = model(train_data, return_embs=True)
-            sem_loss, neg_sem_loss = box_loss(x_dicts, gci0_data, loss_type='distance', neg=True)
-            loss = loss_function(preds, train_data['genes', 'interacts',
-                                                'genes'].edge_label,
-                            reduction='sum')
-            
-        else:
-            preds = model(train_data)
-            loss = mse_loss(preds, train_data['genes', 'interacts',
-                                                'genes'].edge_label,
-                            reduction='sum')
-        
-        
-        total_loss += loss.detach().item()
-
-        # combined_loss = loss + SEMANTIC_WEIGHT * (sem_loss + neg_sem_loss)
-        # combined_loss.backward()
-        loss.backward()
-        optimizer.step()
-        
-        total_examples += preds.numel()
-
-        targets, preds = get_targets_preds(train_data, preds)
-        all_labels = np.concatenate((all_labels, targets))
-        all_preds = np.concatenate((all_preds, preds))
-
-        tm = r2_score(all_labels, all_preds)
-        print(f"Epoch: {epoch:04d}")
-        print(f"train loss: {total_loss / total_examples}")
-        print(f"semantic loss: {sem_loss}")
-        print(f"neg semantic loss: {neg_sem_loss}")
-        print(f"train metric: {tm}")
-
-        with th.no_grad():
-            total_val_loss = val_examples = 0
-            val_labels = []
-            val_preds = []
-            
-            preds = model(val_data)
-            total_val_loss += mse_loss(
-                        preds,
-                        val_data['genes', 'interacts', 'genes'].edge_label,
-                        reduction='sum'
-                ).item()
-            val_examples += preds.numel()
-            targets, preds = get_targets_preds(val_data, preds)
-            val_labels = np.concatenate((val_labels, targets))
-            val_preds = np.concatenate((val_preds, preds))
-
-            vm = r2_score(val_labels, val_preds)
-            print(f"val loss: {total_val_loss / val_examples}")
-            print(f"val metric: {vm}")
-
-        if vm > best_metric:
-            since_improved = 0
-            best_metric = vm
-            print('copying model...')
-            # best_model = deepcopy(model)
-        else:
-            since_improved += 1
-
-        if since_improved > 10:
-            print('Model has not improved in 20 epochs, stopping training...')
-            break
-
-    th.cuda.empty_cache()
-    print(f'BEST METRIC FOR FOLD: {best_metric}')
-    return None, None#best_model
-
-
-
-
-
 def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
                device, model_kwargs, lr=0.001, gci0_data=None):
     
@@ -417,6 +303,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
     model.node_embeddings['genes'].requires_grad_(False)
     model.node_embeddings.requires_grad_(False)
     train_data.to(device)
+    val_data.to(device)
     # if gci0_data:
     #     gci0_da
     # train_data.cuda()
@@ -425,26 +312,22 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         model.node_embeddings.requires_grad_(False)
         model.node_embeddings['genes'].requires_grad_(TRAIN_GENES)
         total_loss = total_examples = 0
-        all_labels = []
-        all_preds = []
-        sem_loss = 0
-        neg_sem_loss = 0
+        # all_labels = []
+        # all_preds = []
+        sem_loss = neg_sem_loss = 0
         # box_loss_epoch = {k: [] for k in model.node_embeddings.keys()}
         # for sampled_data in tqdm.tqdm(train_loader):
         optimizer.zero_grad()
         if gci0_data and False:
             preds, x_dicts = model(train_data, return_embs=True)
             sem_loss, neg_sem_loss = box_loss(x_dicts, gci0_data, loss_type='distance', neg=True)
-            loss = loss_function(preds, train_data['genes', 'interacts',
-                                                'genes'].edge_label,
-                            reduction='sum')
             
         else:
             preds = model(train_data)
-            loss = loss_function(preds, train_data['genes', 'interacts',
+
+        loss = loss_function(preds, train_data['genes', 'interacts',
                                                 'genes'].edge_label,
-                            reduction='sum')
-        
+                            reduction='sum') 
         
         total_loss += loss.detach().item()
 
@@ -454,11 +337,11 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         
         total_examples += preds.numel()
 
-        targets, preds = get_targets_preds(train_data, preds)
-        all_labels = np.concatenate((all_labels, targets))
-        all_preds = np.concatenate((all_preds, preds))
+        targets = train_data['genes','interacts',
+                          'genes'].edge_label.detach().cpu().numpy() 
+        preds = preds.detach().cpu().numpy()
 
-        tm = metric(all_labels, all_preds)
+        tm = metric(targets, preds)
         print(f"Epoch: {epoch:04d}")
         print(f"train loss: {total_loss / total_examples}")
         print(f"semantic loss: {sem_loss}")
@@ -467,33 +350,20 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
 
         with th.no_grad():
             total_val_loss = val_examples = 0
-            val_labels = []
-            val_preds = []
-            
+        
             preds = model(val_data)
             total_val_loss += loss_function(
-                        preds,
-                        val_data['genes', 'interacts', 'genes'].edge_label,
-                        reduction='sum'
-                ).item()
+                    preds,
+                    val_data['genes', 'interacts', 'genes'].edge_label,
+                    reduction='sum'
+            ).item()
+
             val_examples += preds.numel()
-            targets, preds = get_targets_preds(val_data, preds)
-            val_labels = np.concatenate((val_labels, targets))
-            val_preds = np.concatenate((val_preds, preds))
-            #for sampled_data in val_loader:
-            #    sampled_data.to(device)
-            #    preds = model(sampled_data)
-            #    total_val_loss += loss_function(
-            #            preds,
-            #            sampled_data['genes', 'interacts', 'genes'].edge_label,
-            #            reduction='sum'
-            #    ).item()
-            #
-            #    val_examples += preds.numel()
-            #    targets, preds = get_targets_preds(sampled_data, preds)
-            #    val_labels = np.concatenate((val_labels, targets))
-            #    val_preds = np.concatenate((val_preds, preds))
-            vm = metric(val_labels, val_preds)
+            targets = val_data['genes','interacts',
+                          'genes'].edge_label.detach().cpu().numpy() 
+            preds = preds.detach().cpu().numpy()
+            
+            vm = metric(targets, preds)
             print(f"val loss: {total_val_loss / val_examples}")
             print(f"val metric: {vm}")
 
@@ -523,7 +393,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
     metrics['best_metric'] = best_metric
     th.cuda.empty_cache()
     print(f'BEST METRIC FOR FOLD: {best_metric}')
-    return metrics, None#best_model
+    return metrics, best_model
 
 def continue_final_training(model, data, epochs, loss_function, metric, device,
                             lr=0.001):

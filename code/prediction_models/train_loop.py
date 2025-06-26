@@ -309,8 +309,14 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
     # train_data.cuda()
     for epoch in range(1, epochs+1):
         # if epoch > TRAIN_EMBEDDING_EPOCH:
-        model.node_embeddings.requires_grad_(False)
-        model.node_embeddings['genes'].requires_grad_(TRAIN_GENES)
+        td = train_data.clone()
+        perm = np.random.permutation(range(train_data['genes', 'interacts', 'genes'].edge_label_index.shape[1]))
+        td['genes', 'interacts', 'genes'].edge_label_index = td['genes', 'interacts', 'genes'].edge_label_index[:, perm]
+        td['genes', 'interacts', 'genes'].edge_index = td['genes', 'interacts', 'genes'].edge_index[:, perm]
+        td['genes', 'interacts', 'genes'].edge_label = td['genes', 'interacts', 'genes'].edge_label[perm]
+        td.to(device)
+        # model.node_embeddings.requires_grad_(False)
+        # model.node_embeddings['genes'].requires_grad_(TRAIN_GENES)
         total_loss = total_examples = 0
         # all_labels = []
         # all_preds = []
@@ -319,13 +325,13 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         # for sampled_data in tqdm.tqdm(train_loader):
         optimizer.zero_grad()
         if gci0_data and False:
-            preds, x_dicts = model(train_data, return_embs=True)
+            preds, x_dicts = model(td, return_embs=True)
             sem_loss, neg_sem_loss = box_loss(x_dicts, gci0_data, loss_type='distance', neg=True)
             
         else:
-            preds = model(train_data)
+            preds = model(td)
 
-        loss = loss_function(preds, train_data['genes', 'interacts',
+        loss = loss_function(preds, td['genes', 'interacts',
                                                 'genes'].edge_label,
                             reduction='sum') 
         

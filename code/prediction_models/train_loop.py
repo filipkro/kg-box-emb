@@ -388,6 +388,13 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
 
         if since_improved > 10:
             print('Model has not improved in 20 epochs, stopping training...')
+            if tm < 0.15:
+                print("Restarting training for this fold")
+                return train_loop(model_type=model_type, train_data=train_data,
+                                  val_data=val_data, epochs=epochs,
+                                  loss_function=loss_function, metric=metric,
+                                  device=device, model_kwargs=model_kwargs,
+                                  lr=lr/2, gci0_data=gci0_data)
             break
 
     metrics['best_metric'] = best_metric

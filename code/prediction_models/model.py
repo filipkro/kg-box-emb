@@ -2,6 +2,8 @@ from torch_geometric.nn import SAGEConv, HeteroConv
 from torch_geometric.data import HeteroData
 import torch as th
 from parameters import LINKS, BOX_EMBEDDINGS, ONLY_GENE_BOXES
+from box_embeddings.modules.intersection import GumbelIntersection
+from box_embeddings.parameterizations import MinDeltaBoxTensor
 
 class GNNBase(th.nn.Module):
     def __init__(self):
@@ -71,7 +73,10 @@ class HeteroGNN(GNNBase):
 
 
 class Model(th.nn.Module):
-    def __init__(self, gnn_channels: list, nn_channels: list, meta_data, embeddings, edge_types=[('genes', 'interacts', 'genes')], save_path=None, custom=True):
+    def __init__(self, gnn_channels: list, nn_channels: list, meta_data,
+                 embeddings, inter_temp=0.1,
+                 edge_types=[('genes', 'interacts', 'genes')], save_path=None,
+                 custom=True):
         super().__init__()
 
         if custom:
@@ -105,6 +110,7 @@ class Model(th.nn.Module):
         
         self.fp = save_path
         self._neighbors_to_sample = None
+        self.intersect = GumbelIntersection(intersection_temperature=inter_temp)
 
     @property
     def neighbors_to_sample(self):
@@ -161,7 +167,10 @@ class DummyModel(Model):
         links_to_pred = data[LINKS].edge_label_index
         x_dict = {k: self.node_embeddings[k](data[k].node_id)
                   for k in self.node_embeddings}
-        z = x_dict[LINKS[0]][links_to_pred[0]] * x_dict[LINKS[2]][links_to_pred[1]]
+        # z = x_dict[LINKS[0]][links_to_pred[0]] * x_dict[LINKS[2]][links_to_pred[1]]
+        gene_boxes = (MinDeltaBoxTensor.from_vector(x_dict[LINKS[0]][links_to_pred[0]]),
+                      MinDeltaBoxTensor.from_vector(x_dict[LINKS[2]][links_to_pred[1]]))
+        z = self.intersect(gene_boxes[0], gene_boxes[1])
         z = self.transition_layer(z).relu()
         if self.lin_layers:
             for l in self.lin_layers:

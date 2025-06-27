@@ -107,7 +107,9 @@ def cross_val(model_type, model_kwargs, data, epochs, loss_function, metric,
 
     data_splits = []
     for i, (t_idx, v_idx) in enumerate(kf.split(data_to_split)):
-        print(f"Fold: {i}")
+        print(f"Fold: {i}", flush=True)
+        if i > 2:
+            break
         train_data, val_data = split_data(data=data.clone(), t_idx=t_idx, v_idx=v_idx,
                                           split_transform=split_transform,
                                           device=device)
@@ -227,10 +229,7 @@ def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0,
 
             # loss -= (volume(intersect(subclasses, supclasses)) / volume(subclasses)).clamp(min=1e-9, max=1).log().sum()
 
-    if neg:
-        return loss, neg_loss
-    else:
-        return loss
+    return loss, neg_loss
 
 def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
                device, model_kwargs, lr=0.001, gci0_data=None):
@@ -295,7 +294,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
             {'params': model.node_embeddings.parameters(), 'weight_decay': 0},
             {'params': chain(model.gnn.parameters(), model.lin4.parameters(),
                              model.lin_layers.parameters())}
-                              ], lr=0.1, weight_decay=REGULARIZATION)
+                              ], lr=lr, weight_decay=REGULARIZATION)
     # scheduler = th.optim.lr_scheduler.MultiplicativeLR(optimizer,
     #                                                    lambda epoch: 0.1)
     # decreased = False
@@ -310,10 +309,10 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
     for epoch in range(1, epochs+1):
         # if epoch > TRAIN_EMBEDDING_EPOCH:
         td = train_data.clone()
-        perm = np.random.permutation(range(train_data['genes', 'interacts', 'genes'].edge_label_index.shape[1]))
-        td['genes', 'interacts', 'genes'].edge_label_index = td['genes', 'interacts', 'genes'].edge_label_index[:, perm]
-        td['genes', 'interacts', 'genes'].edge_index = td['genes', 'interacts', 'genes'].edge_index[:, perm]
-        td['genes', 'interacts', 'genes'].edge_label = td['genes', 'interacts', 'genes'].edge_label[perm]
+        #perm = np.random.permutation(range(train_data['genes', 'interacts', 'genes'].edge_label_index.shape[1]))
+        #td['genes', 'interacts', 'genes'].edge_label_index = td['genes', 'interacts', 'genes'].edge_label_index[:, perm]
+        #td['genes', 'interacts', 'genes'].edge_index = td['genes', 'interacts', 'genes'].edge_index[:, perm]
+        #td['genes', 'interacts', 'genes'].edge_label = td['genes', 'interacts', 'genes'].edge_label[perm]
         td.to(device)
         # model.node_embeddings.requires_grad_(False)
         # model.node_embeddings['genes'].requires_grad_(TRAIN_GENES)
@@ -324,10 +323,10 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         # box_loss_epoch = {k: [] for k in model.node_embeddings.keys()}
         # for sampled_data in tqdm.tqdm(train_loader):
         optimizer.zero_grad()
-        if gci0_data and False:
+        if gci0_data:
             preds, x_dicts = model(td, return_embs=True)
             sem_loss, neg_sem_loss = box_loss(x_dicts, gci0_data,
-                                              loss_type='distance', neg=True)
+                                              loss_type='distance', neg=False)
             
         else:
             preds = model(td)
@@ -376,7 +375,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
             
             vm = metric(targets, preds)
             print(f"val loss: {total_val_loss / val_examples}")
-            print(f"val metric: {vm}")
+            print(f"val metric: {vm}", flush=True)
 
         metrics['train_losses'].append(total_loss / total_examples)
         metrics['train_metrics'].append(tm)
@@ -392,15 +391,15 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         if vm > best_metric:
             since_improved = 0
             best_metric = vm
-            print('copying model...')
+            print('copying model...', flush=True)
             best_model = deepcopy(model)
         else:
             since_improved += 1
 
-        if since_improved > 10:
-            print('Model has not improved in 20 epochs, stopping training...')
+        if since_improved > 40:
+            print('Model has not improved in 40 epochs, stopping training...', flush=True)
             if tm < 0.15:
-                print("Restarting training for this fold")
+                print("Restarting training for this fold", flush=True)
                 return train_loop(model_type=model_type, train_data=train_data,
                                   val_data=val_data, epochs=epochs,
                                   loss_function=loss_function, metric=metric,
@@ -410,7 +409,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
 
     metrics['best_metric'] = best_metric
     th.cuda.empty_cache()
-    print(f'BEST METRIC FOR FOLD: {best_metric}')
+    print(f'BEST METRIC FOR FOLD: {best_metric}', flush=True)
     return metrics, best_model
 
 def continue_final_training(model, data, epochs, loss_function, metric, device,

@@ -132,8 +132,10 @@ class Model(th.nn.Module):
 
         z = embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]]
         if self.lin_layers:
-            for l in self.lin_layers:
-                z = l(z).relu()
+            for i, l in enumerate(self.lin_layers):
+                z = l(z)
+                if i > 0:
+                    z = z.relu()
         else:
             z = z.sum(dim=-1)
         

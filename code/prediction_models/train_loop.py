@@ -248,7 +248,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
     edge_types = {e: v.shape[1] for e, v in train_data.edge_index_dict.items()
                   if e not in skip_edge}
 
-    model = model_type(edge_types=edge_types, **model_kwargs)
+    model = model_type(edge_types=edge_types, inter_temp=0.1, **model_kwargs)
     model.to(device)
     model.node_embeddings['genes'].requires_grad_(TRAIN_GENES)
     

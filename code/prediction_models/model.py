@@ -97,7 +97,7 @@ class Model(th.nn.Module):
                  for k,v in embeddings.items()])
         else:
             self.node_embeddings = th.nn.ModuleDict([[k, th.nn.Embedding(num_embeddings=v.shape[0], embedding_dim=v.shape[1])] for k,v in embeddings.items()])
-        prev_width = max((1, 2*int(gnn_channels[-1] * self.gnn.es['genes'])))
+        prev_width = max((1, int(gnn_channels[-1] * self.gnn.es['genes'])))
         layers = []
         if len(nn_channels) > 0:
             for c in nn_channels:
@@ -133,16 +133,45 @@ class Model(th.nn.Module):
                   for k in self.node_embeddings}
         x_dict = self.gnn(x_dict, data.edge_index_dict,
                           return_embs=return_embs)
-        z = x_dict[-1] if return_embs else x_dict
+        embs = x_dict[-1] if return_embs else x_dict
 
-        #z = embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]]
-        #if self.lin_layers:
-        #    for i, l in enumerate(self.lin_layers):
-        #        z = l(z)
-        #        if i > 0:
-        #            z = z.relu()
-        #else:
-        #    z = z.sum(dim=-1)
+        gene_boxes = (MinDeltaBoxTensor.from_vector(x_dict[LINKS[0]][links_to_pred[0]]),
+                      MinDeltaBoxTensor.from_vector(x_dict[LINKS[2]][links_to_pred[1]]))
+        intersects = self.intersect(gene_boxes[0], gene_boxes[1])
+        z = intersects
+        # z = th.cat([(embs[LINKS[0]][links_to_pred[0]] + embs[LINKS[0]][links_to_pred[0]]) / 2, embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]], intersects])
+
+        # links_to_pred = data[LINKS].edge_label_index
+        # if return_embs:
+        #     embs, x_dicts = self._forward(data, return_embs=return_embs)
+        # else:
+        #     embs = self._forward(data)
+        # for ii in range(2):
+        #     z = th.concat((embs[LINKS[0]][links_to_pred[ii % 2]], embs[LINKS[2]][links_to_pred[(ii + 1) % 2]]), dim=-1)
+        #     if self.lin_layers:
+        #         for i, l in enumerate(self.lin_layers):
+        #             z = l(z)
+        #             if i > 0:
+        #                 z = z.relu()
+        #     else:
+        #         z = z.sum(dim=-1)
+
+        #     if ii > 0:
+        #         inter = th.stack((inter, z), dim=-1)
+        #     else:
+        #         inter = z
+
+        #     # inter = th.concat((inter, z), dim=-1)
+        # z = self.lin4(z)
+        # z = z.mean(dim=-1).squeeze()
+        # z = embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]]
+        if self.lin_layers:
+           for i, l in enumerate(self.lin_layers):
+               z = l(z)
+               if i > 0:
+                   z = z.relu()
+        else:
+           z = z.sum(dim=-1)
         
         if return_embs:
             return z, x_dict
@@ -156,28 +185,6 @@ class Model(th.nn.Module):
 
         return x_dict['genes']
     
-class DummyModel(Model):
-    def __init__(self, gnn_channels, nn_channels, meta_data, embeddings, edge_types=[('genes', 'interacts', 'genes')], save_path=None):
-        super().__init__(gnn_channels, nn_channels, meta_data, embeddings, edge_types, save_path)
-        self.transition_layer = th.nn.Linear(self.node_embeddings['genes'].embedding_dim, self.lin_layers[0].in_features, bias=True)
-        self.lin4 = th.nn.Linear(self.lin_layers[-1].out_features, 1)
-
-    def forward(self, data: HeteroData):
-        links_to_pred = data[LINKS].edge_label_index
-        x_dict = {k: self.node_embeddings[k](data[k].node_id)
-                  for k in self.node_embeddings}
-        # z = x_dict[LINKS[0]][links_to_pred[0]] * x_dict[LINKS[2]][links_to_pred[1]]
-        gene_boxes = (MinDeltaBoxTensor.from_vector(x_dict[LINKS[0]][links_to_pred[0]]),
-                      MinDeltaBoxTensor.from_vector(x_dict[LINKS[2]][links_to_pred[1]]))
-        #z = self.intersect(gene_boxes[0], gene_boxes[1])
-        z = self.transition_layer(z).relu()
-        if self.lin_layers:
-            for l in self.lin_layers:
-                z = l(z).relu()
-        else:
-            z = z.sum(dim=-1)
-
-        return self.lin4(z).squeeze()
         
     
 class Regressor(Model):
@@ -189,37 +196,37 @@ class Regressor(Model):
             self.lin4 = th.nn.Linear(1, 1)
 
     def forward(self, data: HeteroData, return_embs=False):
-        links_to_pred = data[LINKS].edge_label_index
-        if return_embs:
-            embs, x_dicts = self._forward(data, return_embs=return_embs)
-        else:
-            embs = self._forward(data)
-        for ii in range(2):
-            z = th.concat((embs[LINKS[0]][links_to_pred[ii % 2]], embs[LINKS[2]][links_to_pred[(ii + 1) % 2]]), dim=-1)
-            if self.lin_layers:
-                for i, l in enumerate(self.lin_layers):
-                    z = l(z)
-                    if i > 0:
-                        z = z.relu()
-            else:
-                z = z.sum(dim=-1)
+        # links_to_pred = data[LINKS].edge_label_index
+        # if return_embs:
+        #     embs, x_dicts = self._forward(data, return_embs=return_embs)
+        # else:
+        #     embs = self._forward(data)
+        # for ii in range(2):
+        #     z = th.concat((embs[LINKS[0]][links_to_pred[ii % 2]], embs[LINKS[2]][links_to_pred[(ii + 1) % 2]]), dim=-1)
+        #     if self.lin_layers:
+        #         for i, l in enumerate(self.lin_layers):
+        #             z = l(z)
+        #             if i > 0:
+        #                 z = z.relu()
+        #     else:
+        #         z = z.sum(dim=-1)
 
-            if ii > 0:
-                inter = th.stack((inter, z), dim=-1)
-            else:
-                inter = z
+        #     if ii > 0:
+        #         inter = th.stack((inter, z), dim=-1)
+        #     else:
+        #         inter = z
 
-            # inter = th.concat((inter, z), dim=-1)
-        z = self.lin4(z)
-        z = z.mean(dim=-1).squeeze()
+        #     # inter = th.concat((inter, z), dim=-1)
+        # z = self.lin4(z)
+        # z = z.mean(dim=-1).squeeze()
         if return_embs:
-            #z, x_dicts = self._forward(data, return_embs=return_embs)
-            #return self.lin4(z).squeeze(), x_dicts
-            return z, x_dicts
+            z, x_dicts = self._forward(data, return_embs=return_embs)
+            return self.lin4(z).squeeze(), x_dicts
+            # return z, x_dicts
         else:
-            #z = self._forward(data)
-            #return self.lin4(z).squeeze()
-            return z
+            z = self._forward(data)
+            return self.lin4(z).squeeze()
+            # return z
     
     def predict_from_embedding(self, emb):
         if self.lin_layers:

@@ -4,6 +4,7 @@ import torch as th
 from parameters import LINKS, BOX_EMBEDDINGS, ONLY_GENE_BOXES
 from box_embeddings.modules.intersection import GumbelIntersection
 from box_embeddings.parameterizations import MinDeltaBoxTensor
+from box_embeddings.modules.volume import BesselApproxVolume
 
 class GNNBase(th.nn.Module):
     def __init__(self):
@@ -110,6 +111,7 @@ class Model(th.nn.Module):
         self.fp = save_path
         self._neighbors_to_sample = None
         self.intersect = GumbelIntersection(intersection_temperature=inter_temp)
+        self.vol = BesselApproxVolume()
 
     @property
     def neighbors_to_sample(self):
@@ -135,10 +137,11 @@ class Model(th.nn.Module):
                           return_embs=return_embs)
         embs = x_dict[-1] if return_embs else x_dict
 
-        gene_boxes = (MinDeltaBoxTensor.from_vector(x_dict[LINKS[0]][links_to_pred[0]]),
-                      MinDeltaBoxTensor.from_vector(x_dict[LINKS[2]][links_to_pred[1]]))
+        gene_boxes = (MinDeltaBoxTensor.from_vector(embs[LINKS[0]][links_to_pred[0]]),
+                      MinDeltaBoxTensor.from_vector(embs[LINKS[2]][links_to_pred[1]]))
         intersects = self.intersect(gene_boxes[0], gene_boxes[1])
-        z = intersects
+        #z = MinDeltaBoxTensor.W(intersects.z, intersects.Z)
+        z = th.cat([intersects.z, intersects.Z], dim=-1)
         # z = th.cat([(embs[LINKS[0]][links_to_pred[0]] + embs[LINKS[0]][links_to_pred[0]]) / 2, embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]], intersects])
 
         # links_to_pred = data[LINKS].edge_label_index

@@ -6,7 +6,7 @@ from sklearn.metrics import r2_score
 from torch.cuda import is_available
 from torch.nn.functional import mse_loss
 
-from model import Regressor, DummyModel
+from model import Regressor
 from train_loop import cross_val
 
 from parameters import (EPOCHS, LR, GNN_CHANNELS, NN_CHANNELS, REGULARIZATION,

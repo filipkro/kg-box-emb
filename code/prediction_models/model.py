@@ -7,8 +7,54 @@ from box_embeddings.parameterizations import MinDeltaBoxTensor
 from torch_geometric.nn.aggr import MultiAggregation, SoftmaxAggregation, PowerMeanAggregation
 
 class GNNBase(th.nn.Module):
-    def __init__(self):
+    def __init__(self, channels, edge_types, embeddings, edge_index_max=None):
         super().__init__()
+
+        self.layers = th.nn.ModuleList()
+        self.init_edge_dicts(embeddings, edge_types)
+        es = self.es
+        # sma = SoftmaxAggregation(learn=True)
+        # pma = PowerMeanAggregation(learn=True)
+        # multi_agg = MultiAggregation(aggrs=[sma, 'max'], mode='mean')
+        prev_c = 0
+        for i, c in enumerate(channels):
+            # layer_sizes = self.get_layer_sizes(c, edge_types)
+            # layer_sizes = {k: max(1, c // 2) if v / 1000 < 1 else c
+            #                for k, v in edge_types.items()}
+            # conv = HeteroConv({
+            #         e: SAGEConv((int(i==0) * embeddings[e[0]].shape[1] +
+            #                         int(i>0)*max((1,int(prev_c * es[e[0]]))),
+            #                      int(i==0)*embeddings[e[2]].shape[1] +
+            #                         int(i>0)*max((1,int(prev_c * es[e[2]])))),
+            #                     max((1,int(c * es[e[2]]))), normalize=False, bias=True,
+            #                     root_weight=True, project=True, aggr='max')
+            #                    for e, _ in layer_sizes.items()} , aggr='mean')
+
+            conv_dict = {}
+            for e in edge_types:
+                conv_dict[e] = SAGEConv((int(i==0) * embeddings[e[0]].shape[1] +
+                                    int(i>0)*max((1,int(prev_c * es[e[0]]))),
+                                 int(i==0)*embeddings[e[2]].shape[1] +
+                                    int(i>0)*max((1,int(prev_c * es[e[2]])))),
+                                max((1,int(c * es[e[2]]))), normalize=False, bias=True,
+                                root_weight=True, project=True, aggr='max')
+            conv = HeteroConv(conv_dict, aggr='mean')
+            # {
+            #         e: SAGEConv((int(i==0) * embeddings[e[0]].shape[1] +
+            #                         int(i>0)*max((1,int(prev_c * es[e[0]]))),
+            #                      int(i==0)*embeddings[e[2]].shape[1] +
+            #                         int(i>0)*max((1,int(prev_c * es[e[2]])))),
+            #                     max((1,int(c * es[e[2]]))), normalize=False, bias=True,
+            #                     root_weight=True, project=True, aggr='max')
+            #                    for e, _ in layer_sizes.items()}
+            prev_c = c
+            self.layers.append(conv)
+
+    def init_edge_dicts(self, embeddings, edge_types):
+        raise NotImplementedError()
+    
+    # def get_layer_sizes(self,):
+    #     raise NotImplementedError()
 
     def forward(self, x_dict, edge_index_dict, return_embs=False):
         embs = []
@@ -22,10 +68,27 @@ class GNNBase(th.nn.Module):
         return x_dict
 
 class HeteroGNNCustom(GNNBase):
-    def __init__(self, channels, edge_types, embeddings):
-        super().__init__()
-        self.layers = th.nn.ModuleList()
-        prev_c = 0
+    def __init__(self, channels, edge_types, embeddings, edge_index_max=None):
+        super().__init__(channels, edge_types, embeddings, edge_index_max=None)
+        # self.layers = th.nn.ModuleList()
+        # prev_c = 0
+        # ed = {k: 0 for k in embeddings.keys()}
+        # for e, v in edge_types.items():
+        #     ed[e[0]] += v
+        #     ed[e[2]] += v
+        # self.es = {}
+        # print(ed)
+        # for k, v in ed.items():
+        #     if v / 500000 > 1:
+        #         self.es[k] = 2
+        #     elif v / 100000 > 1:
+        #         self.es[k] = 1
+        #     elif v / 10000 > 1:
+        #         self.es[k] = 0.5
+        #     else:
+        #         self.es[k] = 0.25
+
+    def init_edge_dicts(self, embeddings, edge_types):
         ed = {k: 0 for k in embeddings.keys()}
         for e, v in edge_types.items():
             ed[e[0]] += v
@@ -41,59 +104,44 @@ class HeteroGNNCustom(GNNBase):
                 self.es[k] = 0.5
             else:
                 self.es[k] = 0.25
-        es = self.es
 
-        sma = SoftmaxAggregation(learn=True)
-        pma = PowerMeanAggregation(learn=True)
-        multi_agg = MultiAggregation(aggrs=[sma, 'max'], mode='mean')
-
-        for i, c in enumerate(channels):
-            layer_sizes = {k: max(1, c // 2) if v / 1000 < 1 else c
-                           for k, v in edge_types.items()}
-            conv = HeteroConv({
-                    e: SAGEConv((int(i==0) * embeddings[e[0]].shape[1] +
-                                    int(i>0)*max((1,int(prev_c * es[e[0]]))),
-                                 int(i==0)*embeddings[e[2]].shape[1] +
-                                    int(i>0)*max((1,int(prev_c * es[e[2]])))),
-                                max((1,int(c * es[e[2]]))), normalize=False, bias=True,
-                                root_weight=True, project=True, aggr='max')
-                               for e, _ in layer_sizes.items()} , aggr='mean')
-            prev_c = c
-            self.layers.append(conv)
 
 class HeteroGNN(GNNBase):
-    def __init__(self, channels, edge_types, embeddings):
-        super().__init__()
-        self.layers = th.nn.ModuleList()
-        prev_c = 0
+    def __init__(self, channels, edge_types, embeddings, edge_index_max=None):
+        super().__init__(channels, edge_types, embeddings, edge_index_max=None)
+        # self.layers = th.nn.ModuleList()
+        # prev_c = 0
+        # self.es = {k:1 for k in embeddings.keys()}
+        # sma = SoftmaxAggregation(learn=True)
+
+        # multi_agg = MultiAggregation(aggrs=[sma, 'max'], mode='mean')
+        # pma = PowerMeanAggregation(learn=True)
+
+        # for i, c in enumerate(channels):
+        #     conv = HeteroConv({
+        #         e: SAGEConv((int(i==0) * embeddings[e[0]].shape[1] +
+        #                      int(i>0)*prev_c,int(i==0)*embeddings[e[2]].shape[1]
+        #                      + int(i>0) * prev_c), c, normalize=False, bias=True,
+        #                      root_weight=True, project=True, aggr='max')
+        #                        for e in edge_types}, aggr='mean')
+        #     prev_c = c
+        #     self.layers.append(conv)
+
+    def init_edge_dicts(self, embeddings, edge_types):
         self.es = {k:1 for k in embeddings.keys()}
-        sma = SoftmaxAggregation(learn=True)
-
-        multi_agg = MultiAggregation(aggrs=[sma, 'max'], mode='mean')
-        pma = PowerMeanAggregation(learn=True)
-
-        for i, c in enumerate(channels):
-            conv = HeteroConv({
-                e: SAGEConv((int(i==0) * embeddings[e[0]].shape[1] +
-                             int(i>0)*prev_c,int(i==0)*embeddings[e[2]].shape[1]
-                             + int(i>0) * prev_c), c, normalize=False, bias=True,
-                             root_weight=True, project=True, aggr='max')
-                               for e in edge_types}, aggr='mean')
-            prev_c = c
-            self.layers.append(conv)
 
 
 class Model(th.nn.Module):
     def __init__(self, gnn_channels: list, nn_channels: list, meta_data,
                  embeddings, edge_types=[('genes', 'interacts', 'genes')], save_path=None,
-                 custom=True, inter_temp=0.1):
+                 custom=True, inter_temp=0.1, edge_index_max=None):
         super().__init__()
 
         if custom:
             # varying sizes of embeddings for different target domains
-            self.gnn = HeteroGNNCustom(gnn_channels, edge_types, embeddings)
+            self.gnn = HeteroGNNCustom(gnn_channels, edge_types, embeddings, edge_index_max)
         else:
-            self.gnn = HeteroGNN(gnn_channels, edge_types, embeddings)
+            self.gnn = HeteroGNN(gnn_channels, edge_types, embeddings, edge_index_max)
 
         if ONLY_GENE_BOXES:
             self.node_embeddings = th.nn.ModuleDict(
@@ -199,8 +247,8 @@ class Model(th.nn.Module):
         
     
 class Regressor(Model):
-    def __init__(self, gnn_channels: list, nn_channels: list, meta_data, embeddings, edge_types, save_path=None, custom=True, inter_temp=0.1):
-        super().__init__(gnn_channels, nn_channels, meta_data, embeddings, edge_types, save_path, custom, inter_temp)
+    def __init__(self, gnn_channels: list, nn_channels: list, meta_data, embeddings, edge_types, save_path=None, custom=True, inter_temp=0.1, edge_index_max=None):
+        super().__init__(gnn_channels, nn_channels, meta_data, embeddings, edge_types, save_path, custom, inter_temp, edge_index_max)
         if len(nn_channels) > 0:
             self.lin4 = th.nn.Linear(nn_channels[-1], 1)
         else:

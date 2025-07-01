@@ -4,7 +4,7 @@ import torch as th
 import torch.nn.functional as F
 from torch_geometric import seed_everything
 from torch_geometric.loader import LinkNeighborLoader
-from torch_geometric.utils import sort_edge_index
+from torch_geometric.utils import sort_edge_index, degree
 import torch_geometric.transforms as T
 import copy
 from itertools import chain
@@ -248,8 +248,11 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
             skip_edge.append(e)
     edge_types = {e: v.shape[1] for e, v in train_data.edge_index_dict.items()
                   if e not in skip_edge}
+    
+    edge_index_max = {e: int(degree(train_data[e].edge_index[1]).max().item())}
 
-    model = model_type(edge_types=edge_types, inter_temp=0.1, **model_kwargs)
+    model = model_type(edge_types=edge_types, inter_temp=0.1,
+                       edge_index_max=edge_index_max, **model_kwargs)
     model.to(device)
     model.node_embeddings['genes'].requires_grad_(TRAIN_GENES)
     

@@ -4,7 +4,7 @@ import torch as th
 from parameters import LINKS, BOX_EMBEDDINGS, ONLY_GENE_BOXES
 from box_embeddings.modules.intersection import GumbelIntersection
 from box_embeddings.parameterizations import MinDeltaBoxTensor
-from torch_geometric.nn.aggr import MultiAggregation, SoftmaxAggregation, PowerMeanAggregation
+from torch_geometric.nn.aggr import MultiAggregation, SoftmaxAggregation, PowerMeanAggregation, MLPAggregation
 
 class GNNBase(th.nn.Module):
     def __init__(self, channels, edge_types, embeddings, edge_index_max=None):
@@ -32,12 +32,20 @@ class GNNBase(th.nn.Module):
 
             conv_dict = {}
             for e in edge_types:
-                conv_dict[e] = SAGEConv((int(i==0) * embeddings[e[0]].shape[1] +
-                                    int(i>0)*max((1,int(prev_c * es[e[0]]))),
-                                 int(i==0)*embeddings[e[2]].shape[1] +
-                                    int(i>0)*max((1,int(prev_c * es[e[2]])))),
+                in_channel = int(i==0) * embeddings[e[0]].shape[1] + \
+                    int(i>0)*max((1,int(prev_c * es[e[0]])))
+                out_channel = int(i==0)*embeddings[e[2]].shape[1] + \
+                    int(i>0)*max((1,int(prev_c * es[e[2]])))
+                if edge_index_max:
+                    aggr = MLPAggregation(in_channels=in_channel,
+                                          out_channels=out_channel,
+                                          max_num_elements=edge_index_max[e],
+                                          num_layers=1)
+                else:
+                    aggr = 'max'
+                conv_dict[e] = SAGEConv((in_channel, out_channel),
                                 max((1,int(c * es[e[2]]))), normalize=False, bias=True,
-                                root_weight=True, project=True, aggr='max')
+                                root_weight=True, project=True, aggr=aggr)
             conv = HeteroConv(conv_dict, aggr='mean')
             # {
             #         e: SAGEConv((int(i==0) * embeddings[e[0]].shape[1] +

@@ -4,6 +4,7 @@ import torch as th
 import torch.nn.functional as F
 from torch_geometric import seed_everything
 from torch_geometric.loader import LinkNeighborLoader
+from torch_geometric.utils import sort_edge_index
 import torch_geometric.transforms as T
 import copy
 from itertools import chain
@@ -301,6 +302,9 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
     best_metric = -np.inf
     model.node_embeddings.requires_grad_(True)
     model.node_embeddings['genes'].requires_grad_(False)
+    for e in edge_types:
+        train_data[e].edge_index = sort_edge_index(train_data[e].edge_index)
+        val_data[e].edge_index = sort_edge_index(val_data[e].edge_index)
     train_data.to(device)
     val_data.to(device)
     # if gci0_data:

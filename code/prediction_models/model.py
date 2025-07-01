@@ -4,13 +4,13 @@ import torch as th
 from parameters import LINKS, BOX_EMBEDDINGS, ONLY_GENE_BOXES
 from box_embeddings.modules.intersection import GumbelIntersection
 from box_embeddings.parameterizations import MinDeltaBoxTensor
-from torch_geometric.nn.aggr import MultiAggregation, SoftmaxAggregation, PowerMeanAggregation, MLPAggregation
+from torch_geometric.nn.aggr import MultiAggregation, SoftmaxAggregation, PowerMeanAggregation, MLPAggregation, AttentionalAggregation
 
 class GNNBase(th.nn.Module):
     def __init__(self, channels, edge_types, embeddings, edge_index_max=None):
         super().__init__()
         if edge_index_max:
-            print('using mlp aggregation')
+            print('using attentional aggregation')
         self.layers = th.nn.ModuleList()
         self.init_edge_dicts(embeddings, edge_types)
         es = self.es
@@ -38,10 +38,16 @@ class GNNBase(th.nn.Module):
                 out_channel = int(i==0)*embeddings[e[2]].shape[1] + \
                     int(i>0)*max((1,int(prev_c * es[e[2]])))
                 if edge_index_max:
-                    aggr = MLPAggregation(in_channels=in_channel,
-                                          out_channels=in_channel,
-                                          max_num_elements=edge_index_max[e],
-                                          num_layers=1)
+                    hidden_dim = int(in_channel // 2)
+                    # aggr = MLPAggregation(in_channels=in_channel,
+                    #                       out_channels=in_channel,
+                    #                       max_num_elements=edge_index_max[e],
+                    #                       num_layers=1)
+                    aggr = AttentionalAggregation(gate_nn=th.nn.Sequential(
+                            th.nn.Linear(in_channel, hidden_dim),
+                            th.nn.ReLU(),
+                            th.nn.Linear(hidden_dim, 1)
+                        ))
                 else:
                     aggr = 'max'
                 conv_dict[e] = SAGEConv((in_channel, out_channel),

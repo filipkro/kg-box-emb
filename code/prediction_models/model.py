@@ -4,6 +4,7 @@ import torch as th
 from parameters import LINKS, BOX_EMBEDDINGS, ONLY_GENE_BOXES
 from box_embeddings.modules.intersection import GumbelIntersection
 from box_embeddings.parameterizations import MinDeltaBoxTensor
+from torch_geometric.nn.aggr import MultiAggregation, SoftmaxAggregation, PowerMeanAggregation
 
 class GNNBase(th.nn.Module):
     def __init__(self):
@@ -41,6 +42,11 @@ class HeteroGNNCustom(GNNBase):
             else:
                 self.es[k] = 0.25
         es = self.es
+
+        sma = SoftmaxAggregation(learn=True)
+        pma = PowerMeanAggregation(learn=True)
+        multi_agg = MultiAggregation(aggrs=[sma, 'max'], mode='mean')
+
         for i, c in enumerate(channels):
             layer_sizes = {k: max(1, c // 2) if v / 1000 < 1 else c
                            for k, v in edge_types.items()}
@@ -49,8 +55,8 @@ class HeteroGNNCustom(GNNBase):
                                     int(i>0)*max((1,int(prev_c * es[e[0]]))),
                                  int(i==0)*embeddings[e[2]].shape[1] +
                                     int(i>0)*max((1,int(prev_c * es[e[2]])))),
-                                max((1,int(c * es[e[2]]))), normalize=False,
-                                root_weight=True, project=True, aggr='SoftmaxAggregation')
+                                max((1,int(c * es[e[2]]))), normalize=False, bias=True,
+                                root_weight=True, project=True, aggr='max')
                                for e, _ in layer_sizes.items()} , aggr='mean')
             prev_c = c
             self.layers.append(conv)
@@ -61,12 +67,17 @@ class HeteroGNN(GNNBase):
         self.layers = th.nn.ModuleList()
         prev_c = 0
         self.es = {k:1 for k in embeddings.keys()}
+        sma = SoftmaxAggregation(learn=True)
+
+        multi_agg = MultiAggregation(aggrs=[sma, 'max'], mode='mean')
+        pma = PowerMeanAggregation(learn=True)
+
         for i, c in enumerate(channels):
             conv = HeteroConv({
                 e: SAGEConv((int(i==0) * embeddings[e[0]].shape[1] +
                              int(i>0)*prev_c,int(i==0)*embeddings[e[2]].shape[1]
-                             + int(i>0) * prev_c), c, normalize=True,
-                             root_weight=True, project=True, aggr='SoftmaxAggregation')
+                             + int(i>0) * prev_c), c, normalize=False, bias=True,
+                             root_weight=True, project=True, aggr='max')
                                for e in edge_types}, aggr='mean')
             prev_c = c
             self.layers.append(conv)
@@ -97,7 +108,7 @@ class Model(th.nn.Module):
                  for k,v in embeddings.items()])
         else:
             self.node_embeddings = th.nn.ModuleDict([[k, th.nn.Embedding(num_embeddings=v.shape[0], embedding_dim=v.shape[1])] for k,v in embeddings.items()])
-        prev_width = max((1, int(3*gnn_channels[-1] * self.gnn.es['genes'])))
+        prev_width = max((1, int(gnn_channels[-1] * self.gnn.es['genes'])))
         layers = []
         if len(nn_channels) > 0:
             for c in nn_channels:
@@ -139,7 +150,7 @@ class Model(th.nn.Module):
                       MinDeltaBoxTensor.from_vector(embs[LINKS[2]][links_to_pred[1]]))
         intersects = self.intersect(gene_boxes[0], gene_boxes[1])
         z = th.cat([intersects.z, intersects.Z], dim=-1)
-        z = th.cat([(embs[LINKS[0]][links_to_pred[0]] + embs[LINKS[0]][links_to_pred[0]]) / 2, embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]], z], dim=-1)
+        #z = th.cat([(embs[LINKS[0]][links_to_pred[0]] + embs[LINKS[0]][links_to_pred[0]]) / 2, embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]], z], dim=-1)
 
         # links_to_pred = data[LINKS].edge_label_index
         # if return_embs:

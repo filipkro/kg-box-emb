@@ -49,8 +49,8 @@ class HeteroGNNCustom(GNNBase):
                                     int(i>0)*max((1,int(prev_c * es[e[0]]))),
                                  int(i==0)*embeddings[e[2]].shape[1] +
                                     int(i>0)*max((1,int(prev_c * es[e[2]])))),
-                                max((1,int(c * es[e[2]]))), normalize=True,
-                                root_weight=True, project=True, aggr='max')
+                                max((1,int(c * es[e[2]]))), normalize=False,
+                                root_weight=True, project=True, aggr='SoftmaxAggregation')
                                for e, _ in layer_sizes.items()} , aggr='mean')
             prev_c = c
             self.layers.append(conv)
@@ -66,7 +66,7 @@ class HeteroGNN(GNNBase):
                 e: SAGEConv((int(i==0) * embeddings[e[0]].shape[1] +
                              int(i>0)*prev_c,int(i==0)*embeddings[e[2]].shape[1]
                              + int(i>0) * prev_c), c, normalize=True,
-                             root_weight=True, project=True, aggr='max')
+                             root_weight=True, project=True, aggr='SoftmaxAggregation')
                                for e in edge_types}, aggr='mean')
             prev_c = c
             self.layers.append(conv)

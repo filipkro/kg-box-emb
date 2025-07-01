@@ -17,3 +17,4 @@ LINKS = ('genes', 'interacts', 'genes')
 SPLIT = 'nodes'
 MIN_NBR_EDGES = 100
 SEMANTIC_WEIGHT = 1e-3
+

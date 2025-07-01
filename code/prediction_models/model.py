@@ -9,7 +9,8 @@ from torch_geometric.nn.aggr import MultiAggregation, SoftmaxAggregation, PowerM
 class GNNBase(th.nn.Module):
     def __init__(self, channels, edge_types, embeddings, edge_index_max=None):
         super().__init__()
-
+        if edge_index_max:
+            print('using mlp aggregation')
         self.layers = th.nn.ModuleList()
         self.init_edge_dicts(embeddings, edge_types)
         es = self.es
@@ -77,7 +78,7 @@ class GNNBase(th.nn.Module):
 
 class HeteroGNNCustom(GNNBase):
     def __init__(self, channels, edge_types, embeddings, edge_index_max=None):
-        super().__init__(channels, edge_types, embeddings, edge_index_max=None)
+        super().__init__(channels, edge_types, embeddings, edge_index_max)
         # self.layers = th.nn.ModuleList()
         # prev_c = 0
         # ed = {k: 0 for k in embeddings.keys()}
@@ -116,7 +117,7 @@ class HeteroGNNCustom(GNNBase):
 
 class HeteroGNN(GNNBase):
     def __init__(self, channels, edge_types, embeddings, edge_index_max=None):
-        super().__init__(channels, edge_types, embeddings, edge_index_max=None)
+        super().__init__(channels, edge_types, embeddings, edge_index_max)
         # self.layers = th.nn.ModuleList()
         # prev_c = 0
         # self.es = {k:1 for k in embeddings.keys()}

@@ -307,8 +307,8 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
     model.node_embeddings.requires_grad_(True)
     model.node_embeddings['genes'].requires_grad_(False)
     for e in edge_types:
-        train_data[e].edge_index = sort_edge_index(train_data[e].edge_index)
-        val_data[e].edge_index = sort_edge_index(val_data[e].edge_index)
+        train_data[e].edge_index = sort_edge_index(train_data[e].edge_index, sort_by_row=False)
+        val_data[e].edge_index = sort_edge_index(val_data[e].edge_index, sort_by_row=False)
     train_data.to(device)
     val_data.to(device)
     # if gci0_data:

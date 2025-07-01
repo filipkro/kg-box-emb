@@ -39,7 +39,7 @@ class GNNBase(th.nn.Module):
                     int(i>0)*max((1,int(prev_c * es[e[2]])))
                 if edge_index_max:
                     aggr = MLPAggregation(in_channels=in_channel,
-                                          out_channels=out_channel,
+                                          out_channels=in_channel,
                                           max_num_elements=edge_index_max[e],
                                           num_layers=1)
                 else:

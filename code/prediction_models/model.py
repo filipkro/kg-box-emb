@@ -12,6 +12,9 @@ class GNNBase(th.nn.Module):
         if edge_index_max:
             print('using attentional aggregation')
         self.layers = th.nn.ModuleList()
+        # self.hetero_aggrs = th.nn.ModuleDict({k: th.nn.ModuleList()
+        #                                       for k in embeddings})
+        self.hetero_aggrs = th.nn.ModuleList()
         self.init_edge_dicts(embeddings, edge_types)
         es = self.es
         # sma = SoftmaxAggregation(learn=True)
@@ -32,12 +35,15 @@ class GNNBase(th.nn.Module):
             #                    for e, _ in layer_sizes.items()} , aggr='mean')
 
             conv_dict = {}
+            aggr_dict = th.nn.ModuleDict()
             for e in edge_types:
                 in_channel = int(i==0) * embeddings[e[0]].shape[1] + \
                     int(i>0)*max((1,int(prev_c * es[e[0]])))
                 out_channel = int(i==0)*embeddings[e[2]].shape[1] + \
                     int(i>0)*max((1,int(prev_c * es[e[2]])))
-                if edge_index_max:
+                if True:
+                    if e[2] not in aggr_dict:
+                        aggr_dict[e[2]] = AttentionalAggregation(gate_nn=th.nn.Linear(out_channel, 1))
                     hidden_dim = int(in_channel // 2)
                     # aggr = MLPAggregation(in_channels=in_channel,
                     #                       out_channels=in_channel,
@@ -50,10 +56,13 @@ class GNNBase(th.nn.Module):
                     #    ))
                 else:
                     aggr = 'max'
+                root_weight = bool(i) or e[0] != 'genes'
                 conv_dict[e] = SAGEConv((in_channel, out_channel),
                                 max((1,int(c * es[e[2]]))), normalize=False, bias=True,
-                                root_weight=True, project=False, aggr=aggr)
+                                root_weight=root_weight, project=False, aggr=aggr)
             conv = HeteroConv(conv_dict, aggr='mean')
+            # for k, v in aggr_dict.items():
+            self.hetero_aggrs.append(aggr_dict)
             # {
             #         e: SAGEConv((int(i==0) * embeddings[e[0]].shape[1] +
             #                         int(i>0)*max((1,int(prev_c * es[e[0]]))),
@@ -73,9 +82,9 @@ class GNNBase(th.nn.Module):
 
     def forward(self, x_dict, edge_index_dict, return_embs=False):
         embs = []
-        for conv in self.layers:
+        for conv, aggr in zip(self.layers, self.hetero_aggrs):
             x_dict = conv(x_dict, edge_index_dict)
-            x_dict = {key: x for key, x in x_dict.items()}
+            x_dict = {key: aggr[key](x) for key, x in x_dict.items()}
             if return_embs:
                 embs.append(x_dict)
         if return_embs:

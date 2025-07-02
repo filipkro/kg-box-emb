@@ -45,13 +45,17 @@ class GNNBase(th.nn.Module):
                 out_channels = max((1,int(c * es[e[2]])))
                 if True:
                     if e[2] not in aggr_dict:
-                        aggr_dict[e[2]] = AttentionalAggregation(gate_nn=th.nn.Linear(out_channels, 1))
+                        aggr_dict[e[2]] = AttentionalAggregation(
+                            gate_nn=th.nn.Sequential(th.nn.LayerNorm(out_channels),
+                                                     th.nn.Linear(out_channels, 1)))
                     # hidden_dim = int(source_channels // 2)
                     # aggr = MLPAggregation(in_channels=in_channel,
                     #                       out_channels=in_channel,
                     #                       max_num_elements=edge_index_max[e],
                     #                       num_layers=1)
-                    aggr = AttentionalAggregation(gate_nn=th.nn.Linear(source_channels, 1))#th.nn.Sequential(
+                    aggr = AttentionalAggregation(gate_nn=th.nn.Sequential(
+                        th.nn.LayerNorm(source_channels),
+                        th.nn.Linear(source_channels, 1)))#th.nn.Sequential(
                     #        th.nn.Linear(in_channel, hidden_dim),
                     #        th.nn.ReLU(),
                     #        th.nn.Linear(hidden_dim, 1)

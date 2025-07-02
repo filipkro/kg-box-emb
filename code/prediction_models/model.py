@@ -43,16 +43,16 @@ class GNNBase(th.nn.Module):
                     #                       out_channels=in_channel,
                     #                       max_num_elements=edge_index_max[e],
                     #                       num_layers=1)
-                    aggr = AttentionalAggregation(gate_nn=th.nn.Sequential(
-                            th.nn.Linear(in_channel, hidden_dim),
-                            th.nn.ReLU(),
-                            th.nn.Linear(hidden_dim, 1)
-                        ))
+                    aggr = AttentionalAggregation(gate_nn=th.nn.Linear(in_channel, 1))#th.nn.Sequential(
+                    #        th.nn.Linear(in_channel, hidden_dim),
+                    #        th.nn.ReLU(),
+                    #        th.nn.Linear(hidden_dim, 1)
+                    #    ))
                 else:
                     aggr = 'max'
                 conv_dict[e] = SAGEConv((in_channel, out_channel),
                                 max((1,int(c * es[e[2]]))), normalize=False, bias=True,
-                                root_weight=True, project=True, aggr=aggr)
+                                root_weight=True, project=False, aggr=aggr)
             conv = HeteroConv(conv_dict, aggr='mean')
             # {
             #         e: SAGEConv((int(i==0) * embeddings[e[0]].shape[1] +

@@ -16,6 +16,6 @@ REGULARIZATION = 1e-1
 DATASET = 'pyg_graph_box_interactions_DMA30'
 LINKS = ('genes', 'interacts', 'genes')
 SPLIT = 'nodes'
-MIN_NBR_EDGES = 100
-SEMANTIC_WEIGHT = 1e-3
+MIN_NBR_EDGES = 1000
+SEMANTIC_WEIGHT = 1e-2
 

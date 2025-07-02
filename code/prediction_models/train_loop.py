@@ -297,9 +297,9 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
                'box_losses': {k: [] for k in model.node_embeddings.keys()}}
     optimizer = th.optim.Adam([
             {'params': model.node_embeddings.parameters(), 'weight_decay': 0},
-            {'params': chain(model.gnn.parameters(), model.lin4.parameters(),
-                             model.lin_layers.parameters())}
-                              ], lr=lr, weight_decay=REGULARIZATION)
+            {'params': model.gnn.parameters(), 'weight_decay': 0.01 * REGULARIZATION},
+            {'params': chain(model.lin4.parameters(), model.lin_layers.parameters())}
+                        ], lr=lr, weight_decay=REGULARIZATION)
     # scheduler = th.optim.lr_scheduler.MultiplicativeLR(optimizer,
     #                                                    lambda epoch: 0.1)
     # decreased = False

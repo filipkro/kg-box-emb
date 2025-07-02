@@ -93,7 +93,7 @@ class GNNBase(th.nn.Module):
                 N, T, F = x.size()
                 x_flat = x.view(-1, F)
                 index = th.arange(N, device=x.device).repeat_interleave(T)
-                x_dict[k] = aggr(x_flat, index=index, dim_size=N)
+                x_dict[k] = aggr[k](x_flat, index=index, dim_size=N)
             # x_dict = {key: aggr[key](x, index=th.arange(x.shape[1]).repeat_interleave(x.shape[0]), dim_size=x.shape[1]) for key, x in x_dict.items()}
             if return_embs:
                 embs.append(x_dict)

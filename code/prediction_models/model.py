@@ -65,8 +65,8 @@ class GNNBase(th.nn.Module):
             conv = HeteroConv(conv_dict, aggr=None)
             # for k, v in aggr_dict.items():
             self.hetero_aggrs.append(aggr_dict)
-            print(aggr_dict)
-            print(conv.convs)
+            # print(aggr_dict)
+            # print(conv.convs)
             # {
             #         e: SAGEConv((int(i==0) * embeddings[e[0]].shape[1] +
             #                         int(i>0)*max((1,int(prev_c * es[e[0]]))),
@@ -88,7 +88,13 @@ class GNNBase(th.nn.Module):
         embs = []
         for conv, aggr in zip(self.layers, self.hetero_aggrs):
             x_dict = conv(x_dict, edge_index_dict)
-            x_dict = {key: aggr[key](x, index=th.arange(x.shape[1]).repeat_interleave(x.shape[0]), dim_size=x.shape[1]) for key, x in x_dict.items()}
+            for k in x_dict:
+                x = x_dict[k]
+                N, T, F = x.size()
+                x_flat = x.view(-1, F)
+                index = th.arange(N, device=x.device).repeat_interleave(T)
+                x_dict[k] = aggr(x_flat, index=index, dim_size=N)
+            # x_dict = {key: aggr[key](x, index=th.arange(x.shape[1]).repeat_interleave(x.shape[0]), dim_size=x.shape[1]) for key, x in x_dict.items()}
             if return_embs:
                 embs.append(x_dict)
         if return_embs:

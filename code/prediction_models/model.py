@@ -37,19 +37,21 @@ class GNNBase(th.nn.Module):
             conv_dict = {}
             aggr_dict = th.nn.ModuleDict()
             for e in edge_types:
-                in_channel = int(i==0) * embeddings[e[0]].shape[1] + \
+                # source_channels
+                source_channels = int(i==0) * embeddings[e[0]].shape[1] + \
                     int(i>0)*max((1,int(prev_c * es[e[0]])))
-                out_channel = int(i==0)*embeddings[e[2]].shape[1] + \
+                target_channels = int(i==0)*embeddings[e[2]].shape[1] + \
                     int(i>0)*max((1,int(prev_c * es[e[2]])))
+                out_channels = max((1,int(c * es[e[2]])))
                 if True:
                     if e[2] not in aggr_dict:
-                        aggr_dict[e[2]] = AttentionalAggregation(gate_nn=th.nn.Linear(out_channel, 1))
-                    hidden_dim = int(in_channel // 2)
+                        aggr_dict[e[2]] = AttentionalAggregation(gate_nn=th.nn.Linear(out_channels, 1))
+                    # hidden_dim = int(source_channels // 2)
                     # aggr = MLPAggregation(in_channels=in_channel,
                     #                       out_channels=in_channel,
                     #                       max_num_elements=edge_index_max[e],
                     #                       num_layers=1)
-                    aggr = AttentionalAggregation(gate_nn=th.nn.Linear(in_channel, 1))#th.nn.Sequential(
+                    aggr = AttentionalAggregation(gate_nn=th.nn.Linear(source_channels, 1))#th.nn.Sequential(
                     #        th.nn.Linear(in_channel, hidden_dim),
                     #        th.nn.ReLU(),
                     #        th.nn.Linear(hidden_dim, 1)
@@ -57,12 +59,13 @@ class GNNBase(th.nn.Module):
                 else:
                     aggr = 'max'
                 root_weight = bool(i) or e[0] != 'genes'
-                conv_dict[e] = SAGEConv((in_channel, out_channel),
-                                max((1,int(c * es[e[2]]))), normalize=False, bias=True,
+                conv_dict[e] = SAGEConv((source_channels, target_channels),
+                                out_channels, normalize=False, bias=True,
                                 root_weight=root_weight, project=False, aggr=aggr)
             conv = HeteroConv(conv_dict, aggr='mean')
             # for k, v in aggr_dict.items():
             self.hetero_aggrs.append(aggr_dict)
+            print(aggr_dict)
             # {
             #         e: SAGEConv((int(i==0) * embeddings[e[0]].shape[1] +
             #                         int(i>0)*max((1,int(prev_c * es[e[0]]))),

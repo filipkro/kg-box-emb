@@ -1,4 +1,5 @@
 from torch_geometric.nn import SAGEConv, HeteroConv
+from sage_conv_mod import SAGEConvMod
 from torch_geometric.data import HeteroData
 import torch as th
 from parameters import LINKS, BOX_EMBEDDINGS, ONLY_GENE_BOXES
@@ -40,9 +41,13 @@ class GNNBase(th.nn.Module):
                 else:
                     aggr = 'max'
                 root_weight = bool(i) or e[0] != 'genes' or True
-                conv_dict[e] = SAGEConv((source_channels, target_channels),
+                # conv_dict[e] = SAGEConv((source_channels, target_channels),
+                #                 out_channels, normalize=False, bias=True,
+                #                 root_weight=root_weight, project=False, aggr=aggr)
+                conv_dict[e] = SAGEConvMod((source_channels, target_channels),
                                 out_channels, normalize=False, bias=True,
-                                root_weight=root_weight, project=False, aggr=aggr)
+                                root_weight=root_weight, project=True,
+                                project_out=True, full_bias=True, aggr=aggr)
             conv = HeteroConv(conv_dict, aggr=None)
        
             self.hetero_aggrs.append(aggr_dict)

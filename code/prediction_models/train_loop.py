@@ -336,8 +336,8 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         sem_loss = neg_sem_loss = 0
         # box_loss_epoch = {k: [] for k in model.node_embeddings.keys()}
         # for sampled_data in tqdm.tqdm(train_loader):
-        targets = []
-        preds = []
+        all_targets = []
+        all_preds = []
         for s in gen_batches(num_data, num_data // num_batches):
             batch_indices = edge_indices[:, perm][:, s]
             batch_labels = edge_labels[perm][s]
@@ -368,13 +368,12 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
             
             total_examples += preds.numel()
 
-            targets.append(train_data['genes','interacts',
-                          'genes'].edge_label.detach().cpu().numpy())
-            preds.append(preds.detach().cpu().numpy())
+            all_targets.append(batch_labels.detach().cpu().numpy())
+            all_preds.append(preds.detach().cpu().numpy())
 
-        targets = np.array(targets).flatten()
-        preds = np.array(preds).flatten()
-        tm = metric(targets, preds)
+        all_targets = np.array(all_targets).flatten()
+        all_preds = np.array(all_preds).flatten()
+        tm = metric(all_targets, all_preds)
         if tm > -0.1:
             for param_group in optimizer.param_groups:
                 param_group['lr'] = lr

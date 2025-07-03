@@ -348,7 +348,8 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
                 sem_loss, neg_sem_loss = box_loss(x_dicts, gci0_data,
                                                 loss_type='distance', neg=False)
                 total_sem_loss += sem_loss.detach().item()
-                total_neg_sem_loss += neg_sem_loss.detach().item()
+                if isinstance(neg_sem_loss, th.Tensor):
+                    total_neg_sem_loss += neg_sem_loss.detach().item()
                 
             else:
                 preds = model(td)

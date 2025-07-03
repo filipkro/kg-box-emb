@@ -92,8 +92,7 @@ class SAGEConvMod(SAGEConv):
             kwargs['aggr_kwargs'].setdefault('in_channels', in_channels[0])
             kwargs['aggr_kwargs'].setdefault('out_channels', in_channels[0])
 
-        if self.project_out:
-            self.lin_out = Linear(out_channels, out_channels, bias=full_bias)
+        
 
         super().__init__(in_channels, out_channels, aggr, normalize,
                          root_weight, project, bias, **kwargs)
@@ -115,9 +114,12 @@ class SAGEConvMod(SAGEConv):
         if self.root_weight:
             self.lin_r = Linear(in_channels[1], out_channels, bias=full_bias)
 
-        self.reset_parameters()
+        if self.project_out:
+            self.lin_out = Linear(out_channels, out_channels, bias=full_bias)
 
-    def reset_parameters(self):
+        self.reset_parameters_mod()
+
+    def reset_parameters_mod(self):
         super().reset_parameters()
         # if self.project:
         #     self.lin.reset_parameters()

@@ -30,19 +30,20 @@ class GNNBase(th.nn.Module):
                         hidden_dim = int(out_channels // 2)
                         aggr_dict[e[2]] = AttentionalAggregation(
                             gate_nn=th.nn.Sequential(th.nn.LayerNorm(out_channels),
-                                                     th.nn.Linear(out_channels, hidden_dim),
+                                                     th.nn.Linear(out_channels, hidden_dim, bias=True),
                                                      th.nn.ReLU(),
-                                                     th.nn.Linear(hidden_dim, 1)))
+                                                     th.nn.Linear(hidden_dim, 1, bias=True)))
                     hidden_dim = int(source_channels // 2)
                     aggr = AttentionalAggregation(gate_nn=th.nn.Sequential(
                         th.nn.LayerNorm(source_channels),
-                        th.nn.Linear(source_channels, 1)))
+                        th.nn.Linear(source_channels, 1, bias=True)))
                 else:
                     aggr = 'max'
                 root_weight = bool(i) or e[0] != 'genes' or True
+                #print('normalize in sage')
                 conv_dict[e] = SAGEConv((source_channels, target_channels),
                                 out_channels, normalize=False, bias=True,
-                                root_weight=root_weight, project=False, aggr=aggr)
+                                root_weight=root_weight, project=True, aggr=aggr)
             conv = HeteroConv(conv_dict, aggr=None)
        
             self.hetero_aggrs.append(aggr_dict)
@@ -86,10 +87,12 @@ class HeteroGNNCustom(GNNBase):
                 self.es[k] = 2
             elif v / 100000 > 1:
                 self.es[k] = 1
-            elif v / 10000 > 1:
-                self.es[k] = 0.5
             else:
-                self.es[k] = 0.25
+                self.es[k] = 0.5
+            #elif v / 10000 > 1:
+            #    self.es[k] = 0.5
+            #else:
+            #    self.es[k] = 0.25
 
 
 class HeteroGNN(GNNBase):
@@ -105,7 +108,8 @@ class Model(th.nn.Module):
                  embeddings, edge_types=[('genes', 'interacts', 'genes')], save_path=None,
                  custom=True, inter_temp=0.1, edge_index_max=None):
         super().__init__()
-
+        #custom = False
+        #print('none custom sizes for gnn')
         if custom:
             # varying sizes of embeddings for different target domains
             self.gnn = HeteroGNNCustom(gnn_channels, edge_types, embeddings, edge_index_max)
@@ -167,12 +171,12 @@ class Model(th.nn.Module):
                       MinDeltaBoxTensor.from_vector(embs[LINKS[2]][links_to_pred[1]]))
         intersects = self.intersect(gene_boxes[0], gene_boxes[1])
         z = th.cat([intersects.z, intersects.Z], dim=-1)
-      
+        z = embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]] 
         if self.lin_layers:
            for i, l in enumerate(self.lin_layers):
-               z = l(z)
-               if i > 0:
-                   z = z.relu()
+               z = l(z).relu()
+               #if i > 0:
+               #    z = z.relu()
         else:
            z = z.sum(dim=-1)
         

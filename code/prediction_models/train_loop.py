@@ -17,6 +17,7 @@ from box_embeddings.modules.intersection import GumbelIntersection
 from box_embeddings.modules.volume import BesselApproxVolume
 
 from sklearn.model_selection import KFold
+from sklearn.utils import gen_batches
 from parameters import (LR_DECAY, SCHEDULE_RATE, TRAIN_EMBEDDING_EPOCH,
                         TRAIN_GENES, BOX_WEIGHT, REGULARIZATION, DATASET,
                         MIN_NBR_EDGES, SEMANTIC_WEIGHT)
@@ -311,13 +312,17 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         val_data[e].edge_index = sort_edge_index(val_data[e].edge_index, sort_by_row=False)
     train_data.to(device)
     val_data.to(device)
+    edge_indices = train_data['genes', 'interacts', 'genes'].edge_label_index
+    edge_labels = train_data['genes', 'interacts', 'genes'].edge_label
     # if gci0_data:
     #     gci0_da
     # train_data.cuda()
+    num_data = train_data['genes', 'interacts', 'genes'].edge_label_index.shape[1]
+    num_batches = 10
     for epoch in range(1, epochs+1):
         # if epoch > TRAIN_EMBEDDING_EPOCH:
         td = train_data.clone()
-        #perm = np.random.permutation(range(train_data['genes', 'interacts', 'genes'].edge_label_index.shape[1]))
+        perm = np.random.permutation(range(num_data))
         #td['genes', 'interacts', 'genes'].edge_label_index = td['genes', 'interacts', 'genes'].edge_label_index[:, perm]
         #td['genes', 'interacts', 'genes'].edge_index = td['genes', 'interacts', 'genes'].edge_index[:, perm]
         #td['genes', 'interacts', 'genes'].edge_label = td['genes', 'interacts', 'genes'].edge_label[perm]
@@ -325,36 +330,49 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         # model.node_embeddings.requires_grad_(False)
         # model.node_embeddings['genes'].requires_grad_(TRAIN_GENES)
         total_loss = total_examples = 0
+        total_sem_loss = total_neg_sem_loss = 0
         # all_labels = []
         # all_preds = []
         sem_loss = neg_sem_loss = 0
         # box_loss_epoch = {k: [] for k in model.node_embeddings.keys()}
         # for sampled_data in tqdm.tqdm(train_loader):
-        optimizer.zero_grad()
-        if gci0_data:
-            preds, x_dicts = model(td, return_embs=True)
-            sem_loss, neg_sem_loss = box_loss(x_dicts, gci0_data,
-                                              loss_type='distance', neg=False)
+        targets = []
+        preds = []
+        for s in gen_batches(num_data, num_data // num_batches):
+            batch_indices = edge_indices[:, perm][:, s]
+            batch_labels = edge_labels[perm][s]
+            td['genes', 'interacts', 'genes'].edge_label_index = batch_indices
+            optimizer.zero_grad()
+            if gci0_data:
+                preds, x_dicts = model(td, return_embs=True)
+                sem_loss, neg_sem_loss = box_loss(x_dicts, gci0_data,
+                                                loss_type='distance', neg=False)
+                total_sem_loss += sem_loss.detach().item()
+                total_neg_sem_loss += neg_sem_loss.detach().item()
+                
+            else:
+                preds = model(td)
+
+            # loss = loss_function(preds, td['genes', 'interacts',
+            #                                         'genes'].edge_label,
+            #                     reduction='sum') 
+            loss = loss_function(preds, batch_labels,
+                                reduction='sum') 
             
-        else:
-            preds = model(td)
+            total_loss += loss.detach().item()
 
-        loss = loss_function(preds, td['genes', 'interacts',
-                                                'genes'].edge_label,
-                            reduction='sum') 
-        
-        total_loss += loss.detach().item()
+            combined_loss = loss + SEMANTIC_WEIGHT * (sem_loss + neg_sem_loss) / num_batches
+            combined_loss.backward()
+            optimizer.step()
+            
+            total_examples += preds.numel()
 
-        combined_loss = loss + SEMANTIC_WEIGHT * (sem_loss + neg_sem_loss)
-        combined_loss.backward()
-        optimizer.step()
-        
-        total_examples += preds.numel()
+            targets.append(train_data['genes','interacts',
+                          'genes'].edge_label.detach().cpu().numpy())
+            preds.append(preds.detach().cpu().numpy())
 
-        targets = train_data['genes','interacts',
-                          'genes'].edge_label.detach().cpu().numpy() 
-        preds = preds.detach().cpu().numpy()
-
+        targets = np.array(targets).flatten()
+        preds = np.array(preds).flatten()
         tm = metric(targets, preds)
         if tm > -0.1:
             for param_group in optimizer.param_groups:

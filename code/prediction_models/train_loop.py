@@ -368,11 +368,11 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
             
             total_examples += preds.numel()
 
-            all_targets.append(batch_labels.detach().cpu().numpy())
-            all_preds.append(preds.detach().cpu().numpy())
+            all_targets.extend(batch_labels.detach().cpu().numpy().tolist())
+            all_preds.extend(preds.detach().cpu().numpy().tolist())
 
-        all_targets = np.array(all_targets).flatten()
-        all_preds = np.array(all_preds).flatten()
+        # all_targets = np.array(all_targets).flatten()
+        # all_preds = np.array(all_preds).flatten()
         tm = metric(all_targets, all_preds)
         if tm > -0.1:
             for param_group in optimizer.param_groups:
@@ -396,7 +396,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
 
             val_examples += preds.numel()
             targets = val_data['genes','interacts',
-                          'genes'].edge_label.detach().cpu().numpy() 
+                          'genes'].edge_label.detach().cpu().numpy()
             preds = preds.detach().cpu().numpy()
             
             vm = metric(targets, preds)

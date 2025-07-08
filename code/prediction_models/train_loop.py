@@ -234,7 +234,7 @@ def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0,
     return loss, neg_loss
 
 def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
-               device, model_kwargs, lr=0.001, gci0_data=None):
+               device, model_kwargs, lr=0.001, gci0_data=None, num_batches=3):
     
     skip_edge = [e for e in train_data.edge_types if
                  train_data[e].edge_index.shape[1] < MIN_NBR_EDGES]
@@ -318,7 +318,8 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
     #     gci0_da
     # train_data.cuda()
     num_data = train_data['genes', 'interacts', 'genes'].edge_label_index.shape[1]
-    num_batches = 10
+    #num_batches = 5
+    increased_lr = False
     for epoch in range(1, epochs+1):
         # if epoch > TRAIN_EMBEDDING_EPOCH:
         td = train_data.clone()
@@ -374,9 +375,9 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         # all_targets = np.array(all_targets).flatten()
         # all_preds = np.array(all_preds).flatten()
         tm = metric(all_targets, all_preds)
-        if tm > -0.1:
-            for param_group in optimizer.param_groups:
-                param_group['lr'] = lr
+        #if tm > -0.1:
+        #    for param_group in optimizer.param_groups:
+        #        param_group['lr'] = lr
                 
         print(f"Epoch: {epoch:04d}")
         print(f"train loss: {total_loss / total_examples}")
@@ -414,6 +415,9 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         # if vm > 0 and not decreased:
         #     scheduler.step()
         #     decreased = True
+        if increased_lr:
+            for param_group in optimizer.param_groups:
+                param_group['lr'] = lr
         if vm > best_metric:
             since_improved = 0
             best_metric = vm
@@ -421,16 +425,20 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
             best_model = deepcopy(model)
         else:
             since_improved += 1
-
+        if since_improved == 10:
+            print("increasing lr for one epoch")
+            for param_group in optimizer.param_groups:
+                param_group['lr'] = 10*lr
+            increased_lr = True
         if since_improved > 40:
-            print('Model has not improved in 40 epochs, stopping training...', flush=True)
-            if tm < 0.15:
+            print('Model has not improved in 20 epochs, stopping training...', flush=True)
+            if vm < 0.20:
                 print("Restarting training for this fold", flush=True)
                 return train_loop(model_type=model_type, train_data=train_data,
                                   val_data=val_data, epochs=epochs,
                                   loss_function=loss_function, metric=metric,
                                   device=device, model_kwargs=model_kwargs,
-                                  lr=lr/2, gci0_data=gci0_data)
+                                  lr=lr/1.5, gci0_data=gci0_data, num_batches=num_batches+1)
             break
 
     metrics['best_metric'] = best_metric

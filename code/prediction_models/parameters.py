@@ -1,9 +1,9 @@
-EPOCHS = 1000
-LR = 1e-3
+EPOCHS = 10000
+LR = 1e-4
 NEIGHBOR_SAMPLE_SIZE = 20
-GNN_CHANNELS = [4,8]
+GNN_CHANNELS = [8, 12]
 #NN_CHANNELS = [64, 16, 8]
-NN_CHANNELS = [32, 8]
+NN_CHANNELS = [12, 8]
 LR_DECAY = 1
 SCHEDULE_RATE = 10
 TRAIN_EMBEDDING_EPOCH = 10000#900*int(EPOCHS / 4)
@@ -11,11 +11,11 @@ BOX_EMBEDDINGS = True
 TRAIN_GENES = False
 ONLY_GENE_BOXES = False
 BOX_WEIGHT = 0.0
-REGULARIZATION = 1e-3
+REGULARIZATION = 1e-1
 #DATASET = 'pyg_graph_c_DMA30_fitness'
 DATASET = 'pyg_graph_box_interactions_DMA30'
+#DATASET = 'pyg_graph_box_interactions'
 LINKS = ('genes', 'interacts', 'genes')
 SPLIT = 'nodes'
 MIN_NBR_EDGES = 1000
 SEMANTIC_WEIGHT = 1e-1
-

@@ -26,14 +26,15 @@ class GNNBase(th.nn.Module):
                 target_channels = int(i==0)*embeddings[e[2]].shape[1] + \
                     int(i>0)*max((1,int(prev_c * es[e[2]])))
                 out_channels = max((1,int(c * es[e[2]])))
-                if True:
+                if True:# and False:
                     if e[2] not in aggr_dict:
                         hidden_dim = int(out_channels // 2)
                         aggr_dict[e[2]] = AttentionalAggregation(
                             gate_nn=th.nn.Sequential(th.nn.LayerNorm(out_channels),
-                                                     th.nn.Linear(out_channels, hidden_dim, bias=True),
-                                                     th.nn.ReLU(),
-                                                     th.nn.Linear(hidden_dim, 1, bias=True)))
+                                                     th.nn.Linear(out_channels, 1, bias=True)))
+                                                     #th.nn.Linear(out_channels, hidden_dim, bias=True),
+                                                     #th.nn.ReLU(),
+                                                     #th.nn.Linear(hidden_dim, 1, bias=True)))
                     hidden_dim = int(source_channels // 2)
                     aggr = AttentionalAggregation(gate_nn=th.nn.Sequential(
                         th.nn.LayerNorm(source_channels),
@@ -49,6 +50,7 @@ class GNNBase(th.nn.Module):
                                 root_weight=root_weight, project=True,
                                 project_out=True, full_bias=True, aggr=aggr)
             conv = HeteroConv(conv_dict, aggr=None)
+            print('mod sageconv')
        
             self.hetero_aggrs.append(aggr_dict)
 
@@ -175,7 +177,7 @@ class Model(th.nn.Module):
                       MinDeltaBoxTensor.from_vector(embs[LINKS[2]][links_to_pred[1]]))
         intersects = self.intersect(gene_boxes[0], gene_boxes[1])
         z = th.cat([intersects.z, intersects.Z], dim=-1)
-        z = embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]] 
+        #z = embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]] 
         if self.lin_layers:
            for i, l in enumerate(self.lin_layers):
                z = l(z).relu()

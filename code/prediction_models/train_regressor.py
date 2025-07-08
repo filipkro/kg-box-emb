@@ -72,6 +72,11 @@ if True:
                   pickle.load(fi).training_datasets.gci0_dataset.data.to(device)
 else:
     gci0 = None
+
+for k in data.node_types:
+    num_nodes = data[k].x.shape[0]
+    self_loops = th.ones(2,num_nodes, dtype=th.int64) * th.arange(num_nodes, dtype=th.int64)
+    data[k, 'self', k].edge_index = self_loops
 # %%
 metrics, models, data_splits = cross_val(model_type=Regressor,
                                          model_kwargs=model_kwargs,

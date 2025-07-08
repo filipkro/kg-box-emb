@@ -51,7 +51,7 @@ class GNNBaseGAT(th.nn.Module):
                 #                 out_channels, normalize=False, bias=True,
                 #                 root_weight=root_weight, project=False, aggr=aggr)
                 conv_dict[e] = GATv2Conv((source_channels, target_channels),
-                                         out_channels, heads=1, concat=False)
+                                         out_channels, add_self_loops=False, heads=1, concat=False)
                 # conv_dict[e] = SAGEConvMod((source_channels, target_channels),
                 #                 out_channels, normalize=False, bias=True,
                 #                 root_weight=root_weight, project=True,

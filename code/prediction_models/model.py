@@ -12,12 +12,12 @@ from torch_geometric.nn.aggr import MultiAggregation, SoftmaxAggregation, PowerM
 class GNNBaseGAT(th.nn.Module):
     def __init__(self, channels, edge_types, embeddings, aggr='attn', edge_index_max=None):
         super().__init__()
-        if edge_index_max:
-            print('using attentional aggregation')
+        # if edge_index_max:
+        #     print('using attentional aggregation')
         self.layers = th.nn.ModuleList()
         self.init_edge_dicts(embeddings, edge_types)
         es = self.es
-        assert aggr in ['attn', 'mean', 'max']
+        assert aggr in ['attn', 'mean', 'max'], aggr
         self.aggr = aggr
         if self.aggr == 'attn':
             self.hetero_aggrs = th.nn.ModuleList()
@@ -101,7 +101,7 @@ class GNNBaseGAT(th.nn.Module):
     
 class HeteroGNNGATCustom(GNNBaseGAT):
     def __init__(self, channels, edge_types, embeddings, aggr='attn', edge_index_max=None):
-        super().__init__(channels, edge_types, embeddings, aggr, edge_index_max)
+        super().__init__(channels, edge_types, embeddings, aggr=aggr, edge_index_max=edge_index_max)
 
     def init_edge_dicts(self, embeddings, edge_types):
         ed = {k: 0 for k in embeddings.keys()}
@@ -234,7 +234,7 @@ class Model(th.nn.Module):
         #     self.gnn = HeteroGNN(gnn_channels, edge_types, embeddings, edge_index_max)
         # if custom:
             # varying sizes of embeddings for different target domains
-        self.gnn = HeteroGNNGATCustom(gnn_channels, edge_types, embeddings, edge_index_max)
+        self.gnn = HeteroGNNGATCustom(gnn_channels, edge_types, embeddings)
         # else:
         #     self.gnn = HeteroGNN(gnn_channels, edge_types, embeddings, edge_index_max)
 

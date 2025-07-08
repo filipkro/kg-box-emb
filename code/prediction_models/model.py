@@ -100,8 +100,8 @@ class GNNBaseGAT(th.nn.Module):
             return x_dict
     
 class HeteroGNNGATCustom(GNNBaseGAT):
-    def __init__(self, channels, edge_types, embeddings, edge_index_max=None):
-        super().__init__(channels, edge_types, embeddings, edge_index_max)
+    def __init__(self, channels, edge_types, embeddings, aggr='attn', edge_index_max=None):
+        super().__init__(channels, edge_types, embeddings, aggr, edge_index_max)
 
     def init_edge_dicts(self, embeddings, edge_types):
         ed = {k: 0 for k in embeddings.keys()}

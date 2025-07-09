@@ -250,11 +250,10 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
     edge_types = {e: v.shape[1] for e, v in train_data.edge_index_dict.items()
                   if e not in skip_edge}
     
-    edge_index_max = {e: int(degree(train_data[e].edge_index[1]).max().item())
-                      for e in edge_types}
+    # edge_index_max = {e: int(degree(train_data[e].edge_index[1]).max().item())
+    #                   for e in edge_types}
 
-    model = model_type(edge_types=edge_types, inter_temp=0.1,
-                       edge_index_max=edge_index_max, **model_kwargs)
+    model = model_type(edge_types=edge_types, inter_temp=0.1, aggr='attn', **model_kwargs)
     model.to(device)
     model.node_embeddings['genes'].requires_grad_(TRAIN_GENES)
     

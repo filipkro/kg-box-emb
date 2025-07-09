@@ -38,19 +38,7 @@ class GNNBaseGAT(th.nn.Module):
                     aggr_dict[e[2]] = AttentionalAggregation(
                         gate_nn=th.nn.Sequential(th.nn.LayerNorm(out_channels),
                                                     th.nn.Linear(out_channels, 1, bias=True)))
-                                                    #th.nn.Linear(out_channels, hidden_dim, bias=True),
-                                                    #th.nn.ReLU(),
-                                                    #th.nn.Linear(hidden_dim, 1, bias=True)))
-                # hidden_dim = int(source_channels // 2)
-                # aggr = AttentionalAggregation(gate_nn=th.nn.Sequential(
-                #     th.nn.LayerNorm(source_channels),
-                #     th.nn.Linear(source_channels, 1, bias=True)))
-                # else:
-                    # aggr = 'max'
-                # root_weight = bool(i) or e[0] != 'genes' or True
-                # conv_dict[e] = SAGEConv((source_channels, target_channels),
-                #                 out_channels, normalize=False, bias=True,
-                #                 root_weight=root_weight, project=False, aggr=aggr)
+        
                 conv_dict[e] = GATv2Conv((source_channels, target_channels),
                                          out_channels, add_self_loops=False, heads=2, concat=False)
                 # conv_dict[e] = SAGEConvMod((source_channels, target_channels),
@@ -99,7 +87,14 @@ class GNNBaseGAT(th.nn.Module):
             if return_embs:
                 return embs
             return x_dict
-    
+
+class HeteroGNNGAT(GNNBaseGAT):
+    def __init__(self, channels, edge_types, embeddings, aggr='attn', edge_index_max=None):
+        super().__init__(channels, edge_types, embeddings, aggr=aggr, edge_index_max=edge_index_max)
+
+    def init_edge_dicts(self, embeddings, edge_types):
+        self.es = {k:1 for k in embeddings.keys()}
+
 class HeteroGNNGATCustom(GNNBaseGAT):
     def __init__(self, channels, edge_types, embeddings, aggr='attn', edge_index_max=None):
         print('HeteroGNNGATCustom')

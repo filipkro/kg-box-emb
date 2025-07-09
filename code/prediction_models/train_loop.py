@@ -234,7 +234,7 @@ def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0,
     return loss, neg_loss
 
 def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
-               device, model_kwargs, lr=0.001, gci0_data=None, num_batches=3):
+               device, model_kwargs, lr=0.001, gci0_data=None, num_batches=2):
     
     skip_edge = [e for e in train_data.edge_types if
                  train_data[e].edge_index.shape[1] < MIN_NBR_EDGES]
@@ -430,9 +430,9 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
             for param_group in optimizer.param_groups:
                 param_group['lr'] = 10*lr
             increased_lr = True
-        if since_improved > 40:
+        if since_improved > 50:
             print('Model has not improved in 20 epochs, stopping training...', flush=True)
-            if vm < 0.20:
+            if best_metric < 0.20:
                 print("Restarting training for this fold", flush=True)
                 return train_loop(model_type=model_type, train_data=train_data,
                                   val_data=val_data, epochs=epochs,

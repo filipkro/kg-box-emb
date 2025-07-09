@@ -12,6 +12,7 @@ from torch_geometric.nn.aggr import MultiAggregation, SoftmaxAggregation, PowerM
 class GNNBaseGAT(th.nn.Module):
     def __init__(self, channels, edge_types, embeddings, aggr='attn', edge_index_max=None):
         super().__init__()
+        aggr = 'mean'
         # if edge_index_max:
         #     print('using attentional aggregation')
         self.layers = th.nn.ModuleList()
@@ -51,7 +52,7 @@ class GNNBaseGAT(th.nn.Module):
                 #                 out_channels, normalize=False, bias=True,
                 #                 root_weight=root_weight, project=False, aggr=aggr)
                 conv_dict[e] = GATv2Conv((source_channels, target_channels),
-                                         out_channels, add_self_loops=False, heads=1, concat=False)
+                                         out_channels, add_self_loops=False, heads=2, concat=False)
                 # conv_dict[e] = SAGEConvMod((source_channels, target_channels),
                 #                 out_channels, normalize=False, bias=True,
                 #                 root_weight=root_weight, project=True,
@@ -101,6 +102,7 @@ class GNNBaseGAT(th.nn.Module):
     
 class HeteroGNNGATCustom(GNNBaseGAT):
     def __init__(self, channels, edge_types, embeddings, aggr='attn', edge_index_max=None):
+        print('HeteroGNNGATCustom')
         super().__init__(channels, edge_types, embeddings, aggr=aggr, edge_index_max=edge_index_max)
 
     def init_edge_dicts(self, embeddings, edge_types):
@@ -132,6 +134,8 @@ class GNNBase(th.nn.Module):
             conv_dict = {}
             aggr_dict = th.nn.ModuleDict()
             for e in edge_types:
+                if e[0] == 'genes' and e[1] == 'self':
+                    continue
                 source_channels = int(i==0) * embeddings[e[0]].shape[1] + \
                     int(i>0)*max((1,int(prev_c * es[e[0]])))
                 target_channels = int(i==0)*embeddings[e[2]].shape[1] + \
@@ -153,6 +157,7 @@ class GNNBase(th.nn.Module):
                 else:
                     aggr = 'max'
                 root_weight = bool(i) or e[0] != 'genes' or True
+                #root_weight = False
                 # conv_dict[e] = SAGEConv((source_channels, target_channels),
                 #                 out_channels, normalize=False, bias=True,
                 #                 root_weight=root_weight, project=False, aggr=aggr)
@@ -190,6 +195,7 @@ class GNNBase(th.nn.Module):
 
 class HeteroGNNCustom(GNNBase):
     def __init__(self, channels, edge_types, embeddings, edge_index_max=None):
+        print('HeteroGNNCustom')
         super().__init__(channels, edge_types, embeddings, edge_index_max)
 
     def init_edge_dicts(self, embeddings, edge_types):
@@ -214,6 +220,7 @@ class HeteroGNNCustom(GNNBase):
 
 class HeteroGNN(GNNBase):
     def __init__(self, channels, edge_types, embeddings, edge_index_max=None):
+        print('HeteroGNN')
         super().__init__(channels, edge_types, embeddings, edge_index_max)
 
     def init_edge_dicts(self, embeddings, edge_types):
@@ -227,11 +234,11 @@ class Model(th.nn.Module):
         super().__init__()
         #custom = False
         #print('none custom sizes for gnn')
-        # if custom:
-        #     # varying sizes of embeddings for different target domains
-        #     self.gnn = HeteroGNNCustom(gnn_channels, edge_types, embeddings, edge_index_max)
-        # else:
-        #     self.gnn = HeteroGNN(gnn_channels, edge_types, embeddings, edge_index_max)
+        #if custom:
+        #    # varying sizes of embeddings for different target domains
+        #    self.gnn = HeteroGNNCustom(gnn_channels, edge_types, embeddings, edge_index_max)
+        #else:
+        #    self.gnn = HeteroGNN(gnn_channels, edge_types, embeddings, edge_index_max)
         # if custom:
             # varying sizes of embeddings for different target domains
         self.gnn = HeteroGNNGATCustom(gnn_channels, edge_types, embeddings)
@@ -289,11 +296,11 @@ class Model(th.nn.Module):
                           return_embs=return_embs)
         embs = x_dict[-1] if return_embs else x_dict
 
-        gene_boxes = (MinDeltaBoxTensor.from_vector(embs[LINKS[0]][links_to_pred[0]]),
-                      MinDeltaBoxTensor.from_vector(embs[LINKS[2]][links_to_pred[1]]))
-        intersects = self.intersect(gene_boxes[0], gene_boxes[1])
-        z = th.cat([intersects.z, intersects.Z], dim=-1)
-        #z = embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]] 
+        #gene_boxes = (MinDeltaBoxTensor.from_vector(embs[LINKS[0]][links_to_pred[0]]),
+        #              MinDeltaBoxTensor.from_vector(embs[LINKS[2]][links_to_pred[1]]))
+        #intersects = self.intersect(gene_boxes[0], gene_boxes[1])
+        #z = th.cat([intersects.z, intersects.Z], dim=-1)
+        z = embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]] 
         if self.lin_layers:
            for i, l in enumerate(self.lin_layers):
                z = l(z).relu()

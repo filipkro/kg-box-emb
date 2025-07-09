@@ -1,7 +1,7 @@
 EPOCHS = 10000
-LR = 1e-4
+LR = 1e-3
 NEIGHBOR_SAMPLE_SIZE = 20
-GNN_CHANNELS = [8, 12]
+GNN_CHANNELS = [8, 16]
 #NN_CHANNELS = [64, 16, 8]
 NN_CHANNELS = [12, 8]
 LR_DECAY = 1
@@ -18,4 +18,4 @@ DATASET = 'pyg_graph_box_interactions_DMA30'
 LINKS = ('genes', 'interacts', 'genes')
 SPLIT = 'nodes'
 MIN_NBR_EDGES = 1000
-SEMANTIC_WEIGHT = 1e-1
+SEMANTIC_WEIGHT = 1e-3

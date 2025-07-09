@@ -54,13 +54,8 @@ class GNNBase(th.nn.Module):
 class GNNBaseTransfromer(GNNBase):
     def __init__(self, channels, edge_types, embeddings, aggr='attn', edge_index_max=None):
         super().__init__(embeddings=embeddings, edge_types=edge_types, aggr=aggr)
-        # self.layers = th.nn.ModuleList()
-        # self.init_edge_dicts(embeddings, edge_types)
+
         es = self.es
-        # assert aggr in ['attn', 'mean', 'max'], aggr
-        # self.aggr = aggr
-        # if self.aggr == 'attn':
-        #     self.hetero_aggrs = th.nn.ModuleList()
         prev_c = 0
         for i, c in enumerate(channels):
             conv_dict = {}
@@ -71,7 +66,7 @@ class GNNBaseTransfromer(GNNBase):
                 target_channels = int(i==0)*embeddings[e[2]].shape[1] + \
                     int(i>0)*max((1,int(prev_c * es[e[2]])))
                 out_channels = max((1,int(c * es[e[2]])))
-                # if True:# and False:
+
                 if self.aggr == 'attn' and e[2] not in aggr_dict:
                     # hidden_dim = int(out_channels // 2)
                     aggr_dict[e[2]] = AttentionalAggregation(
@@ -80,13 +75,8 @@ class GNNBaseTransfromer(GNNBase):
                 root_weight = bool(i) or e[0] != 'genes' or True
                 conv_dict[e] = TransformerConv((source_channels, target_channels),
                                          out_channels, heads=1, concat=False, bias=True, root_weight=root_weight)
-                # conv_dict[e] = SAGEConvMod((source_channels, target_channels),
-                #                 out_channels, normalize=False, bias=True,
-                #                 root_weight=root_weight, project=True,
-                #                 project_out=True, full_bias=True, aggr=aggr)
             aggr = None if self.aggr == 'attn' else self.aggr
             conv = HeteroConv(conv_dict, aggr=aggr)
-            
        
             if self.aggr == 'attn':
                 self.hetero_aggrs.append(aggr_dict)
@@ -121,16 +111,6 @@ class GNNBaseGAT(GNNBase):
     def __init__(self, channels, edge_types, embeddings, aggr='attn'):
         super().__init__(embeddings=embeddings, edge_types=edge_types,
                          aggr=aggr)
-        # aggr = 'mean'
-        # if edge_index_max:
-        #     print('using attentional aggregation')
-        # self.layers = th.nn.ModuleList()
-        # self.init_edge_dicts(embeddings, edge_types)
-        # es = self.es
-        # assert aggr in ['attn', 'mean', 'max'], aggr
-        # self.aggr = aggr
-        # if self.aggr == 'attn':
-        #     self.hetero_aggrs = th.nn.ModuleList()
         es = self.es
         prev_c = 0
         for i, c in enumerate(channels):
@@ -142,19 +122,14 @@ class GNNBaseGAT(GNNBase):
                 target_channels = int(i==0)*embeddings[e[2]].shape[1] + \
                     int(i>0)*max((1,int(prev_c * es[e[2]])))
                 out_channels = max((1,int(c * es[e[2]])))
-                # if True:# and False:
+
                 if self.aggr == 'attn' and e[2] not in aggr_dict:
-                    # hidden_dim = int(out_channels // 2)
                     aggr_dict[e[2]] = AttentionalAggregation(
                         gate_nn=th.nn.Sequential(th.nn.LayerNorm(out_channels),
                                                     th.nn.Linear(out_channels, 1, bias=True)))
         
                 conv_dict[e] = GATv2Conv((source_channels, target_channels),
                                          out_channels, add_self_loops=False, heads=2, concat=False)
-                # conv_dict[e] = SAGEConvMod((source_channels, target_channels),
-                #                 out_channels, normalize=False, bias=True,
-                #                 root_weight=root_weight, project=True,
-                #                 project_out=True, full_bias=True, aggr=aggr)
             aggr = None if self.aggr == 'attn' else self.aggr
             conv = HeteroConv(conv_dict, aggr=aggr)
             print('mod sageconv')
@@ -167,36 +142,6 @@ class GNNBaseGAT(GNNBase):
 
     def init_edge_dicts(self, embeddings, edge_types):
         raise NotImplementedError()
-    
-    # def forward_attention(self, x_dict, edge_index_dict, return_embs=False):
-    #     embs = []
-    #     for conv, aggr in zip(self.layers, self.hetero_aggrs):
-    #         x_dict = conv(x_dict, edge_index_dict)
-    #         for k in x_dict:
-    #             x = x_dict[k]
-    #             N, T, F = x.size()
-    #             x_flat = x.view(-1, F)
-    #             index = th.arange(N, device=x.device).repeat_interleave(T)
-    #             x_dict[k] = aggr[k](x_flat, index=index, dim_size=N)
-    #         if return_embs:
-    #             embs.append(x_dict)
-    #     if return_embs:
-    #         return embs
-    #     return x_dict
-
-    # def forward(self, x_dict, edge_index_dict, return_embs=False):
-    #     if self.aggr == 'attn':
-    #         return self.forward_attention(x_dict, edge_index_dict,
-    #                                       return_embs=return_embs)
-    #     else:
-    #         embs = []
-    #         for conv in self.layers:
-    #             x_dict = conv(x_dict, edge_index_dict)
-    #             if return_embs:
-    #                 embs.append(x_dict)
-    #         if return_embs:
-    #             return embs
-    #         return x_dict
 
 class HeteroGNNGAT(GNNBaseGAT):
     def __init__(self, channels, edge_types, embeddings, aggr='attn'):
@@ -230,11 +175,6 @@ class GNNBaseSAGE(GNNBase):
     def __init__(self, channels, edge_types, embeddings, aggr='attn'):
         super().__init__(embeddings=embeddings, edge_types=edge_types,
                          aggr=aggr)
-        # if edge_index_max:
-        #     print('using attentional aggregation')
-        # self.layers = th.nn.ModuleList()
-        # self.hetero_aggrs = th.nn.ModuleList()
-        # self.init_edge_dicts(embeddings, edge_types)
         es = self.es
         prev_c = 0
         for i, c in enumerate(channels):
@@ -248,7 +188,7 @@ class GNNBaseSAGE(GNNBase):
                 target_channels = int(i==0)*embeddings[e[2]].shape[1] + \
                     int(i>0)*max((1,int(prev_c * es[e[2]])))
                 out_channels = max((1,int(c * es[e[2]])))
-                # if True:# and False:
+
                 if self.aggr == 'attn':
                     if e[2] not in aggr_dict:
                         aggr_dict[e[2]] = AttentionalAggregation(
@@ -273,22 +213,6 @@ class GNNBaseSAGE(GNNBase):
     def init_edge_dicts(self, embeddings, edge_types):
         raise NotImplementedError()
     
-
-    # def forward(self, x_dict, edge_index_dict, return_embs=False):
-    #     embs = []
-    #     for conv, aggr in zip(self.layers, self.hetero_aggrs):
-    #         x_dict = conv(x_dict, edge_index_dict)
-    #         for k in x_dict:
-    #             x = x_dict[k]
-    #             N, T, F = x.size()
-    #             x_flat = x.view(-1, F)
-    #             index = th.arange(N, device=x.device).repeat_interleave(T)
-    #             x_dict[k] = aggr[k](x_flat, index=index, dim_size=N)
-    #         if return_embs:
-    #             embs.append(x_dict)
-    #     if return_embs:
-    #         return embs
-    #     return x_dict
 
 class HeteroGNNSAGECustom(GNNBaseSAGE):
     def __init__(self, channels, edge_types, embeddings, aggr='attn'):

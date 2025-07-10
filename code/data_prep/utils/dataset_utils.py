@@ -11,6 +11,102 @@ import rdflib
 from rdflib.plugins.stores import sparqlstore
 from rdflib.namespace import OWL, RDF, RDFS
 
+USED_GCI = ['gci0', 'gci2', 'gci1_bot']
+prefix = """PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+            SELECT DISTINCT ?a ?b
+            WHERE """
+
+def get_queries(a, b, merged_assertions=True):
+    q = [prefix + f"""{{
+                    ?a rdfs:subClassOf* <{a}> .
+                    ?b rdfs:subClassOf* <{b}> .
+                }} LIMIT 50000"""]
+    if merged_assertions:
+        q.extend([prefix + f"""{{
+                        ?aa rdfs:subClassOf* <{a}> .
+                        ?bb rdfs:subClassOf* <{b}> .
+                        ?a rdf:type ?aa .
+                        ?b rdf:type ?bb .
+                    }} LIMIT 50000""",
+                prefix + f"""{{
+                        ?aa rdfs:subClassOf* <{a}> .
+                        ?b rdfs:subClassOf* <{b}> .
+                        ?a rdf:type ?aa .
+                    }} LIMIT 50000""",
+                prefix + f"""{{
+                        ?a rdfs:subClassOf* <{a}> .
+                        ?bb rdfs:subClassOf* <{b}> .
+                        ?b rdf:type ?bb .
+                    }} LIMIT 50000"""])
+    return q
+
+def get_bots(gci1_bot, i2c, c2i, full_fp, merged_assertions=True):
+    kg = rdflib.Graph()
+    kg.parse(full_fp)
+    new_bots = set()
+    for i, tensor_pair in enumerate(gci1_bot[:,:2]):
+        print(f"{i} of {len(gci1_bot)} completed...", end="\r")
+        pair = tuple(sorted(tensor_pair.tolist()))
+        if not pair in new_bots:
+            a = i2c[pair[0]]
+            b = i2c[pair[1]]
+            
+            queries = get_queries(a,b, merged_assertions=merged_assertions)
+            for q in queries:
+                res = kg.query(q)
+                for r in res:
+                    bot_pair = tuple(sorted([c2i[str(r[0])], c2i[str(r[1])]]))
+                    new_bots.add(bot_pair)
+
+    bot_class = gci1_bot[0,2].item()
+    tensor_bots = th.tensor(list(new_bots), dtype=th.int32)
+    new_dataset = th.empty((2*len(tensor_bots), 3), dtype=th.int32)
+    new_dataset[:len(tensor_bots), :2] = tensor_bots
+    new_dataset[len(tensor_bots):, 0] = tensor_bots[:,1]
+    new_dataset[len(tensor_bots):, 1] = tensor_bots[:,0]
+    new_dataset[:,2] = th.ones(new_dataset[:,2].shape, dtype=th.int32) * bot_class
+    print()
+    return new_dataset
+
+
+def get_normalized_el_dataset(kg_fp, merge_assertions=False):
+    if not merge_assertions:
+        USED_GCI.extend(['class_assertion', 'object_property_assertion'])
+    data = PathDataset(kg_fp)
+    el_dataset = ELDataset(data.ontology)
+    el_dataset.load()
+
+    gcis = {k: v.data for k,v in el_dataset.get_gci_datasets().items() if k in USED_GCI}
+    if merge_assertions:
+        ind_index = {k.toString(): v for k, v in data.individual_to_id.items()}
+        class_index = el_dataset.class_index_dict
+        class_assert = th.flip(el_dataset.class_assertion_dataset.data,
+                               dims=(1,))
+        prop_assert = el_dataset.object_property_assertion_dataset.data
+        t_box_classes = len(class_index)
+        class_assert[:,0] = class_assert[:,0] + t_box_classes
+        prop_assert[:,0] = prop_assert[:,0] + t_box_classes
+        prop_assert[:,2] = prop_assert[:,2] + t_box_classes
+        for k,v in ind_index.items():
+            class_index[k[1:-1]] = v + t_box_classes
+
+        gcis['gci0'] = th.cat((gcis['gci0'], class_assert), dim=0)
+        gcis['gci2'] = th.cat((gcis['gci2'], prop_assert), dim=0)
+
+        index_dict = {'class_index': class_index,
+                      'property_index': el_dataset.object_property_index_dict}
+
+        # new_ind_idx = {v: v+}
+    else:
+        index_dict = {'class_index': el_dataset.class_index_dict,
+                      'class_assertion_index': {k.toString(): v for k, v in
+                                                data.individual_to_id.items()},
+                      'property_index': el_dataset.object_property_index_dict}
+    
+    return gcis, index_dict#, el_dataset
+    # return el_dataset, data
+
 def get_normalized_dataset(kg_fp, role_fp=None):
     if role_fp == None:
         role_fp = kg_fp

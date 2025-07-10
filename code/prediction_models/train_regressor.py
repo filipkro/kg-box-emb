@@ -12,7 +12,7 @@ from train_loop import cross_val
 from parameters import (EPOCHS, LR, GNN_CHANNELS, NN_CHANNELS, REGULARIZATION,
                         TRAIN_EMBEDDING_EPOCH, TRAIN_GENES, BOX_WEIGHT,
                         DATASET, BOX_EMBEDDINGS, ONLY_GENE_BOXES, SPLIT,
-                        SEMANTIC_WEIGHT, MIN_NBR_EDGES)
+                        SEMANTIC_WEIGHT, MIN_NBR_EDGES, NUM_BATCHES)
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../embeddings')))
@@ -45,6 +45,7 @@ print(f'Dataset: {DATASET}')
 print(f"gnn channels: {GNN_CHANNELS}")
 print(f"nn channels: {NN_CHANNELS}")
 print(f"splitting: {SPLIT}")
+print(f"num batches: {NUM_BATCHES}")
 # %%
 print(f"epochs: {EPOCHS}")
 print(f"lr: {LR}")
@@ -76,14 +77,14 @@ else:
 for k in data.node_types:
     num_nodes = data[k].x.shape[0]
     self_loops = th.ones(2,num_nodes, dtype=th.int64) * th.arange(num_nodes, dtype=th.int64)
-    data[k, 'self', k].edge_index = self_loops
+    #data[k, 'self', k].edge_index = self_loops
 # %%
 metrics, models, data_splits = cross_val(model_type=Regressor,
                                          model_kwargs=model_kwargs,
                                          data=data, epochs=EPOCHS,
                                          loss_function=mse_loss,
                                          metric=r2_score, device=device, lr=LR,
-                                         gci0_data=gci0, folds=10, split=SPLIT)
+                                         gci0_data=gci0, folds=10, split=SPLIT, num_batches=NUM_BATCHES)
 #metrics, models = cross_val(model_type=DummyModel, model_kwargs=model_kwargs,
 #                            data=data, epochs=EPOCHS, loss_function=mse_loss,
 #                            metric=r2_score, device=device, lr=LR,

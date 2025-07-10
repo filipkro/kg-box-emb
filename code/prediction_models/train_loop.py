@@ -83,7 +83,7 @@ def node_split(data, v_idx, t_idx=None, split_transform=None, device='cpu'):
 
 
 def cross_val(model_type, model_kwargs, data, epochs, loss_function, metric,
-              device, folds=10, lr=0.001, split='nodes', gci0_data=None):
+              device, folds=10, lr=0.001, split='nodes', gci0_data=None, num_batches=2):
     print(f"Splitting {split}")
     kf = KFold(n_splits=folds, shuffle=True, random_state=42)
     metrics = []
@@ -119,7 +119,7 @@ def cross_val(model_type, model_kwargs, data, epochs, loss_function, metric,
         fold_metrics, fold_model = train_loop(model_type, train_data, val_data,
                                               epochs, loss_function, metric,
                                               device, model_kwargs, lr,
-                                              gci0_data)
+                                              gci0_data, num_batches)
         metrics.append(fold_metrics)
         best_models.append(fold_model.cpu())
         best_metrics.append(fold_metrics['best_metric'])

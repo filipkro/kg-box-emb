@@ -61,6 +61,8 @@ class GNNBaseTransfromer(GNNBase):
             conv_dict = {}
             aggr_dict = th.nn.ModuleDict()
             for e in edge_types:
+                if i == len(channels) - 1 and e[2] != 'genes':
+                    continue
                 source_channels = int(i==0) * embeddings[e[0]].shape[1] + \
                     int(i>0)*max((1,int(prev_c * es[e[0]])))
                 target_channels = int(i==0)*embeddings[e[2]].shape[1] + \
@@ -74,7 +76,7 @@ class GNNBaseTransfromer(GNNBase):
                                                     th.nn.Linear(out_channels, 1, bias=True)))
                 root_weight = bool(i) or e[0] != 'genes' or True
                 conv_dict[e] = TransformerConv((source_channels, target_channels),
-                                         out_channels, heads=1, concat=False, bias=True, root_weight=root_weight)
+                                         out_channels, heads=4, concat=False, bias=True, root_weight=root_weight, beta=True)
             aggr = None if self.aggr == 'attn' else self.aggr
             conv = HeteroConv(conv_dict, aggr=aggr)
        
@@ -318,16 +320,15 @@ class Model(th.nn.Module):
                           return_embs=return_embs)
         embs = x_dict[-1] if return_embs else x_dict
 
-        #gene_boxes = (MinDeltaBoxTensor.from_vector(embs[LINKS[0]][links_to_pred[0]]),
-        #              MinDeltaBoxTensor.from_vector(embs[LINKS[2]][links_to_pred[1]]))
-        #intersects = self.intersect(gene_boxes[0], gene_boxes[1])
-        #z = th.cat([intersects.z, intersects.Z], dim=-1)
-        z = embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]] 
+        gene_boxes = (MinDeltaBoxTensor.from_vector(embs[LINKS[0]][links_to_pred[0]]),
+                      MinDeltaBoxTensor.from_vector(embs[LINKS[2]][links_to_pred[1]]))
+        intersects = self.intersect(gene_boxes[0], gene_boxes[1])
+        z = th.cat([intersects.z, intersects.Z], dim=-1)
+        
+        #z = embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]] 
         if self.lin_layers:
            for i, l in enumerate(self.lin_layers):
                z = l(z).relu()
-               #if i > 0:
-               #    z = z.relu()
         else:
            z = z.sum(dim=-1)
         

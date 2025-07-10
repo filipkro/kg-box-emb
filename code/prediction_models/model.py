@@ -6,10 +6,25 @@ from parameters import LINKS, BOX_EMBEDDINGS, ONLY_GENE_BOXES
 from box_embeddings.modules.intersection import GumbelIntersection
 from box_embeddings.parameterizations import MinDeltaBoxTensor
 from torch_geometric.nn.aggr import MultiAggregation, SoftmaxAggregation, PowerMeanAggregation, MLPAggregation, AttentionalAggregation
+import torch.nn.functional as F
 
+class HeadwiseAttentionalAggregator(th.nn.Module):
+    def __init__(self, head_dim, num_heads=None):
+        super().__init__()
+        self.gate_nn = th.nn.Sequential(
+            th.nn.LayerNorm(head_dim),
+            th.nn.Linear(head_dim, 1)  # one score per head
+        )
+
+    def forward(self, x):  # x: [N, H, C]
+        attn_logits = self.gate_nn(x).squeeze(-1)     # [N, H]
+        attn_weights = F.softmax(attn_logits, dim=1)  # [N, H]
+        return th.sum(x * attn_weights.unsqueeze(-1), dim=1)  # [N, C]
+    
 class GNNBase(th.nn.Module):
     def __init__(self, embeddings, edge_types, aggr='attn'):
         super().__init__()
+        self.heads = 1
         self.layers = th.nn.ModuleList()
         self.init_edge_dicts(embeddings, edge_types)
         # es = self.es
@@ -54,12 +69,15 @@ class GNNBase(th.nn.Module):
 class GNNBaseTransfromer(GNNBase):
     def __init__(self, channels, edge_types, embeddings, aggr='attn', edge_index_max=None):
         super().__init__(embeddings=embeddings, edge_types=edge_types, aggr=aggr)
+        self.heads = 4
 
         es = self.es
         prev_c = 0
+        self.head_aggrs = th.nn.ModuleList()
         for i, c in enumerate(channels):
             conv_dict = {}
             aggr_dict = th.nn.ModuleDict()
+            head_aggr_dict = th.nn.ModuleDict()
             for e in edge_types:
                 source_channels = int(i==0) * embeddings[e[0]].shape[1] + \
                     int(i>0)*max((1,int(prev_c * es[e[0]])))
@@ -72,14 +90,18 @@ class GNNBaseTransfromer(GNNBase):
                     aggr_dict[e[2]] = AttentionalAggregation(
                         gate_nn=th.nn.Sequential(th.nn.LayerNorm(out_channels),
                                                     th.nn.Linear(out_channels, 1, bias=True)))
+                if self.heads > 1 and e[2] not in head_aggr_dict:
+                    head_aggr_dict[e[2]] = HeadwiseAttentionalAggregator(out_channels)
                 root_weight = bool(i) or e[0] != 'genes' or True
                 conv_dict[e] = TransformerConv((source_channels, target_channels),
-                                         out_channels, heads=1, concat=False, bias=True, root_weight=root_weight)
+                                         out_channels, heads=self.heads, concat=False, bias=True, root_weight=root_weight)
             aggr = None if self.aggr == 'attn' else self.aggr
             conv = HeteroConv(conv_dict, aggr=aggr)
        
             if self.aggr == 'attn':
                 self.hetero_aggrs.append(aggr_dict)
+            if self.heads > 1:
+                self.head_aggrs.append(head_aggr_dict)
 
             prev_c = c
             self.layers.append(conv)

@@ -21,6 +21,8 @@ def get_queries(a, b, merged_assertions=True):
     q = [prefix + f"""{{
                     ?a rdfs:subClassOf* <{a}> .
                     ?b rdfs:subClassOf* <{b}> .
+                    FILTER (!isBlank(?a)) .
+                    FILTER (!isBlank(?b)) .
                 }} LIMIT 50000"""]
     if merged_assertions:
         q.extend([prefix + f"""{{
@@ -28,16 +30,22 @@ def get_queries(a, b, merged_assertions=True):
                         ?bb rdfs:subClassOf* <{b}> .
                         ?a rdf:type ?aa .
                         ?b rdf:type ?bb .
+                        FILTER (!isBlank(?aa)) .
+                        FILTER (!isBlank(?bb)) .
                     }} LIMIT 50000""",
                 prefix + f"""{{
                         ?aa rdfs:subClassOf* <{a}> .
                         ?b rdfs:subClassOf* <{b}> .
                         ?a rdf:type ?aa .
+                        FILTER (!isBlank(?aa)) .
+                        FILTER (!isBlank(?b)) .
                     }} LIMIT 50000""",
                 prefix + f"""{{
                         ?a rdfs:subClassOf* <{a}> .
                         ?bb rdfs:subClassOf* <{b}> .
                         ?b rdf:type ?bb .
+                        FILTER (!isBlank(?a)) .
+                        FILTER (!isBlank(?bb)) .
                     }} LIMIT 50000"""])
     return q
 

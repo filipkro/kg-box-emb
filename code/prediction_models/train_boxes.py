@@ -1,7 +1,7 @@
 # %%
 import torch
 import os, pickle
-from model import HeteroGNN, HeteroGNNGAT
+from model import HeteroGNNGAT
 from box_embeddings.parameterizations import MinDeltaBoxTensor, SigmoidBoxTensor
 from box_embeddings.modules.intersection import GumbelIntersection
 from box_embeddings.modules.volume import BesselApproxVolume
@@ -43,7 +43,7 @@ def box_loss_inclusion(embeddings, gci0, box=MinDeltaBoxTensor, inter='gumbel',
         case 'bessel':
             volume = BesselApproxVolume(intersection_temperature=inter_temp,
                                         volume_temperature=vol_temp, 
-                                        og_scale=False)
+                                        log_scale=False)
     loss = 0
     
     for x_dict in embeddings:
@@ -84,15 +84,7 @@ def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0,
 
             loss += dist_inclusion(sub_c, sub_o, sup_c, sup_o, neg=False)
             
-            if neg_data:
-                subclasses = box_emb[neg_data[k][:,0], ...]
-                sub_c = subclasses.centre
-                sub_o = subclasses.Z - subclasses.centre
-                supclasses = box_emb[neg_data[k][:,1], ...]
-                sup_c = supclasses.centre
-                sup_o = supclasses.Z - supclasses.centre
-
-                neg_loss += dist_inclusion(sub_c, sub_o, sup_c, sup_o, neg=True)
+            
             if neg:
                 max_i = len(emb)
 
@@ -100,7 +92,12 @@ def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0,
                                              size=(len(gci0[k]),),
                                              device=gci0[k].device)
                 nsub = box_emb[rand_classes, ...]
+                # print(nsub.box_shape)
                 nsub_c, nsub_o = nsub.centre, nsub.Z - nsub.centre
+                # print(nsub_c.shape)
+                # print(nsub_o.shape)
+                # print(sup_c.shape)
+                # print(sup_o.shape)
                 neg_loss += dist_inclusion(nsub_c, nsub_o, sup_c, sup_o,
                                            neg=True)
 
@@ -121,14 +118,24 @@ def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0,
                 nsup_c, nsup_o = nsup.centre, nsup.Z - nsup.centre
                 neg_loss += dist_inclusion(nsub_c, nsub_o, nsup_c, nsup_o,
                                            neg=True)
+                
+            if neg_data:
+                subclasses = box_emb[neg_data[k][:,0], ...]
+                sub_c = subclasses.centre
+                sub_o = subclasses.Z - subclasses.centre
+                supclasses = box_emb[neg_data[k][:,1], ...]
+                sup_c = supclasses.centre
+                sup_o = supclasses.Z - supclasses.centre
+
+                neg_loss += dist_inclusion(sub_c, sub_o, sup_c, sup_o, neg=True)
 
     return loss, neg_loss
 # %%
-GNN_CHANNELS = [2]
-LR = 1e-1
+GNN_CHANNELS = [2*2]
+LR = 1e-3
 REGULARIZATION = 1e-2
 EPOCHS = 10
-NEG_WEIGHT = 1.0
+NEG_WEIGHT = 1e7
 # %%
 BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 with open(os.path.join(BASE, 'datasets/box_graph.pkl'), 'rb') as fi:
@@ -146,15 +153,19 @@ optimizer = torch.optim.Adam(model.parameters(), lr=LR,
 # %%
 model.requires_grad_(True)
 
-for epoch in range(EPOCHS):
+for epoch in range(100*EPOCHS):
     optimizer.zero_grad()
 
     x_dicts = model(graph.x_dict, graph.edge_index_dict, return_embs=True)
 
-    pos_loss, neg_loss = box_loss(x_dicts, gci['gci0'], neg_data=gci['gci1_bot'])
+    pos_loss, neg_loss = box_loss(x_dicts, gci['gci0'], neg_data=gci['gci1_bot'], neg=True)
     loss = pos_loss + NEG_WEIGHT * neg_loss
     loss.backward()
     optimizer.step()
 
-    print(f"Epoch: {epoch}, loss: {loss.detach().item()}")
+    print(f"Epoch: {epoch}, loss: {loss.detach().item()}, neg loss: {neg_loss}")
+# %%
+model.to('cpu')
+with open('box_model.pkl', 'wb') as fo:
+    pickle.dump(model, fo)
 # %%

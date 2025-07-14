@@ -294,8 +294,10 @@ class OGGNNCustom(th.nn.Module):
                 self.es[k] = 0.25
         es = self.es
         for i, c in enumerate(channels):
+            if i == len(channels) - 1 and e[2] != 'genes':
+                    continue
             layer_sizes = {k: max(1, c // 2) if v / 1000 < 1 else c
-                           for k, v in edge_types.items()}
+                           for k, v in edge_types.items() if (i != len(channels) - 1) or (e[2] == 'genes')}
             conv = HeteroConv({
                     e: SAGEConv((int(i==0) * embeddings[e[0]].shape[1] +
                                     int(i>0)*max((1,int(prev_c * es[e[0]]))),

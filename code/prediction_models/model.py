@@ -94,7 +94,7 @@ class GNNBaseTransfromer(GNNBase):
                                                     th.nn.Linear(out_channels, 1, bias=True)))
                 if self.heads > 1 and e[2] not in head_aggr_dict:
                     head_aggr_dict[e[2]] = HeadwiseAttentionalAggregator(out_channels)
-                root_weight = bool(i) or e[0] != 'genes' or True
+                root_weight = bool(i) or e[2] != 'genes'# or True
                 conv_dict[e] = TransformerConv((source_channels, target_channels),
                                          out_channels, heads=4, concat=False, bias=True, root_weight=root_weight, beta=True)
             aggr = None if self.aggr == 'attn' else self.aggr

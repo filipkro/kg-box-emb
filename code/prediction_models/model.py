@@ -7,6 +7,119 @@ from box_embeddings.modules.intersection import GumbelIntersection
 from box_embeddings.parameterizations import MinDeltaBoxTensor
 from torch_geometric.nn.aggr import MultiAggregation, SoftmaxAggregation, PowerMeanAggregation, MLPAggregation, AttentionalAggregation
 import torch.nn.functional as F
+from typing import Dict, List, Optional
+from torch_geometric.nn.conv import MessagePassing
+from torch_geometric.typing import EdgeType, NodeType
+
+def group(xs: List[th.Tensor], aggr: Optional[str]) -> Optional[th.Tensor]:
+    if len(xs) == 0:
+        return None
+    elif aggr is None:
+        return th.stack(xs, dim=1)
+    elif len(xs) == 1:
+        return xs[0]
+    elif aggr == "cat":
+        return th.cat(xs, dim=-1)
+    else:
+        out = th.stack(xs, dim=0)
+        out = getattr(th, aggr)(out, dim=0)
+        out = out[0] if isinstance(out, tuple) else out
+        return out
+
+class HeteroConvMod(HeteroConv):
+    def __init__(
+        self,
+        convs: Dict[EdgeType, MessagePassing],
+        aggr: Optional[str] = "sum"
+    ):
+        super().__init__(convs=convs, aggr=aggr)
+
+    def forward(
+        self,
+        *args_dict,
+        head_aggr=None,
+        **kwargs_dict,
+    ) -> Dict[NodeType, th.Tensor]:
+        r"""Runs the forward pass of the module.
+
+        Args:
+            x_dict (Dict[str, torch.Tensor]): A dictionary holding node feature
+                information for each individual node type.
+            edge_index_dict (Dict[Tuple[str, str, str], torch.Tensor]): A
+                dictionary holding graph connectivity information for each
+                individual edge type, either as a :class:`torch.Tensor` of
+                shape :obj:`[2, num_edges]` or a
+                :class:`torch_sparse.SparseTensor`.
+            *args_dict (optional): Additional forward arguments of individual
+                :class:`torch_geometric.nn.conv.MessagePassing` layers.
+            **kwargs_dict (optional): Additional forward arguments of
+                individual :class:`torch_geometric.nn.conv.MessagePassing`
+                layers.
+                For example, if a specific GNN layer at edge type
+                :obj:`edge_type` expects edge attributes :obj:`edge_attr` as a
+                forward argument, then you can pass them to
+                :meth:`~torch_geometric.nn.conv.HeteroConv.forward` via
+                :obj:`edge_attr_dict = { edge_type: edge_attr }`.
+        """
+        out_dict: Dict[str, List[th.Tensor]] = {}
+
+        for edge_type, conv in self.convs.items():
+            src, rel, dst = edge_type
+
+            has_edge_level_arg = False
+
+            args = []
+            for value_dict in args_dict:
+                if edge_type in value_dict:
+                    has_edge_level_arg = True
+                    args.append(value_dict[edge_type])
+                elif src == dst and src in value_dict:
+                    args.append(value_dict[src])
+                elif src in value_dict or dst in value_dict:
+                    args.append((
+                        value_dict.get(src, None),
+                        value_dict.get(dst, None),
+                    ))
+
+            kwargs = {}
+            for arg, value_dict in kwargs_dict.items():
+                if not arg.endswith('_dict'):
+                    raise ValueError(
+                        f"Keyword arguments in '{self.__class__.__name__}' "
+                        f"need to end with '_dict' (got '{arg}')")
+
+                arg = arg[:-5]  # `{*}_dict`
+                if edge_type in value_dict:
+                    has_edge_level_arg = True
+                    kwargs[arg] = value_dict[edge_type]
+                elif src == dst and src in value_dict:
+                    kwargs[arg] = value_dict[src]
+                elif src in value_dict or dst in value_dict:
+                    kwargs[arg] = (
+                        value_dict.get(src, None),
+                        value_dict.get(dst, None),
+                    )
+
+            if not has_edge_level_arg:
+                continue
+
+            out = conv(*args, **kwargs)
+
+            # here aggregate between heads
+            if head_aggr:
+                # dict with aggregators for each edge type
+                pass
+
+
+            if dst not in out_dict:
+                out_dict[dst] = [out]
+            else:
+                out_dict[dst].append(out)
+
+        for key, value in out_dict.items():
+            out_dict[key] = group(value, self.aggr)
+
+        return out_dict
 
 class HeadwiseAttentionalAggregator(th.nn.Module):
     def __init__(self, head_dim, num_heads=None):
@@ -36,6 +149,10 @@ class GNNBase(th.nn.Module):
     def init_edge_dicts(self, embeddings, edge_types):
         raise NotImplementedError()
     
+    def aggregate_heads(self, x, edge_type, heads):
+
+
+        pass
     def forward_attention(self, x_dict, edge_index_dict, return_embs=False):
         embs = []
         for conv, aggr in zip(self.layers, self.hetero_aggrs):
@@ -92,17 +209,21 @@ class GNNBaseTransfromer(GNNBase):
                     aggr_dict[e[2]] = AttentionalAggregation(
                         gate_nn=th.nn.Sequential(th.nn.LayerNorm(out_channels),
                                                     th.nn.Linear(out_channels, 1, bias=True)))
-                if self.heads > 1 and e[2] not in head_aggr_dict:
-                    head_aggr_dict[e[2]] = HeadwiseAttentionalAggregator(out_channels)
-                root_weight = bool(i) or e[0] != 'genes' or True
+                if self.heads > 1 and self.aggr == 'attn':
+                    # should be entire e in dict instead???
+                    head_aggr_dict[e] = AttentionalAggregation(
+                        gate_nn=th.nn.Sequential(th.nn.LayerNorm(out_channels),
+                                                    th.nn.Linear(out_channels, 1, bias=True)))
+                root_weight = bool(i) or e[2] != 'genes'
+                concat_heads = self.heads > 1 and self.aggr == 'attn'
                 conv_dict[e] = TransformerConv((source_channels, target_channels),
-                                         out_channels, heads=4, concat=False, bias=True, root_weight=root_weight, beta=True)
+                                         out_channels, heads=4, concat=concat_heads, bias=True, root_weight=root_weight, beta=True)
             aggr = None if self.aggr == 'attn' else self.aggr
             conv = HeteroConv(conv_dict, aggr=aggr)
        
             if self.aggr == 'attn':
                 self.hetero_aggrs.append(aggr_dict)
-            if self.heads > 1:
+            if self.heads > 1 and self.aggr == 'attn':
                 self.head_aggrs.append(head_aggr_dict)
 
             prev_c = c
@@ -130,6 +251,14 @@ class HeteroGNNTransformerCustom(GNNBaseTransfromer):
                 self.es[k] = 1
             else:
                 self.es[k] = 0.5
+
+class HeteroGNNTransformer(GNNBaseTransfromer):
+    def __init__(self, channels, edge_types, embeddings, aggr='attn'):
+        print('HeteroGNNTransformer')
+        super().__init__(channels, edge_types, embeddings, aggr=aggr)
+
+    def init_edge_dicts(self, embeddings, edge_types):
+        self.es = {k:1 for k in embeddings.keys()}
 
 class GNNBaseGAT(GNNBase):
     def __init__(self, channels, edge_types, embeddings, aggr='attn'):
@@ -223,14 +352,15 @@ class GNNBaseSAGE(GNNBase):
                         th.nn.Linear(source_channels, 1, bias=True)))
                 else:
                     aggr = self.aggr
-                root_weight = bool(i) or e[0] != 'genes' or True
+                root_weight = bool(i) or e[2] != 'genes'# or True
                 conv_dict[e] = SAGEConvMod((source_channels, target_channels),
-                                out_channels, normalize=False, bias=True,
+                                out_channels, normalize=True, bias=True,
                                 root_weight=root_weight, project=True,
                                 project_out=True, full_bias=True, aggr=aggr)
             conv = HeteroConv(conv_dict, aggr=None)
             print('mod sageconv')
-            self.hetero_aggrs.append(aggr_dict)
+            if self.aggr == 'attn':
+                self.hetero_aggrs.append(aggr_dict)
             prev_c = c
             self.layers.append(conv)
 
@@ -294,10 +424,64 @@ class OGGNNCustom(th.nn.Module):
                 self.es[k] = 0.25
         es = self.es
         for i, c in enumerate(channels):
+            conv_dict = {}
+            for e in edge_types:
+                if i == len(channels) - 1 and e[2] != 'genes':
+                    continue
+                source_channels = int(i==0) * embeddings[e[0]].shape[1] + \
+                    int(i>0)*max((1,int(prev_c * es[e[0]])))
+                target_channels = int(i==0)*embeddings[e[2]].shape[1] + \
+                    int(i>0)*max((1,int(prev_c * es[e[2]])))
+                out_channels = max((1,int(c * es[e[2]])))
+                root_weight = bool(i) or e[2] != 'genes'
+
+                conv_dict[e] = SAGEConv((source_channels, target_channels),
+                                        out_channels, normalize=True,
+                                        root_weight=root_weight, project=True,
+                                        aggr='max')
+            # layer_sizes = {k: max(1, c // 2) if v / 1000 < 1 else c
+            #                for k, v in edge_types.items() if (i != len(channels) - 1) or (e[2] == 'genes')}
+            conv = HeteroConv(conv_dict, aggr='mean')
+            prev_c = c
+            self.layers.append(conv)
+
+    def forward(self, x_dict, edge_index_dict, return_embs=False):
+        embs = []
+        for conv in self.layers:
+            x_dict = conv(x_dict, edge_index_dict)
+            if return_embs:
+                embs.append(x_dict)
+        if return_embs:
+            return embs
+        return x_dict
+    
+class OGGNN(th.nn.Module):
+    def __init__(self, channels, edge_types, embeddings):
+        super().__init__()
+        self.layers = th.nn.ModuleList()
+        prev_c = 0
+        # ed = {k: 0 for k in embeddings.keys()}
+        # for e, v in edge_types.items():
+        #     ed[e[0]] += v
+        #     ed[e[2]] += v
+        # self.es = {}
+        # print(ed)
+        # for k, v in ed.items():
+        #     if v / 500000 > 1:
+        #         self.es[k] = 2
+        #     elif v / 100000 > 1:
+        #         self.es[k] = 1
+        #     elif v / 10000 > 1:
+        #         self.es[k] = 0.5
+        #     else:
+        #         self.es[k] = 0.25
+        # es = self.es
+        es = {k:1 for k in embeddings.keys()}
+        for i, c in enumerate(channels):
             if i == len(channels) - 1 and e[2] != 'genes':
                     continue
             layer_sizes = {k: max(1, c // 2) if v / 1000 < 1 else c
-                           for k, v in edge_types.items() if (i != len(channels) - 1) or (e[2] == 'genes')}
+                           for k, v in edge_types.items()}
             conv = HeteroConv({
                     e: SAGEConv((int(i==0) * embeddings[e[0]].shape[1] +
                                     int(i>0)*max((1,int(prev_c * es[e[0]]))),
@@ -414,6 +598,26 @@ class Model(th.nn.Module):
 
         return x_dict['genes']
     
+
+class OntologyGNN(th.nn.Module):
+    def __init__(self, channels, edge_types, embeddings, aggr='attn'):
+        super().__init__()
+
+        self.node_embeddings = self.node_embeddings = th.nn.ModuleDict(
+                [[k, th.nn.Embedding.from_pretrained(v.clone(), freeze=False)]
+                 for k,v in embeddings.items()])
+        self.gnn = HeteroGNNSAGE(channels, edge_types, embeddings)
+        # self.gnn = HeteroGNNTransformer(channels, edge_types, embeddings)
+
+        
+
+    def forward(self, data: HeteroData, return_embs=True):
+        x_dict = {k: self.node_embeddings[k](data[k].node_id)
+                  for k in self.node_embeddings}
+        x_dicts = self.gnn(x_dict, data.edge_index_dict,
+                          return_embs=return_embs)
+        
+        return x_dicts
         
     
 class Regressor(Model):

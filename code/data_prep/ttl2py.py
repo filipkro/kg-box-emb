@@ -1,14 +1,15 @@
 # %%
 from utils.dataset_utils import get_normalized_el_dataset, get_bots
 import os, pickle
-# import rdflib
 import torch
 from torch_geometric.data import HeteroData
 
 # %%
 EMBED_DIMS = 2
 BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-full_fp = os.path.join(BASE, 'graphs/dummy_test.ttl')
+# full_fp = os.path.join(BASE, 'graphs/royals.ttl')
+full_fp = os.path.join(BASE, 'graphs/fhkb.owl')
+# full_fp = os.path.join(BASE, 'graphs/HYPO_DS_10000.ttl')
 # split_dir = os.path.join(BASE, 'datasets/split_datasets')
 LOAD_NORMALIZED_DATA = False
 
@@ -38,7 +39,7 @@ for ri in gci2[:,1].unique():
 
 # %%
 data = HeteroData()
-data['classes'].x = torch.randn(len(index['class_index']), EMBED_DIMS)
+data['classes'].x = torch.randn(len(i2c), 2*EMBED_DIMS)
 for r,v in rel_data.items():
     r = r.split('/')[-1].split('#')[-1]
     data['classes', r, 'classes'].edge_index = torch.tensor(v, dtype=torch.int64).T

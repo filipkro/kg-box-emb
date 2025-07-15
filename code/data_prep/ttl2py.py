@@ -39,7 +39,7 @@ for ri in gci2[:,1].unique():
 
 # %%
 data = HeteroData()
-data['classes'].x = torch.randn(max(i2c.keys()), 2*EMBED_DIMS)
+data['classes'].x = torch.randn(len(i2c), 2*EMBED_DIMS)
 for r,v in rel_data.items():
     r = r.split('/')[-1].split('#')[-1]
     data['classes', r, 'classes'].edge_index = torch.tensor(v, dtype=torch.int64).T

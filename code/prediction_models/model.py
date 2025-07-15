@@ -2,6 +2,7 @@ from torch_geometric.nn import SAGEConv, HeteroConv, GATv2Conv, TransformerConv
 from sage_conv_mod import SAGEConvMod
 from torch_geometric.data import HeteroData
 import torch as th
+import torch.nn as nn
 from parameters import LINKS, BOX_EMBEDDINGS, ONLY_GENE_BOXES
 from box_embeddings.modules.intersection import GumbelIntersection
 from box_embeddings.parameterizations import MinDeltaBoxTensor
@@ -26,13 +27,15 @@ def group(xs: List[th.Tensor], aggr: Optional[str]) -> Optional[th.Tensor]:
         out = out[0] if isinstance(out, tuple) else out
         return out
 
-class HeteroConvMod(HeteroConv):
+class HeteroConvHeads(HeteroConv):
     def __init__(
         self,
         convs: Dict[EdgeType, MessagePassing],
-        aggr: Optional[str] = "sum"
+        aggr: Optional[str] = "sum",
+        heads: Optional[int] = 4
     ):
         super().__init__(convs=convs, aggr=aggr)
+        self.heads = heads
 
     def forward(
         self,
@@ -64,6 +67,7 @@ class HeteroConvMod(HeteroConv):
         out_dict: Dict[str, List[th.Tensor]] = {}
 
         for edge_type, conv in self.convs.items():
+            # print(edge_type)
             src, rel, dst = edge_type
 
             has_edge_level_arg = False
@@ -106,9 +110,17 @@ class HeteroConvMod(HeteroConv):
             out = conv(*args, **kwargs)
 
             # here aggregate between heads
-            if head_aggr:
+            if head_aggr and self.heads > 1:
                 # dict with aggregators for each edge type
-                pass
+                # out has form [N, H*C], H-heads, C-out_dim
+                # -> reshape to [N, C] using attentional aggregator
+                aggr = head_aggr[str(edge_type)]
+                aggr_size = aggr.gate_nn[1].in_features
+                N, HC = out.size()
+                C = HC / self.heads
+                assert C == aggr_size, f"Sizes doesn't match: C={C}, aggr={aggr_size}"
+                out = out.view(N, self.heads, aggr_size)
+                out = aggr(out).squeeze(dim=1)
 
 
             if dst not in out_dict:
@@ -121,38 +133,41 @@ class HeteroConvMod(HeteroConv):
 
         return out_dict
 
-class HeadwiseAttentionalAggregator(th.nn.Module):
-    def __init__(self, head_dim, num_heads=None):
-        super().__init__()
-        self.gate_nn = th.nn.Sequential(
-            th.nn.LayerNorm(head_dim),
-            th.nn.Linear(head_dim, 1)  # one score per head
-        )
-
-    def forward(self, x):  # x: [N, H, C]
-        attn_logits = self.gate_nn(x).squeeze(-1)     # [N, H]
-        attn_weights = F.softmax(attn_logits, dim=1)  # [N, H]
-        return th.sum(x * attn_weights.unsqueeze(-1), dim=1)  # [N, C]
     
 class GNNBase(th.nn.Module):
     def __init__(self, embeddings, edge_types, aggr='attn'):
         super().__init__()
         self.heads = 1
-        self.layers = th.nn.ModuleList()
+        self.layers = nn.ModuleList()
         self.init_edge_dicts(embeddings, edge_types)
         # es = self.es
         assert aggr in ['attn', 'mean', 'max'], aggr
         self.aggr = aggr
         if self.aggr == 'attn':
-            self.hetero_aggrs = th.nn.ModuleList()
+            self.hetero_aggrs = nn.ModuleList()
     
     def init_edge_dicts(self, embeddings, edge_types):
         raise NotImplementedError()
     
-    def aggregate_heads(self, x, edge_type, heads):
+    def forward_head_attention(self, x_dict, edge_index_dict,
+                               return_embs=False):
+        embs = []
+        for conv, aggr, head_aggr in zip(self.layers, self.hetero_aggrs,
+                                         self.head_aggrs):
+            x_dict = conv(x_dict, edge_index_dict, head_aggr=head_aggr)
+            for k in x_dict:
+                x = x_dict[k]
+                # print(x.size())
+                N, T, F = x.size()
+                x_flat = x.view(-1, F)
+                index = th.arange(N, device=x.device).repeat_interleave(T)
+                x_dict[k] = aggr[k](x_flat, index=index, dim_size=N)
+            if return_embs:
+                embs.append(x_dict)
+        if return_embs:
+            return embs
+        return x_dict
 
-
-        pass
     def forward_attention(self, x_dict, edge_index_dict, return_embs=False):
         embs = []
         for conv, aggr in zip(self.layers, self.hetero_aggrs):
@@ -170,6 +185,9 @@ class GNNBase(th.nn.Module):
         return x_dict
 
     def forward(self, x_dict, edge_index_dict, return_embs=False):
+        if self.heads > 1 and self.aggr == 'attn':
+            return self.forward_head_attention(x_dict, edge_index_dict,
+                                               return_embs=return_embs)
         if self.aggr == 'attn':
             return self.forward_attention(x_dict, edge_index_dict,
                                           return_embs=return_embs)
@@ -184,9 +202,11 @@ class GNNBase(th.nn.Module):
             return x_dict
  
 class GNNBaseTransfromer(GNNBase):
-    def __init__(self, channels, edge_types, embeddings, aggr='attn', edge_index_max=None):
-        super().__init__(embeddings=embeddings, edge_types=edge_types, aggr=aggr)
-        self.heads = 4
+    def __init__(self, channels, edge_types, embeddings,
+                 aggr='attn', heads=4, skip_last=True):
+        super().__init__(embeddings=embeddings, edge_types=edge_types,
+                         aggr=aggr)
+        self.heads = heads
 
         es = self.es
         prev_c = 0
@@ -196,7 +216,7 @@ class GNNBaseTransfromer(GNNBase):
             aggr_dict = th.nn.ModuleDict()
             head_aggr_dict = th.nn.ModuleDict()
             for e in edge_types:
-                if i == len(channels) - 1 and e[2] != 'genes':
+                if skip_last and (i == len(channels) - 1 and e[2] != 'genes'):
                     continue
                 source_channels = int(i==0) * embeddings[e[0]].shape[1] + \
                     int(i>0)*max((1,int(prev_c * es[e[0]])))
@@ -205,21 +225,32 @@ class GNNBaseTransfromer(GNNBase):
                 out_channels = max((1,int(c * es[e[2]])))
 
                 if self.aggr == 'attn' and e[2] not in aggr_dict:
+                    # aggregate different edge types to each node type 
                     # hidden_dim = int(out_channels // 2)
                     aggr_dict[e[2]] = AttentionalAggregation(
-                        gate_nn=th.nn.Sequential(th.nn.LayerNorm(out_channels),
-                                                    th.nn.Linear(out_channels, 1, bias=True)))
+                        gate_nn=nn.Sequential(nn.LayerNorm(out_channels),
+                                              nn.Linear(out_channels, 1,
+                                                        bias=True)))
                 if self.heads > 1 and self.aggr == 'attn':
-                    # should be entire e in dict instead???
-                    head_aggr_dict[e] = AttentionalAggregation(
-                        gate_nn=th.nn.Sequential(th.nn.LayerNorm(out_channels),
-                                                    th.nn.Linear(out_channels, 1, bias=True)))
+                    # aggregate between heads for each edge type
+                    head_aggr_dict[str(e)] = AttentionalAggregation(
+                        gate_nn=nn.Sequential(nn.LayerNorm(out_channels),
+                                              nn.Linear(out_channels, 1,
+                                                        bias=True)))
                 root_weight = bool(i) or e[2] != 'genes'
                 concat_heads = self.heads > 1 and self.aggr == 'attn'
-                conv_dict[e] = TransformerConv((source_channels, target_channels),
-                                         out_channels, heads=4, concat=concat_heads, bias=True, root_weight=root_weight, beta=True)
+                conv_dict[e] = TransformerConv((source_channels,
+                                                target_channels), out_channels,
+                                                heads=self.heads,
+                                                concat=concat_heads, bias=True,
+                                                root_weight=root_weight,
+                                                beta=True)
             aggr = None if self.aggr == 'attn' else self.aggr
-            conv = HeteroConv(conv_dict, aggr=aggr)
+            # if aggregate heads should use custom heteroconv
+            if self.heads > 1 and self.aggr == 'attn':
+                conv = HeteroConvHeads(conv_dict, aggr=aggr, heads=self.heads)
+            else:
+                conv = HeteroConv(conv_dict, aggr=aggr)
        
             if self.aggr == 'attn':
                 self.hetero_aggrs.append(aggr_dict)
@@ -233,9 +264,11 @@ class GNNBaseTransfromer(GNNBase):
         raise NotImplementedError()
     
 class HeteroGNNTransformerCustom(GNNBaseTransfromer):
-    def __init__(self, channels, edge_types, embeddings, aggr='attn'):
+    def __init__(self, channels, edge_types, embeddings,
+                 aggr='attn', heads=4, skip_last=True):
         print('HeteroGNNTransformerCustom')
-        super().__init__(channels, edge_types, embeddings, aggr=aggr)
+        super().__init__(channels, edge_types, embeddings,
+                         aggr=aggr, heads=heads, skip_last=skip_last)
 
     def init_edge_dicts(self, embeddings, edge_types):
         ed = {k: 0 for k in embeddings.keys()}
@@ -253,9 +286,11 @@ class HeteroGNNTransformerCustom(GNNBaseTransfromer):
                 self.es[k] = 0.5
 
 class HeteroGNNTransformer(GNNBaseTransfromer):
-    def __init__(self, channels, edge_types, embeddings, aggr='attn'):
+    def __init__(self, channels, edge_types, embeddings,
+                 aggr='attn', heads=4, skip_last=False):
         print('HeteroGNNTransformer')
-        super().__init__(channels, edge_types, embeddings, aggr=aggr)
+        super().__init__(channels, edge_types, embeddings,
+                         aggr=aggr, heads=heads, skip_last=skip_last)
 
     def init_edge_dicts(self, embeddings, edge_types):
         self.es = {k:1 for k in embeddings.keys()}
@@ -325,7 +360,8 @@ class HeteroGNNGATCustom(GNNBaseGAT):
                 self.es[k] = 0.5
 
 class GNNBaseSAGE(GNNBase):
-    def __init__(self, channels, edge_types, embeddings, aggr='attn', skip_last=True):
+    def __init__(self, channels, edge_types, embeddings,
+                 aggr='attn', skip_last=True):
         super().__init__(embeddings=embeddings, edge_types=edge_types,
                          aggr=aggr)
         es = self.es
@@ -345,11 +381,12 @@ class GNNBaseSAGE(GNNBase):
                 if self.aggr == 'attn':
                     if e[2] not in aggr_dict:
                         aggr_dict[e[2]] = AttentionalAggregation(
-                            gate_nn=th.nn.Sequential(th.nn.LayerNorm(out_channels),
-                                                        th.nn.Linear(out_channels, 1, bias=True)))
-                    aggr = AttentionalAggregation(gate_nn=th.nn.Sequential(
-                        th.nn.LayerNorm(source_channels),
-                        th.nn.Linear(source_channels, 1, bias=True)))
+                            gate_nn=nn.Sequential(nn.LayerNorm(out_channels),
+                                                  nn.Linear(out_channels, 1,
+                                                            bias=True)))
+                    aggr = AttentionalAggregation(gate_nn=nn.Sequential(
+                        nn.LayerNorm(source_channels),
+                        nn.Linear(source_channels, 1, bias=True)))
                 else:
                     aggr = self.aggr
                 root_weight = bool(i) or e[2] != 'genes'# or True
@@ -370,9 +407,11 @@ class GNNBaseSAGE(GNNBase):
     
 
 class HeteroGNNSAGECustom(GNNBaseSAGE):
-    def __init__(self, channels, edge_types, embeddings, aggr='attn', skip_last=True):
+    def __init__(self, channels, edge_types, embeddings,
+                 aggr='attn', skip_last=True):
         print('HeteroGNNCustom')
-        super().__init__(channels, edge_types, embeddings, aggr=aggr, skip_last=skip_last)
+        super().__init__(channels, edge_types, embeddings,
+                         aggr=aggr, skip_last=skip_last)
 
     def init_edge_dicts(self, embeddings, edge_types):
         ed = {k: 0 for k in embeddings.keys()}
@@ -395,9 +434,11 @@ class HeteroGNNSAGECustom(GNNBaseSAGE):
 
 
 class HeteroGNNSAGE(GNNBaseSAGE):
-    def __init__(self, channels, edge_types, embeddings, aggr='attn', skip_last=True):
+    def __init__(self, channels, edge_types, embeddings,
+                 aggr='attn', skip_last=False):
         print('HeteroGNN')
-        super().__init__(channels, edge_types, embeddings, aggr=aggr, skip_last=skip_last)
+        super().__init__(channels, edge_types, embeddings,
+                         aggr=aggr, skip_last=skip_last)
 
     def init_edge_dicts(self, embeddings, edge_types):
         self.es = {k:1 for k in embeddings.keys()}
@@ -405,6 +446,7 @@ class HeteroGNNSAGE(GNNBaseSAGE):
 
 class OGGNNCustom(th.nn.Module):
     def __init__(self, channels, edge_types, embeddings, skip_last=True):
+        print("OGGNNCustom")
         super().__init__()
         self.layers = th.nn.ModuleList()
         prev_c = 0
@@ -457,7 +499,7 @@ class OGGNNCustom(th.nn.Module):
         return x_dict
     
 class OGGNN(th.nn.Module):
-    def __init__(self, channels, edge_types, embeddings, skip_last=True):
+    def __init__(self, channels, edge_types, embeddings, skip_last=False):
         super().__init__()
         self.layers = th.nn.ModuleList()
         prev_c = 0
@@ -494,24 +536,19 @@ class OGGNN(th.nn.Module):
 
 class Model(th.nn.Module):
     def __init__(self, gnn_channels: list, nn_channels: list, meta_data,
-                 embeddings, edge_types=[('genes', 'interacts', 'genes')], save_path=None,
-                 custom=True, inter_temp=0.1, aggr='attn'):
+                 embeddings, edge_types=[('genes', 'interacts', 'genes')],
+                 save_path=None, custom=True, inter_temp=0.1, aggr='attn'):
         super().__init__()
         #custom = False
         #print('none custom sizes for gnn')
-        #if custom:
-        #    # varying sizes of embeddings for different target domains
-        #    self.gnn = HeteroGNNCustom(gnn_channels, edge_types, embeddings, edge_index_max)
-        #else:
-        #    self.gnn = HeteroGNN(gnn_channels, edge_types, embeddings, edge_index_max)
+   
         # if custom:
             # varying sizes of embeddings for different target domains
         # self.gnn = HeteroGNNGATCustom(gnn_channels, edge_types, embeddings, aggr=aggr)
-        # self.gnn = HeteroGNNTransformerCustom(gnn_channels, edge_types, embeddings, aggr=aggr)
+        self.gnn = HeteroGNNTransformerCustom(gnn_channels, edge_types, embeddings, aggr=aggr, heads=4, skip_last=True)
         # self.gnn = OGGNNCustom(gnn_channels, edge_types, embeddings, skip_last=True)
-        self.gnn = HeteroGNNSAGECustom(gnn_channels, edge_types, embeddings, aggr='attn', skip_last=True)
-        # else:
-        #     self.gnn = HeteroGNN(gnn_channels, edge_types, embeddings, edge_index_max)
+        # self.gnn = HeteroGNNSAGECustom(gnn_channels, edge_types, embeddings,
+        #                                aggr=aggr, skip_last=True)
 
         if ONLY_GENE_BOXES:
             self.node_embeddings = th.nn.ModuleDict(
@@ -525,7 +562,10 @@ class Model(th.nn.Module):
                 [[k, th.nn.Embedding.from_pretrained(v.clone(), freeze=True)]
                  for k,v in embeddings.items()])
         else:
-            self.node_embeddings = th.nn.ModuleDict([[k, th.nn.Embedding(num_embeddings=v.shape[0], embedding_dim=v.shape[1])] for k,v in embeddings.items()])
+            self.node_embeddings = th.nn.ModuleDict([[k,
+                                th.nn.Embedding(num_embeddings=v.shape[0],
+                                                embedding_dim=v.shape[1])]
+                                                for k,v in embeddings.items()])
         prev_width = max((1, int(gnn_channels[-1] * self.gnn.es['genes'])))
         layers = []
         if len(nn_channels) > 0:
@@ -597,7 +637,10 @@ class OntologyGNN(th.nn.Module):
                 [[k, th.nn.Embedding.from_pretrained(v.clone(), freeze=False)]
                  for k,v in embeddings.items()])
         # self.gnn = OGGNN(channels, edge_types, embeddings, skip_last=False)
-        self.gnn = HeteroGNNSAGE(channels, edge_types, embeddings, skip_last=False)
+        # self.gnn = HeteroGNNSAGE(channels, edge_types, embeddings,
+        #                          aggr='attn', skip_last=False)
+        self.gnn = HeteroGNNTransformer(channels, edge_types, embeddings,
+                                 aggr='attn', skip_last=False, heads=4)
         
         # self.gnn = HeteroGNNTransformer(channels, edge_types, embeddings)
 
@@ -614,8 +657,11 @@ class OntologyGNN(th.nn.Module):
         
     
 class Regressor(Model):
-    def __init__(self, gnn_channels: list, nn_channels: list, meta_data, embeddings, edge_types, save_path=None, custom=True, inter_temp=0.1, aggr='attn'):
-        super().__init__(gnn_channels, nn_channels, meta_data, embeddings, edge_types, save_path, custom, inter_temp, aggr=aggr)
+    def __init__(self, gnn_channels: list, nn_channels: list, meta_data,
+                 embeddings, edge_types, save_path=None, custom=True,
+                 inter_temp=0.1, aggr='attn'):
+        super().__init__(gnn_channels, nn_channels, meta_data, embeddings,
+                         edge_types, save_path, custom, inter_temp, aggr=aggr)
         if len(nn_channels) > 0:
             self.lin4 = th.nn.Linear(nn_channels[-1], 1)
         else:
@@ -642,8 +688,10 @@ class Regressor(Model):
         return self.lin4(z).squeeze()
 
 class Classifier(Model):
-    def __init__(self, gnn_channels: list, nn_channels: list, meta_data, embeddings, edge_types, nbr_classes=2, save_path=None):
-        super().__init__(gnn_channels, nn_channels, meta_data, embeddings, edge_types, save_path)
+    def __init__(self, gnn_channels: list, nn_channels: list, meta_data,
+                 embeddings, edge_types, nbr_classes=2, save_path=None):
+        super().__init__(gnn_channels, nn_channels, meta_data, embeddings,
+                         edge_types, save_path)
         self.activation = th.nn.Sigmoid()
 
     def forward(self, data: HeteroData) -> th.Tensor:

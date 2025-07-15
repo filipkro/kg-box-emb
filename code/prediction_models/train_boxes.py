@@ -165,7 +165,7 @@ for epoch in range(100*EPOCHS):
     loss.backward()
     optimizer.step()
 
-    print(f"Epoch: {epoch}, loss: {loss.detach().item()}, neg loss: {neg_loss}")
+    print(f"Epoch: {epoch}, total loss: {loss.detach().item():.4f}, pos loss: {pos_loss / len(gci['gci0']['classes']):.6f}, neg loss: {neg_loss:.6f}")
 # %%
 model.to('cpu')
 with open('box_model.pkl', 'wb') as fo:

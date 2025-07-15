@@ -1,7 +1,7 @@
 # %%
 import torch
 import os, pickle
-from model import HeteroGNNGAT, HeteroGNNSAGE
+from model import HeteroGNNGAT, HeteroGNNSAGE, OntologyGNN
 from box_embeddings.parameterizations import MinDeltaBoxTensor, SigmoidBoxTensor
 from box_embeddings.modules.intersection import GumbelIntersection
 from box_embeddings.modules.volume import BesselApproxVolume
@@ -135,7 +135,7 @@ GNN_CHANNELS = [2*2]
 LR = 1e-3
 REGULARIZATION = 1e-2
 EPOCHS = 10
-NEG_WEIGHT = 1e0
+NEG_WEIGHT = 1e3
 # %%
 BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 with open(os.path.join(BASE, 'datasets/box_graph.pkl'), 'rb') as fi:
@@ -143,10 +143,12 @@ with open(os.path.join(BASE, 'datasets/box_graph.pkl'), 'rb') as fi:
 graph = data['graph'].to(device)
 gci = data['gci']
 gci = {k: {kk: vv.to(device) for kk, vv in v.items()} for k,v in gci.items()}
+# graph['classes'].node_id = torch.arange(len(graph['classes'].x))
 # %%
 
 # model = HeteroGNNGAT(GNN_CHANNELS, graph.edge_types, graph.x_dict)
-model = HeteroGNNSAGE(GNN_CHANNELS, graph.edge_types, graph.x_dict)
+# model = HeteroGNNSAGE(GNN_CHANNELS, graph.edge_types, graph.x_dict)
+model = OntologyGNN(GNN_CHANNELS, graph.edge_types, graph.x_dict)
 model.to(device)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=LR,
@@ -158,7 +160,8 @@ model.requires_grad_(True)
 for epoch in range(100*EPOCHS):
     optimizer.zero_grad()
 
-    x_dicts = model(graph.x_dict, graph.edge_index_dict, return_embs=True)
+    # x_dicts = model(graph.x_dict, graph.edge_index_dict, return_embs=True)
+    x_dicts = model(graph, return_embs=True)
 
     pos_loss, neg_loss = box_loss(x_dicts, gci['gci0'], neg_data=gci['gci1_bot'], neg=True)
     loss = pos_loss + NEG_WEIGHT * neg_loss
@@ -166,6 +169,7 @@ for epoch in range(100*EPOCHS):
     optimizer.step()
 
     print(f"Epoch: {epoch}, total loss: {loss.detach().item():.4f}, pos loss: {pos_loss / len(gci['gci0']['classes']):.6f}, neg loss: {neg_loss:.6f}")
+print(MinDeltaBoxTensor.from_vector(x_dicts[-1]['classes']).Z)
 # %%
 model.to('cpu')
 with open('box_model.pkl', 'wb') as fo:

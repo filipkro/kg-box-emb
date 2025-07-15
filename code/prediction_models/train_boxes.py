@@ -1,7 +1,7 @@
 # %%
 import torch
 import os, pickle
-from model import HeteroGNNGAT
+from model import HeteroGNNGAT, HeteroGNNSAGE
 from box_embeddings.parameterizations import MinDeltaBoxTensor, SigmoidBoxTensor
 from box_embeddings.modules.intersection import GumbelIntersection
 from box_embeddings.modules.volume import BesselApproxVolume
@@ -135,7 +135,7 @@ GNN_CHANNELS = [2*2]
 LR = 1e-3
 REGULARIZATION = 1e-2
 EPOCHS = 10
-NEG_WEIGHT = 1e7
+NEG_WEIGHT = 1e0
 # %%
 BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 with open(os.path.join(BASE, 'datasets/box_graph.pkl'), 'rb') as fi:
@@ -145,11 +145,13 @@ gci = data['gci']
 gci = {k: {kk: vv.to(device) for kk, vv in v.items()} for k,v in gci.items()}
 # %%
 
-model = HeteroGNNGAT(GNN_CHANNELS, graph.edge_types, graph.x_dict)
+# model = HeteroGNNGAT(GNN_CHANNELS, graph.edge_types, graph.x_dict)
+model = HeteroGNNSAGE(GNN_CHANNELS, graph.edge_types, graph.x_dict)
 model.to(device)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=LR,
                              weight_decay=REGULARIZATION)
+print(sum(p.numel() for p in model.parameters() if p.requires_grad))
 # %%
 model.requires_grad_(True)
 

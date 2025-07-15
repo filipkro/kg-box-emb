@@ -20,7 +20,7 @@ from sklearn.model_selection import KFold
 from sklearn.utils import gen_batches
 from parameters import (LR_DECAY, SCHEDULE_RATE, TRAIN_EMBEDDING_EPOCH,
                         TRAIN_GENES, BOX_WEIGHT, REGULARIZATION, DATASET,
-                        MIN_NBR_EDGES, SEMANTIC_WEIGHT)
+                        MIN_NBR_EDGES, SEMANTIC_WEIGHT, NEG_WEIGHT)
 
 import os, pickle
 seed_everything(42)
@@ -319,6 +319,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
     num_data = train_data['genes', 'interacts', 'genes'].edge_label_index.shape[1]
     #num_batches = 5
     increased_lr = False
+    print(f"Trainable parameters in model: {sum(p.numel() for p in model.parameters() if p.requires_grad)}"
     for epoch in range(1, epochs+1):
         # if epoch > TRAIN_EMBEDDING_EPOCH:
         td = train_data.clone()
@@ -346,7 +347,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
             if gci0_data:
                 preds, x_dicts = model(td, return_embs=True)
                 sem_loss, neg_sem_loss = box_loss(x_dicts, gci0_data,
-                                                loss_type='distance', neg=False)
+                                                loss_type='distance', neg=True)
                 total_sem_loss += sem_loss.detach().item()
                 if isinstance(neg_sem_loss, th.Tensor):
                     total_neg_sem_loss += neg_sem_loss.detach().item()
@@ -362,7 +363,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
             
             total_loss += loss.detach().item()
 
-            combined_loss = loss + SEMANTIC_WEIGHT * (sem_loss + neg_sem_loss) / num_batches
+            combined_loss = loss + SEMANTIC_WEIGHT * (sem_loss + NEG_WEIGHT * neg_sem_loss) / num_batches
             combined_loss.backward()
             optimizer.step()
             

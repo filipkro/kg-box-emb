@@ -132,10 +132,10 @@ def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0,
     return loss, neg_loss
 # %%
 GNN_CHANNELS = [2*2]
-LR = 1e-3
+LR = 1e-1
 REGULARIZATION = 1e-2
 EPOCHS = 10
-NEG_WEIGHT = 1e3
+NEG_WEIGHT = 1e1
 # %%
 BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 with open(os.path.join(BASE, 'datasets/box_graph.pkl'), 'rb') as fi:
@@ -157,19 +157,20 @@ print(sum(p.numel() for p in model.parameters() if p.requires_grad))
 # %%
 model.requires_grad_(True)
 
-for epoch in range(100*EPOCHS):
+for epoch in range(500*EPOCHS):
     optimizer.zero_grad()
 
     # x_dicts = model(graph.x_dict, graph.edge_index_dict, return_embs=True)
-    x_dicts = model(graph, return_embs=True)
+    x_dicts = [model(graph, return_embs=False)]
 
     pos_loss, neg_loss = box_loss(x_dicts, gci['gci0'], neg_data=gci['gci1_bot'], neg=True)
     loss = pos_loss + NEG_WEIGHT * neg_loss
+    # loss = neg_loss
     loss.backward()
     optimizer.step()
 
     print(f"Epoch: {epoch}, total loss: {loss.detach().item():.4f}, pos loss: {pos_loss / len(gci['gci0']['classes']):.6f}, neg loss: {neg_loss:.6f}")
-print(MinDeltaBoxTensor.from_vector(x_dicts[-1]['classes']).Z)
+# print(MinDeltaBoxTensor.from_vector(x_dicts[-1]['classes']).Z)
 # %%
 model.to('cpu')
 with open('box_model.pkl', 'wb') as fo:

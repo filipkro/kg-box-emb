@@ -157,7 +157,7 @@ print(sum(p.numel() for p in model.parameters() if p.requires_grad))
 # %%
 model.requires_grad_(True)
 
-for epoch in range(500*EPOCHS):
+for epoch in range(100*EPOCHS):
     optimizer.zero_grad()
 
     # x_dicts = model(graph.x_dict, graph.edge_index_dict, return_embs=True)

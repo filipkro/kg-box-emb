@@ -64,6 +64,10 @@ def box_loss_inclusion(embeddings, gci0, box=MinDeltaBoxTensor, inter='gumbel',
 
             loss -= (volume(intersect(subclasses, supclasses)) /
                      volume(subclasses)).clamp(min=1e-9, max=1).log().sum()
+            # print(volume(intersect(subclasses, supclasses)))
+            # print(volume(subclasses))
+            # print((volume(intersect(subclasses, supclasses)) /
+            #          volume(subclasses)))
             # print(volume(subclasses))
             # print(volume(supclasses))
             # print(torch.minimum(volume(subclasses), volume(supclasses)))
@@ -175,13 +179,22 @@ def regularize_box(embeddings):
             box_emb = box.from_vector(emb)
             reg_loss -= box_regularizer(box_emb)
     return reg_loss
+def small_box_penalty(embeddings):
+    loss = 0
+    for x_dict in embeddings:
+        for emb in x_dict.values():
+            box_emb = box.from_vector(emb)
+            box_sizes = torch.norm(box_emb.Z - box_emb.z, dim=-1)
+            # print(box_sizes)
+            loss += torch.relu(1/box_sizes - 1).sum()
+    return loss
 # %%
 GNN_CHANNELS = [2*2]
 LR = 1e-1
 REGULARIZATION = 0
-BOX_REGULARIZATION = 1e-4
+BOX_REGULARIZATION = 1e-1
 EPOCHS = 10
-NEG_WEIGHT = 1e0
+NEG_WEIGHT = 0.5*1e0
 # %%
 BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 with open(os.path.join(BASE, 'datasets/box_graph.pkl'), 'rb') as fi:
@@ -210,14 +223,17 @@ for epoch in range(100*EPOCHS):
     # x_dicts = model(graph.x_dict, graph.edge_index_dict, return_embs=True)
     x_dicts = [model(graph, return_embs=False)]
 
-    pos_loss, neg_loss = box_loss(x_dicts, gci['gci0'], loss_type='inclusion', neg_data=gci['gci1_bot'], neg=True)
-    reg_loss = regularize_box(x_dicts)
+    loss_type = 'inclusion'
+    pos_loss, neg_loss = box_loss(x_dicts, gci['gci0'], loss_type=loss_type, neg_data=gci['gci1_bot'], neg=True)
+    reg_loss = small_box_penalty(x_dicts)
     loss = pos_loss + NEG_WEIGHT * neg_loss + BOX_REGULARIZATION * reg_loss
     # loss = neg_loss
     loss.backward()
     optimizer.step()
-
-    print(f"Epoch: {epoch}, total loss: {loss.detach().item():.4f}, pos loss: {pos_loss / len(gci['gci0']['classes']):.6f}, neg loss: {neg_loss  / (3*len(gci['gci0']['classes']) + len(gci['gci1_bot']['classes'])):.6f}, reg: {reg_loss:.3f}")
+    if loss_type == 'distance':
+        print(f"Epoch: {epoch}, total loss: {loss.detach().item():.4f}, pos loss: {pos_loss / len(gci['gci0']['classes']):.6f}, neg loss: {neg_loss  / (3*len(gci['gci0']['classes']) + len(gci['gci1_bot']['classes'])):.6f}, reg: {reg_loss:.3f}")
+    else:
+        print(f"Epoch: {epoch}, total loss: {loss.detach().item():.4f}, pos ratio: {torch.exp(-pos_loss / len(gci['gci0']['classes'])):.6f}, neg ratio: {1-torch.exp(-neg_loss  / (3*len(gci['gci0']['classes']) + len(gci['gci1_bot']['classes']))):.6f}, reg: {reg_loss:.8f}")
 # print(MinDeltaBoxTensor.from_vector(x_dicts[-1]['classes']).Z)
 # %%
 model.to('cpu')

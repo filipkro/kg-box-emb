@@ -5,9 +5,11 @@ from model import HeteroGNNGAT, HeteroGNNSAGE, OntologyGNN
 from box_embeddings.parameterizations import MinDeltaBoxTensor, SigmoidBoxTensor
 from box_embeddings.modules.intersection import GumbelIntersection
 from box_embeddings.modules.volume import BesselApproxVolume
+from box_embeddings.modules.regularization import L2SideBoxRegularizer
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 # %%
+
 def box_loss(embeddings, gci0, loss_type='distance', box_transform='mindelta',
              inter='gumbel', inter_temp=0.1, vol='bessel', vol_temp=0.1,
              gamma=0.0, neg_data=None, neg=False, **kwargs):
@@ -163,10 +165,21 @@ def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0,
                 neg_loss += dist_inclusion(sub_c, sub_o, sup_c, sup_o, neg=True)
 
     return loss, neg_loss
+
+box_regularizer = L2SideBoxRegularizer(weight=1.0, log_scale=False)
+box = MinDeltaBoxTensor
+def regularize_box(embeddings):
+    reg_loss = 0
+    for x_dict in embeddings:
+        for k, emb in x_dict.items():
+            box_emb = box.from_vector(emb)
+            reg_loss -= box_regularizer(box_emb)
+    return reg_loss
 # %%
 GNN_CHANNELS = [2*2]
 LR = 1e-1
 REGULARIZATION = 0
+BOX_REGULARIZATION = 1e-4
 EPOCHS = 10
 NEG_WEIGHT = 1e0
 # %%
@@ -190,6 +203,7 @@ print(sum(p.numel() for p in model.parameters() if p.requires_grad))
 # %%
 model.requires_grad_(True)
 
+
 for epoch in range(100*EPOCHS):
     optimizer.zero_grad()
 
@@ -197,12 +211,13 @@ for epoch in range(100*EPOCHS):
     x_dicts = [model(graph, return_embs=False)]
 
     pos_loss, neg_loss = box_loss(x_dicts, gci['gci0'], loss_type='inclusion', neg_data=gci['gci1_bot'], neg=True)
-    loss = pos_loss + NEG_WEIGHT * neg_loss
+    reg_loss = regularize_box(x_dicts)
+    loss = pos_loss + NEG_WEIGHT * neg_loss + BOX_REGULARIZATION * reg_loss
     # loss = neg_loss
     loss.backward()
     optimizer.step()
 
-    print(f"Epoch: {epoch}, total loss: {loss.detach().item():.4f}, pos loss: {pos_loss / len(gci['gci0']['classes']):.6f}, neg loss: {neg_loss:.6f}")
+    print(f"Epoch: {epoch}, total loss: {loss.detach().item():.4f}, pos loss: {pos_loss / len(gci['gci0']['classes']):.6f}, neg loss: {neg_loss  / (3*len(gci['gci0']['classes']) + len(gci['gci1_bot']['classes'])):.6f}, reg: {reg_loss:.3f}")
 # print(MinDeltaBoxTensor.from_vector(x_dicts[-1]['classes']).Z)
 # %%
 model.to('cpu')

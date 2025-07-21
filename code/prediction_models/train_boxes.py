@@ -1,13 +1,37 @@
 # %%
+from memory_profiler import profile
+import numpy as np
 from box_embeddings.modules.volume import BesselApproxVolume
 from box_embeddings.modules.intersection import GumbelIntersection
 from box_embeddings.parameterizations import MinDeltaBoxTensor, SigmoidBoxTensor
-from box_embeddings.modules.intersection import GumbelIntersection
-from box_embeddings.modules.volume import BesselApproxVolume
 from box_embeddings.modules.regularization import L2SideBoxRegularizer
+from model import HeteroGNNGAT, HeteroGNNSAGE
+import pickle
+import os
+import sys
+from pprint import pprint
+from model import HeteroGNNGAT, HeteroGNNSAGE, OntologyGNN
+import torch
+from torch_geometric import seed_everything
+
+from box_forward import get_boxes_from_model_and_graph
+sys.path.append(os.path.join("/", "workspaces",
+                "kg-box-emb", "code", "presentation"))
+from boxplot2d import plot_box_2d, animate_boxes
+
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
+seed_everything(42)
+torch.manual_seed(42)
 # %%
+
+# %%
+GNN_CHANNELS = [2*2]
+LR = 1e-2
+REGULARIZATION = 0
+BOX_REGULARIZATION = 1e-1
+EPOCHS = 300
+NEG_WEIGHT = 0.5*1e0
 
 
 def box_loss(embeddings, gci0, loss_type='distance', box_transform='mindelta',
@@ -182,6 +206,8 @@ def regularize_box(embeddings):
             box_emb = box.from_vector(emb)
             reg_loss -= box_regularizer(box_emb)
     return reg_loss
+
+
 def small_box_penalty(embeddings):
     loss = 0
     for x_dict in embeddings:
@@ -191,56 +217,99 @@ def small_box_penalty(embeddings):
             # print(box_sizes)
             loss += torch.relu(1/box_sizes - 1).sum()
     return loss
-# %%
-GNN_CHANNELS = [2*2]
-LR = 1e-1
-REGULARIZATION = 0
-BOX_REGULARIZATION = 1e-1
-EPOCHS = 10
-NEG_WEIGHT = 0.5*1e0
-# %%
-BASE = os.path.dirname(os.path.dirname(
-    os.path.dirname(os.path.abspath(__file__))))
-with open(os.path.join(BASE, 'datasets/box_graph.pkl'), 'rb') as fi:
-    data = pickle.load(fi)
-graph = data['graph'].to(device)
-gci = data['gci']
-gci = {k: {kk: vv.to(device) for kk, vv in v.items()} for k, v in gci.items()}
-# graph['classes'].node_id = torch.arange(len(graph['classes'].x))
-# %%
-
-# model = HeteroGNNGAT(GNN_CHANNELS, graph.edge_types, graph.x_dict)
-# model = HeteroGNNSAGE(GNN_CHANNELS, graph.edge_types, graph.x_dict)
-model = OntologyGNN(GNN_CHANNELS, graph.edge_types, graph.x_dict)
-model.to(device)
-
-optimizer = torch.optim.Adam(model.parameters(), lr=LR,
-                             weight_decay=REGULARIZATION)
-print(sum(p.numel() for p in model.parameters() if p.requires_grad))
-# %%
-model.requires_grad_(True)
 
 
-for epoch in range(100*EPOCHS):
-    optimizer.zero_grad()
+# @profile
+def train_boxes_OntologyGNN(
+    graph,
+    gci,
+    gnn_channels=GNN_CHANNELS,
+    lr=LR,
+    epochs=EPOCHS,
+    regularization=REGULARIZATION,
+    box_regularization=BOX_REGULARIZATION,
+    neg_weight=NEG_WEIGHT,
+):
 
-    # x_dicts = model(graph.x_dict, graph.edge_index_dict, return_embs=True)
-    x_dicts = [model(graph, return_embs=False)]
+    # model = HeteroGNNGAT(GNN_CHANNELS, graph.edge_types, graph.x_dict)
+    # model = HeteroGNNSAGE(GNN_CHANNELS, graph.edge_types, graph.x_dict)
+    model = OntologyGNN(GNN_CHANNELS, graph.edge_types, graph.x_dict)
+    model.to(device)
 
-    loss_type = 'inclusion'
-    pos_loss, neg_loss = box_loss(x_dicts, gci['gci0'], loss_type=loss_type, neg_data=gci['gci1_bot'], neg=True)
-    reg_loss = small_box_penalty(x_dicts)
-    loss = pos_loss + NEG_WEIGHT * neg_loss + BOX_REGULARIZATION * reg_loss
-    # loss = neg_loss
-    loss.backward()
-    optimizer.step()
-    if loss_type == 'distance':
-        print(f"Epoch: {epoch}, total loss: {loss.detach().item():.4f}, pos loss: {pos_loss / len(gci['gci0']['classes']):.6f}, neg loss: {neg_loss  / (3*len(gci['gci0']['classes']) + len(gci['gci1_bot']['classes'])):.6f}, reg: {reg_loss:.3f}")
-    else:
-        print(f"Epoch: {epoch}, total loss: {loss.detach().item():.4f}, pos ratio: {torch.exp(-pos_loss / len(gci['gci0']['classes'])):.6f}, neg ratio: {1-torch.exp(-neg_loss  / (3*len(gci['gci0']['classes']) + len(gci['gci1_bot']['classes']))):.6f}, reg: {reg_loss:.8f}")
-# print(MinDeltaBoxTensor.from_vector(x_dicts[-1]['classes']).Z)
-# %%
-model.to('cpu')
-with open('box_model.pkl', 'wb') as fo:
-    pickle.dump(model, fo)
-# %%
+    optimizer = torch.optim.Adam(model.parameters(), lr=LR,
+                                 weight_decay=REGULARIZATION)
+    print(sum(p.numel() for p in model.parameters() if p.requires_grad))
+    # %%
+    model.requires_grad_(True)
+
+    boxes = []
+
+    for epoch in range(EPOCHS):
+        optimizer.zero_grad()
+
+        # x_dicts = model(graph.x_dict, graph.edge_index_dict, return_embs=True)
+        x_dicts = [model(graph, return_embs=False)]
+
+        loss_type = 'inclusion'
+        pos_loss, neg_loss = box_loss(
+            x_dicts, gci['gci0'], loss_type=loss_type, neg_data=gci['gci1_bot'], neg=True)
+        reg_loss = small_box_penalty(x_dicts)
+        loss = pos_loss + NEG_WEIGHT * neg_loss + BOX_REGULARIZATION * reg_loss
+        # loss = neg_loss
+        loss.backward()
+        optimizer.step()
+        total_loss = loss.detach().item()
+        pos_ratio = torch.exp(-pos_loss / len(gci['gci0']['classes']))
+        neg_ratio = 1 - \
+            torch.exp(-neg_loss /
+                      (3*len(gci['gci0']['classes']) + len(gci['gci1_bot']['classes'])))
+
+        if loss_type == 'distance':
+            print(
+                f"Epoch: {epoch}, total loss: {total_loss:.4f}, pos loss: {pos_ratio:.6f}, neg loss: {neg_ratio:.6f}, reg: {reg_loss:.3f}")
+        else:
+            print(
+                f"Epoch: {epoch}, total loss: {total_loss:.4f}, pos ratio: {pos_ratio:.6f}, neg ratio: {neg_ratio:.6f}, reg: {reg_loss:.8f}")
+    #
+        if epoch % 1 == 0:
+            boxes.append((
+                get_boxes_from_model_and_graph(
+                    model, graph).data.detach().numpy(),
+                total_loss,
+                pos_ratio.detach().item(),
+                neg_ratio.detach().item(),
+                reg_loss.detach().item()
+            ))
+    # print(MinDeltaBoxTensor.from_vector(x_dicts[-1]['classes']).Z)
+    # %%
+    return model, boxes
+
+
+if __name__ == "__main__":
+
+    # %%
+    BASE = os.path.dirname(os.path.dirname(
+        os.path.dirname(os.path.abspath(__file__))))
+    with open(os.path.join(BASE, 'datasets/box_graph.pkl'), 'rb') as fi:
+        data = pickle.load(fi)
+    graph = data['graph'].to(device)
+    pprint(graph.edge_types)
+    gci = data['gci']
+    gci = {k: {kk: vv.to(device) for kk, vv in v.items()}
+           for k, v in gci.items()}
+    # graph['classes'].node_id = torch.arange(len(graph['classes'].x))
+    # %%
+
+    model, boxes = train_boxes_OntologyGNN(graph, gci)
+
+    model.to('cpu')
+    with open('box_model.pkl', 'wb') as fo:
+        pickle.dump(model, fo)
+    # %%
+
+    boxes_epochs = np.stack([b[0] for b in boxes])
+    be_dict = {i: boxes_epochs[:, i, :, :] for i in range(boxes_epochs.shape[1])}
+    # print([[t for t in b[1:]] for b in boxes])
+    losses = np.array([b[1:] for b in boxes])
+
+    animate_boxes(be_dict, losses, save=True)

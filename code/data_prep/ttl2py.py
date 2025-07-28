@@ -58,6 +58,16 @@ data = T.ToUndirected(merge=False)(data)
 # %%
 
 with open(os.path.join(BASE, 'datasets/box_graph.pkl'), 'wb') as fo:
-    pickle.dump({'graph': data, 'gci': {'gci0': {
-                'classes': gci['gci0']}, 'gci1_bot': {'classes': gci['gci1_bot']}}}, fo)
+    pickle.dump({
+        'graph': data, 'gci': {
+            'gci0': {
+                'classes': gci['gci0']
+            },
+            'gci1_bot': {
+                'classes': gci['gci1_bot']
+            }
+        },
+        'rev_class_dict': rev_class_dict,
+        'rev_rel_dict': rev_rel_dict,
+    }, fo)
 # %%

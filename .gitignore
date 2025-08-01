@@ -254,3 +254,15 @@ memray-*
 **/*.mp4
 
 .vscode/launch.json
+code/prediction_models/box_model.pkl
+datasets/box_graph.pkl
+graphs/box-embed-test.ttl
+graphs/fhkb.owl
+graphs/fhkb.ttl
+graphs/HYPO_DS_1000.trig
+graphs/HYPO_DS_1000.ttl
+graphs/HYPO_DS_10000 copy.ttl
+graphs/HYPO_DS_10000.ttl
+graphs/royals-before.ttl
+graphs/royals.ttl
+code/prediction_models/box_model.pkl

@@ -59,6 +59,7 @@ data = T.ToUndirected(merge=False)(data)
 
 with open(os.path.join(BASE, 'datasets/box_graph.pkl'), 'wb') as fo:
     pickle.dump({
+        'source_ontology': ontology_path,
         'graph': data, 'gci': {
             'gci0': {
                 'classes': gci['gci0']

@@ -246,6 +246,7 @@ datasplit.pkl
 20250202-102800-reg.pkl
 
 large_files*
+trained_models/
 
 .log
 

@@ -84,34 +84,41 @@ def get_normalized_el_dataset(kg_fp, merge_assertions=False):
     data = PathDataset(kg_fp)
     el_dataset = ELDataset(data.ontology)
     el_dataset.load()
+    '''
+    Merging assertions here means to "convert" individuals in the dataset to
+    classes, replace subclass relations with
+    '''
 
     gcis = {k: v.data for k,v in el_dataset.get_gci_datasets().items() if k in USED_GCI}
+    index_dict = {}
     if merge_assertions:
+        # For each individual, create a map from id to individual
         ind_index = {k.toString(): v for k, v in data.individual_to_id.items()}
-        class_index = el_dataset.class_index_dict
-        class_assert = th.flip(el_dataset.class_assertion_dataset.data,
-                               dims=(1,))
+
+        # Add individuals into the class index dictionary
+        t_box_classes = len(el_dataset.class_index_dict)
+        for k,v in ind_index.items():
+            el_dataset.class_index_dict[k[1:-1]] = v + t_box_classes
+
+        # Access the class assertion and object property assertion data
+        # (for translation into gci0 and gci2 axioms)
+        class_assert = th.flip(el_dataset.class_assertion_dataset.data, dims=(1,))
         prop_assert = el_dataset.object_property_assertion_dataset.data
-        t_box_classes = len(class_index)
+
+        # Change indices to match for gci0 and gci2 axioms
         class_assert[:,0] = class_assert[:,0] + t_box_classes
         prop_assert[:,0] = prop_assert[:,0] + t_box_classes
         prop_assert[:,2] = prop_assert[:,2] + t_box_classes
-        for k,v in ind_index.items():
-            class_index[k[1:-1]] = v + t_box_classes
 
+        # Extend gci0 and gci2 axioms with class assertions and property assertions
         gcis['gci0'] = th.cat((gcis['gci0'], class_assert), dim=0)
         gcis['gci2'] = th.cat((gcis['gci2'], prop_assert), dim=0)
-
-        index_dict = {'class_index': class_index,
-                      'property_index': el_dataset.object_property_index_dict}
-
-        # new_ind_idx = {v: v+}
     else:
-        index_dict = {'class_index': el_dataset.class_index_dict,
-                      'class_assertion_index': {k.toString(): v for k, v in
-                                                data.individual_to_id.items()},
-                      'property_index': el_dataset.object_property_index_dict}
+        index_dict['class_assertion_index']: {k.toString(): v for k, v in data.individual_to_id.items()}
     
+    index_dict.update({'class_index': el_dataset.class_index_dict,
+                    'property_index': el_dataset.object_property_index_dict})
+
     return gcis, index_dict#, el_dataset
     # return el_dataset, data
 

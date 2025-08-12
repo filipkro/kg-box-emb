@@ -11,6 +11,7 @@ import torch.nn.functional as F
 from typing import Dict, List, Optional
 from torch_geometric.nn.conv import MessagePassing
 from torch_geometric.typing import EdgeType, NodeType
+from parameters import HEADS
 
 def group(xs: List[th.Tensor], aggr: Optional[str]) -> Optional[th.Tensor]:
     if len(xs) == 0:
@@ -207,7 +208,7 @@ class GNNBaseTransfromer(GNNBase):
         super().__init__(embeddings=embeddings, edge_types=edge_types,
                          aggr=aggr)
         self.heads = heads
-
+        print(f"number of heads: {heads}")
         es = self.es
         prev_c = 0
         self.head_aggrs = th.nn.ModuleList()
@@ -391,10 +392,11 @@ class GNNBaseSAGE(GNNBase):
                     aggr = self.aggr
                 root_weight = bool(i) or e[2] != 'genes'# or True
                 conv_dict[e] = SAGEConvMod((source_channels, target_channels),
-                                out_channels, normalize=True, bias=True,
+                                out_channels, normalize=False, bias=True,
                                 root_weight=root_weight, project=True,
                                 project_out=True, full_bias=True, aggr=aggr)
             aggr = None if self.aggr == 'attn' else self.aggr
+            aggr = 'mean'
             conv = HeteroConv(conv_dict, aggr=aggr)
             print('mod sageconv')
             if self.aggr == 'attn':
@@ -480,7 +482,7 @@ class OGGNNCustom(th.nn.Module):
 
                 conv_dict[e] = SAGEConv((source_channels, target_channels),
                                         out_channels, normalize=True,
-                                        root_weight=root_weight, project=True,
+                                        root_weight=root_weight, project=True, #aggr='lstm')
                                         aggr='max')
             # layer_sizes = {k: max(1, c // 2) if v / 1000 < 1 else c
             #                for k, v in edge_types.items() if (i != len(channels) - 1) or (e[2] == 'genes')}
@@ -545,10 +547,10 @@ class Model(th.nn.Module):
         # if custom:
             # varying sizes of embeddings for different target domains
         # self.gnn = HeteroGNNGATCustom(gnn_channels, edge_types, embeddings, aggr=aggr)
-        self.gnn = HeteroGNNTransformerCustom(gnn_channels, edge_types, embeddings, aggr=aggr, heads=4, skip_last=True)
-        # self.gnn = OGGNNCustom(gnn_channels, edge_types, embeddings, skip_last=True)
-        # self.gnn = HeteroGNNSAGECustom(gnn_channels, edge_types, embeddings,
-        #                                aggr=aggr, skip_last=True)
+        #self.gnn = HeteroGNNTransformerCustom(gnn_channels, edge_types, embeddings, aggr=aggr, heads=HEADS, skip_last=True)
+        self.gnn = OGGNNCustom(gnn_channels, edge_types, embeddings, skip_last=True)
+        #self.gnn = HeteroGNNSAGECustom(gnn_channels, edge_types, embeddings,
+        #                                aggr='max', skip_last=True)
 
         if ONLY_GENE_BOXES:
             self.node_embeddings = th.nn.ModuleDict(

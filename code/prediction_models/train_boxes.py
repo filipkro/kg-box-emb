@@ -5,9 +5,11 @@ from model import HeteroGNNGAT, HeteroGNNSAGE, OntologyGNN
 from box_embeddings.parameterizations import MinDeltaBoxTensor, SigmoidBoxTensor
 from box_embeddings.modules.intersection import GumbelIntersection
 from box_embeddings.modules.volume import BesselApproxVolume
+from box_embeddings.modules.regularization import L2SideBoxRegularizer
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 # %%
+
 def box_loss(embeddings, gci0, loss_type='distance', box_transform='mindelta',
              inter='gumbel', inter_temp=0.1, vol='bessel', vol_temp=0.1,
              gamma=0.0, neg_data=None, neg=False, **kwargs):
@@ -30,9 +32,13 @@ def box_loss(embeddings, gci0, loss_type='distance', box_transform='mindelta',
 def box_loss_inclusion(embeddings, gci0, box=MinDeltaBoxTensor, inter='gumbel',
              inter_temp=0.1, vol='bessel', vol_temp=0.1, neg_data=None,
              neg=False, **kwargs):
-    if neg or neg_data:
-        raise NotImplementedError("Negative loss not yet implemented "
-                                  "for inclusion loss")
+    def neg_loss_func(A, B, volume, intersect):
+        return (1 - (volume(intersect(A, B)) /
+                     torch.minimum(volume(A), volume(B)))).clamp(min=1e-9,
+                                                         max=1).log().sum()
+    # if neg or neg_data:
+    #     raise NotImplementedError("Negative loss not yet implemented "
+    #                               "for inclusion loss")
     match inter:
         case 'gumbel':
             intersect = GumbelIntersection(intersection_temperature=inter_temp)
@@ -45,7 +51,7 @@ def box_loss_inclusion(embeddings, gci0, box=MinDeltaBoxTensor, inter='gumbel',
                                         volume_temperature=vol_temp, 
                                         log_scale=False)
     loss = 0
-    
+    neg_loss = 0
     for x_dict in embeddings:
         for k, emb in x_dict.items():
             
@@ -58,8 +64,46 @@ def box_loss_inclusion(embeddings, gci0, box=MinDeltaBoxTensor, inter='gumbel',
 
             loss -= (volume(intersect(subclasses, supclasses)) /
                      volume(subclasses)).clamp(min=1e-9, max=1).log().sum()
+            # print(volume(intersect(subclasses, supclasses)))
+            # print(volume(subclasses))
+            # print((volume(intersect(subclasses, supclasses)) /
+            #          volume(subclasses)))
+            # print(volume(subclasses))
+            # print(volume(supclasses))
+            # print(torch.minimum(volume(subclasses), volume(supclasses)))
+            
 
-    return loss
+            # print(((volume(subclasses), volume(subclasses)).min()))
+            # print()
+
+            if neg:
+                max_i = len(emb)
+                rand_classes = torch.randint(low=0, high=max_i,
+                                             size=(len(gci0[k]),),
+                                             device=gci0[k].device)
+                A = box_emb[rand_classes, ...]
+                neg_loss -= neg_loss_func(A, supclasses, volume, intersect)
+
+                rand_classes = torch.randint(low=0, high=max_i,
+                                             size=(len(gci0[k]),),
+                                             device=gci0[k].device)
+                A = box_emb[rand_classes, ...]
+                neg_loss -= neg_loss_func(A, subclasses, volume, intersect)
+
+                rand_classes = torch.randint(low=0, high=max_i,
+                                             size=(len(gci0[k]),2),
+                                             device=gci0[k].device)
+                A = box_emb[rand_classes[:,0], ...]
+                B = box_emb[rand_classes[:,1], ...]
+                neg_loss -= neg_loss_func(A, B, volume, intersect)
+
+            if neg_data:
+                A = box_emb[neg_data[k][:,0], ...]
+                B = box_emb[neg_data[k][:,1], ...]
+
+                neg_loss -= neg_loss_func(A, B, volume, intersect)
+
+    return loss, neg_loss
 
 
 def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0,
@@ -92,12 +136,7 @@ def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0,
                                              size=(len(gci0[k]),),
                                              device=gci0[k].device)
                 nsub = box_emb[rand_classes, ...]
-                # print(nsub.box_shape)
                 nsub_c, nsub_o = nsub.centre, nsub.Z - nsub.centre
-                # print(nsub_c.shape)
-                # print(nsub_o.shape)
-                # print(sup_c.shape)
-                # print(sup_o.shape)
                 neg_loss += dist_inclusion(nsub_c, nsub_o, sup_c, sup_o,
                                            neg=True)
 
@@ -130,12 +169,32 @@ def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0,
                 neg_loss += dist_inclusion(sub_c, sub_o, sup_c, sup_o, neg=True)
 
     return loss, neg_loss
+
+box_regularizer = L2SideBoxRegularizer(weight=1.0, log_scale=False)
+box = MinDeltaBoxTensor
+def regularize_box(embeddings):
+    reg_loss = 0
+    for x_dict in embeddings:
+        for k, emb in x_dict.items():
+            box_emb = box.from_vector(emb)
+            reg_loss -= box_regularizer(box_emb)
+    return reg_loss
+def small_box_penalty(embeddings):
+    loss = 0
+    for x_dict in embeddings:
+        for emb in x_dict.values():
+            box_emb = box.from_vector(emb)
+            box_sizes = torch.norm(box_emb.Z - box_emb.z, dim=-1)
+            # print(box_sizes)
+            loss += torch.relu(1/box_sizes - 1).sum()
+    return loss
 # %%
 GNN_CHANNELS = [2*2]
-LR = 1e-3
-REGULARIZATION = 1e-2
+LR = 1e-1
+REGULARIZATION = 0
+BOX_REGULARIZATION = 1e-1
 EPOCHS = 10
-NEG_WEIGHT = 1e3
+NEG_WEIGHT = 0.5*1e0
 # %%
 BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 with open(os.path.join(BASE, 'datasets/box_graph.pkl'), 'rb') as fi:
@@ -157,19 +216,25 @@ print(sum(p.numel() for p in model.parameters() if p.requires_grad))
 # %%
 model.requires_grad_(True)
 
+
 for epoch in range(100*EPOCHS):
     optimizer.zero_grad()
 
     # x_dicts = model(graph.x_dict, graph.edge_index_dict, return_embs=True)
-    x_dicts = model(graph, return_embs=True)
+    x_dicts = [model(graph, return_embs=False)]
 
-    pos_loss, neg_loss = box_loss(x_dicts, gci['gci0'], neg_data=gci['gci1_bot'], neg=True)
-    loss = pos_loss + NEG_WEIGHT * neg_loss
+    loss_type = 'inclusion'
+    pos_loss, neg_loss = box_loss(x_dicts, gci['gci0'], loss_type=loss_type, neg_data=gci['gci1_bot'], neg=True)
+    reg_loss = small_box_penalty(x_dicts)
+    loss = pos_loss + NEG_WEIGHT * neg_loss + BOX_REGULARIZATION * reg_loss
+    # loss = neg_loss
     loss.backward()
     optimizer.step()
-
-    print(f"Epoch: {epoch}, total loss: {loss.detach().item():.4f}, pos loss: {pos_loss / len(gci['gci0']['classes']):.6f}, neg loss: {neg_loss:.6f}")
-print(MinDeltaBoxTensor.from_vector(x_dicts[-1]['classes']).Z)
+    if loss_type == 'distance':
+        print(f"Epoch: {epoch}, total loss: {loss.detach().item():.4f}, pos loss: {pos_loss / len(gci['gci0']['classes']):.6f}, neg loss: {neg_loss  / (3*len(gci['gci0']['classes']) + len(gci['gci1_bot']['classes'])):.6f}, reg: {reg_loss:.3f}")
+    else:
+        print(f"Epoch: {epoch}, total loss: {loss.detach().item():.4f}, pos ratio: {torch.exp(-pos_loss / len(gci['gci0']['classes'])):.6f}, neg ratio: {1-torch.exp(-neg_loss  / (3*len(gci['gci0']['classes']) + len(gci['gci1_bot']['classes']))):.6f}, reg: {reg_loss:.8f}")
+# print(MinDeltaBoxTensor.from_vector(x_dicts[-1]['classes']).Z)
 # %%
 model.to('cpu')
 with open('box_model.pkl', 'wb') as fo:

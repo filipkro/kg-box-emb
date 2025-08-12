@@ -3,7 +3,7 @@ from utils.dataset_utils import get_normalized_el_dataset, get_bots
 import os, pickle
 import torch
 from torch_geometric.data import HeteroData
-
+import torch_geometric.transforms as T
 # %%
 EMBED_DIMS = 2
 BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -44,6 +44,7 @@ data['classes'].node_id = torch.arange(len(i2c))
 for r,v in rel_data.items():
     r = r.split('/')[-1].split('#')[-1]
     data['classes', r, 'classes'].edge_index = torch.tensor(v, dtype=torch.int64).T
+data = T.ToUndirected(merge=False)(data)
 # %%
 
 with open(os.path.join(BASE, 'datasets/box_graph.pkl'), 'wb') as fo:

@@ -392,9 +392,10 @@ class GNNBaseSAGE(GNNBase):
                     aggr = self.aggr
                 root_weight = bool(i) or e[2] != 'genes'# or True
                 conv_dict[e] = SAGEConvMod((source_channels, target_channels),
-                                out_channels, normalize=False, bias=True,
-                                root_weight=root_weight, project=True,
-                                project_out=True, full_bias=True, aggr=aggr)
+                                out_channels, normalize=(not skip_last),
+                                bias=True, root_weight=root_weight,
+                                project=True, project_out=True,
+                                full_bias=True, aggr=aggr)
             aggr = None if self.aggr == 'attn' else self.aggr
             aggr = 'mean'
             conv = HeteroConv(conv_dict, aggr=aggr)

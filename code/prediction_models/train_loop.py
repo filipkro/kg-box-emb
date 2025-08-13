@@ -308,7 +308,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
     #)
 
     metrics = {'train_losses': [], 'train_metrics': [], 'val_losses': [],
-               'val_metrics': [], 'box_losses': []}
+               'val_metrics': [], 'sem_losses': [], 'box_losses': []}
     optimizer = th.optim.Adam([
             {'params': model.node_embeddings.parameters(), 'weight_decay': 0},
             {'params': model.gnn.parameters(), 'weight_decay': REGULARIZATION},
@@ -356,6 +356,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         all_targets = []
         all_preds = []
         model.train()
+        epoc_sem_losses = []
         for s in gen_batches(num_data, num_data // num_batches):
             batch_indices = edge_indices[:, perm][:, s]
             batch_labels = edge_labels[perm][s]
@@ -367,7 +368,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
                             gci0_data, loss_type=SEMANTIC_MEASURE,
                             neg=False, return_layer_loss=True)
                 total_sem_loss += sem_loss.detach().item()
-                metrics['box_losses'].append(layer_losses)
+                epoc_sem_losses.append(layer_losses)
                 if isinstance(neg_sem_loss, th.Tensor):
                     total_neg_sem_loss += neg_sem_loss.detach().item()
                 
@@ -395,14 +396,15 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         # all_targets = np.array(all_targets).flatten()
         # all_preds = np.array(all_preds).flatten()
         tm = metric(all_targets, all_preds)
+        metrics['box_losses'].append(epoc_sem_losses)
         #if tm > -0.1:
         #    for param_group in optimizer.param_groups:
         #        param_group['lr'] = lr
                 
         print(f"Epoch: {epoch:04d}")
         print(f"train loss: {total_loss / total_examples}")
-        print(f"semantic loss: {sem_loss}")
-        print(f"neg semantic loss: {neg_sem_loss}")
+        print(f"semantic loss: {total_sem_loss / num_batches}")
+        print(f"neg semantic loss: {total_neg_sem_loss / num_batches}")
         print(f"train metric: {tm}")
         model.eval()
         with th.no_grad():
@@ -428,6 +430,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         metrics['train_metrics'].append(tm)
         metrics['val_losses'].append(total_val_loss / val_examples)
         metrics['val_metrics'].append(vm)
+        metrics['sem_losses'].append(total_sem_loss / num_batches)
         #if gci0_data:
         #    for k,v in box_loss_epoch.items():
         #        metrics['box_losses'][k].append(np.mean(v).item())

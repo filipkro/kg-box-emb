@@ -193,7 +193,7 @@ class GNNBase(th.nn.Module):
             return self.forward_attention(x_dict, edge_index_dict,
                                           return_embs=return_embs)
         else:
-            embs = []
+            embs = [x_dict]
             for conv in self.layers:
                 x_dict = conv(x_dict, edge_index_dict)
                 if return_embs:
@@ -492,7 +492,7 @@ class OGGNNCustom(th.nn.Module):
             self.layers.append(conv)
 
     def forward(self, x_dict, edge_index_dict, return_embs=False):
-        embs = []
+        embs = [x_dict]
         for conv in self.layers:
             x_dict = conv(x_dict, edge_index_dict)
             if return_embs:
@@ -528,7 +528,7 @@ class OGGNN(th.nn.Module):
             self.layers.append(conv)
 
     def forward(self, x_dict, edge_index_dict, return_embs=False):
-        embs = []
+        embs = [x_dict]
         for conv in self.layers:
             x_dict = conv(x_dict, edge_index_dict)
             if return_embs:

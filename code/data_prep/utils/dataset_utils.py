@@ -86,7 +86,7 @@ def get_normalized_el_dataset(kg_fp, merge_assertions=False):
     el_dataset.load()
     '''
     Merging assertions here means to "convert" individuals in the dataset to
-    classes, replace subclass relations with
+    classes, replace rdf:type relations with rdfs:subclass relations
     '''
 
     gcis = {k: v.data for k,v in el_dataset.get_gci_datasets().items() if k in USED_GCI}

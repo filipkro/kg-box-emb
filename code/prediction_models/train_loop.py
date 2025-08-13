@@ -366,7 +366,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
                 preds, x_dicts = model(td, return_embs=True)
                 sem_loss, neg_sem_loss, layer_losses = box_loss(x_dicts,
                             gci0_data, loss_type=SEMANTIC_MEASURE,
-                            neg=False, return_layer_loss=True)
+                            neg=(NEG_WEIGHT > 0), return_layer_loss=True)
                 total_sem_loss += sem_loss.detach().item()
                 epoc_sem_losses.append(layer_losses)
                 if isinstance(neg_sem_loss, th.Tensor):

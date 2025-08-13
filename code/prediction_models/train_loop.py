@@ -23,7 +23,8 @@ from parameters import (LR_DECAY, SCHEDULE_RATE, TRAIN_EMBEDDING_EPOCH,
                         MIN_NBR_EDGES, SEMANTIC_WEIGHT, NEG_WEIGHT)
 
 import os, pickle
-seed_everything(42)
+seed_everything(0)
+th.manual_seed(0)
 BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from copy import deepcopy, copy
 
@@ -110,8 +111,8 @@ def cross_val(model_type, model_kwargs, data, epochs, loss_function, metric,
     data_splits = []
     for i, (t_idx, v_idx) in enumerate(kf.split(data_to_split)):
         print(f"Fold: {i}", flush=True)
-        #if i > 2:
-        #    break
+        if i > 2:
+            break
         train_data, val_data = split_data(data=data.clone(), t_idx=t_idx, v_idx=v_idx,
                                           split_transform=split_transform,
                                           device=device)
@@ -446,8 +447,8 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
             for param_group in optimizer.param_groups:
                 param_group['lr'] = 10*lr
             increased_lr = True
-        if since_improved > 50:
-            print('Model has not improved in 20 epochs, stopping training...', flush=True)
+        if since_improved > 40:
+            print('Model has not improved in 40 epochs, stopping training...', flush=True)
             if best_metric < 0.20:
                 print("Restarting training for this fold", flush=True)
                 return train_loop(model_type=model_type, train_data=train_data,

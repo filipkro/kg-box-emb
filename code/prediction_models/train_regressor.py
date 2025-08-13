@@ -12,7 +12,8 @@ from train_loop import cross_val
 from parameters import (EPOCHS, LR, GNN_CHANNELS, NN_CHANNELS, REGULARIZATION,
                         TRAIN_EMBEDDING_EPOCH, TRAIN_GENES, BOX_WEIGHT,
                         DATASET, BOX_EMBEDDINGS, ONLY_GENE_BOXES, SPLIT,
-                        SEMANTIC_WEIGHT, MIN_NBR_EDGES, NUM_BATCHES)
+                        SEMANTIC_WEIGHT, MIN_NBR_EDGES, NUM_BATCHES,
+                        SEMANTIC_MEASURE, DROP_OUT)
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../embeddings')))
@@ -59,6 +60,9 @@ print(f'regularization: {REGULARIZATION}')
 
 print(f"semantic weight: {SEMANTIC_WEIGHT}")
 print(f"min nbr edges: {MIN_NBR_EDGES}")
+
+print(f"semantic measure: {SEMANTIC_MEASURE}")
+print(f"dropout: {DROP_OUT}")
 
 model_kwargs = {'gnn_channels': GNN_CHANNELS, 'nn_channels': NN_CHANNELS,
                 'meta_data': data.metadata(), 'embeddings': data.x_dict}

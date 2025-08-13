@@ -20,7 +20,8 @@ from sklearn.model_selection import KFold
 from sklearn.utils import gen_batches
 from parameters import (LR_DECAY, SCHEDULE_RATE, TRAIN_EMBEDDING_EPOCH,
                         TRAIN_GENES, BOX_WEIGHT, REGULARIZATION, DATASET,
-                        MIN_NBR_EDGES, SEMANTIC_WEIGHT, NEG_WEIGHT)
+                        MIN_NBR_EDGES, SEMANTIC_WEIGHT, NEG_WEIGHT,
+                        SEMANTIC_MEASURE)
 
 import os, pickle
 seed_everything(42)
@@ -354,6 +355,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         # for sampled_data in tqdm.tqdm(train_loader):
         all_targets = []
         all_preds = []
+        model.train()
         for s in gen_batches(num_data, num_data // num_batches):
             batch_indices = edge_indices[:, perm][:, s]
             batch_labels = edge_labels[perm][s]
@@ -361,8 +363,9 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
             optimizer.zero_grad()
             if gci0_data:
                 preds, x_dicts = model(td, return_embs=True)
-                sem_loss, neg_sem_loss, layer_losses = box_loss(x_dicts, gci0_data,
-                                                loss_type='distance', neg=False, return_layer_loss=True)
+                sem_loss, neg_sem_loss, layer_losses = box_loss(x_dicts,
+                            gci0_data, loss_type=SEMANTIC_MEASURE,
+                            neg=False, return_layer_loss=True)
                 total_sem_loss += sem_loss.detach().item()
                 metrics['box_losses'].append(layer_losses)
                 if isinstance(neg_sem_loss, th.Tensor):
@@ -374,12 +377,13 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
             # loss = loss_function(preds, td['genes', 'interacts',
             #                                         'genes'].edge_label,
             #                     reduction='sum') 
-            loss = loss_function(preds, batch_labels,
-                                reduction='sum') 
+            loss = loss_function(preds, batch_labels, reduction='sum') 
             
             total_loss += loss.detach().item()
 
-            combined_loss = loss + SEMANTIC_WEIGHT * (sem_loss + NEG_WEIGHT * neg_sem_loss) / num_batches
+            combined_loss = loss + (SEMANTIC_WEIGHT *
+                                    (sem_loss + NEG_WEIGHT * neg_sem_loss) /
+                                    num_batches)
             combined_loss.backward()
             optimizer.step()
             
@@ -400,7 +404,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         print(f"semantic loss: {sem_loss}")
         print(f"neg semantic loss: {neg_sem_loss}")
         print(f"train metric: {tm}")
-
+        model.eval()
         with th.no_grad():
             total_val_loss = val_examples = 0
         

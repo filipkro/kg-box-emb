@@ -25,14 +25,7 @@ def get_queries(a, b, merged_assertions=True):
                     FILTER (!isBlank(?b)) .
                 }} LIMIT 50000"""]
     if merged_assertions:
-        q.extend([prefix + f"""{{
-                        ?aa rdfs:subClassOf* <{a}> .
-                        ?bb rdfs:subClassOf* <{b}> .
-                        ?a rdf:type ?aa .
-                        ?b rdf:type ?bb .
-                        FILTER (!isBlank(?aa)) .
-                        FILTER (!isBlank(?bb)) .
-                    }} LIMIT 50000""",
+        q.extend([
                 prefix + f"""{{
                         ?aa rdfs:subClassOf* <{a}> .
                         ?b rdfs:subClassOf* <{b}> .
@@ -48,6 +41,15 @@ def get_queries(a, b, merged_assertions=True):
                         FILTER (!isBlank(?bb)) .
                     }} LIMIT 50000"""])
     return q
+
+# prefix + f"""{{
+#                         ?aa rdfs:subClassOf* <{a}> .
+#                         ?bb rdfs:subClassOf* <{b}> .
+#                         ?a rdf:type ?aa .
+#                         ?b rdf:type ?bb .
+#                         FILTER (!isBlank(?aa)) .
+#                         FILTER (!isBlank(?bb)) .
+#                     }} LIMIT 50000""",
 
 def get_bots(gci1_bot, i2c, c2i, full_fp, merged_assertions=True):
     kg = rdflib.Graph()
@@ -78,7 +80,8 @@ def get_bots(gci1_bot, i2c, c2i, full_fp, merged_assertions=True):
     return new_dataset
 
 
-def get_normalized_el_dataset(kg_fp, merge_assertions=False):
+def get_normalized_el_dataset(kg_fp, merge_assertions=False,
+                              bypass_classes=False):
     if not merge_assertions:
         USED_GCI.extend(['class_assertion', 'object_property_assertion'])
     data = PathDataset(kg_fp)
@@ -111,7 +114,18 @@ def get_normalized_el_dataset(kg_fp, merge_assertions=False):
                       'class_assertion_index': {k.toString(): v for k, v in
                                                 data.individual_to_id.items()},
                       'property_index': el_dataset.object_property_index_dict}
-    
+    if bypass_classes:
+        classes = [1,3] #??
+        parent = 2  #??
+
+        gci0 = gcis['gci0']
+        for c in classes:
+            gci_n = gci0[gci0[:,1]==c]
+            gci_n[:,1] = parent
+            gci0 = th.concat((gci0, gci_n))
+
+        gcis['gci0'] = gci0.unique(dim=0)
+
     return gcis, index_dict#, el_dataset
     # return el_dataset, data
 

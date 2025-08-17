@@ -266,3 +266,7 @@ graphs/HYPO_DS_10000.ttl
 graphs/royals-before.ttl
 graphs/royals.ttl
 code/prediction_models/box_model.pkl
+graphs/royals-extended-2.ttl
+graphs/royals-extended-3.ttl
+graphs/royals-extended-4.ttl
+graphs/royals-extended.ttl

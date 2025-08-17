@@ -90,8 +90,45 @@ def plot_box_2d(z, Z, fig=None, ax=None):
     upper_right = Z
     width = upper_right[0] - lower_left[0]
     height = upper_right[1] - lower_left[1]
-    rect = Rectangle(lower_left, width, height,
-                     fill=None, edgecolor='blue', linewidth=1)
+    rect = Rectangle(
+        lower_left, width, height, fill=None, edgecolor="blue", linewidth=1
+    )
+    ax.add_patch(rect)
+
+    if returnFig:
+        return fig, ax
+
+
+def plot_min_delta_box_2d(w, d, fig=None, ax=None):
+    """
+    Plot a box given lower left and upper right corners.
+    """
+    if fig is None or ax is None:
+        fig, ax = plt.subplots()
+        returnFig = True
+    else:
+        returnFig = False
+
+    # ax.set_xlim(
+    #     np.floor(z[0]-0.5),
+    #     np.ceil(Z[0]+0.5)
+    # )
+    # ax.set_ylim(
+    #     np.floor(z[1]-0.5),
+    #     np.ceil(Z[1]+0.5)
+    # )
+    ax.set_aspect("equal")
+    ax.set_title("2D Box Plot")
+    ax.set_xlabel("X-axis")
+    ax.set_ylabel("Y-axis")
+    ax.grid(True)
+    lower_left = w
+    upper_right = w + d
+    width = upper_right[0] - lower_left[0]
+    height = upper_right[1] - lower_left[1]
+    rect = Rectangle(
+        lower_left, width, height, fill=None, edgecolor="blue", linewidth=1
+    )
     ax.add_patch(rect)
 
     if returnFig:
@@ -123,17 +160,17 @@ def interpolate_losses(losses, frames=10):
     nlp = np.interp(xp, np.arange(len(losses)), losses[:, 2])
     rlp = np.interp(xp, np.arange(len(losses)), losses[:, 3])
 
-    return np.array([
-        [xp, tlp, plp, nlp, rlp]
-    ]).T.reshape(-1, 5)
+    return np.array([[xp, tlp, plp, nlp, rlp]]).T.reshape(-1, 5)
 
 
 def calculate_intersection(box1, box2):
-    '''
+    """
     Calculate the intersection of two boxes.
     Each box is defined by its lower left and upper right corners.
     Returns the bottom left and top right vertices.
-    '''
+
+    TODO: add mindelta functionality
+    """
     x1 = max(box1[0][0], box2[0][0])
     y1 = max(box1[0][1], box2[0][1])
     x2 = min(box1[1][0], box2[1][0])
@@ -240,11 +277,14 @@ def animate_boxes(boxes, losses=None, save=False):
         )
         ax.add_patch(rects[key])
 
-    def update(frame, losses=losses):
+    def update(frame, losses=losses, mindelta=True):
         for key, rect in rects.items():
             boxes_series = boxes_interpolated[key]
             lower_left = boxes_series[frame][0]
-            upper_right = boxes_series[frame][1]
+            if mindelta:
+                upper_right = boxes_series[frame][0] + boxes_series[frame][1]
+            else:
+                upper_right = boxes_series[frame][1]
             width = upper_right[0] - lower_left[0]
             height = upper_right[1] - lower_left[1]
             rect.set_xy(lower_left)
@@ -439,7 +479,9 @@ def animate_boxes_with_blitting(boxes, losses, save=False, fp='training.mp4', bo
 
         return animation_artists
 
-    def update_artists(frame, animation_artists, boxes_interpolated, losses_interpolated):
+    def update_artists(
+        frame, animation_artists, boxes_interpolated, losses_interpolated, mindelta=True
+    ):
         for key, rect, label in zip(
             boxes_interpolated.keys(),
             animation_artists[9:9+len(boxes_interpolated.keys())],
@@ -447,7 +489,10 @@ def animate_boxes_with_blitting(boxes, losses, save=False, fp='training.mp4', bo
         ):
             boxes_series = boxes_interpolated[key]
             lower_left = boxes_series[frame][0]
-            upper_right = boxes_series[frame][1]
+            if mindelta:
+                upper_right = boxes_series[frame][0] + boxes_series[frame][1]
+            else:
+                upper_right = boxes_series[frame][1]
             width = upper_right[0] - lower_left[0]
             height = upper_right[1] - lower_left[1]
             rect.set_xy(lower_left)
@@ -571,7 +616,14 @@ def animate_boxes_with_blitting(boxes, losses, save=False, fp='training.mp4', bo
 
 if __name__ == "__main__":
 
+    w = np.array([0.2, 0.2])
+    d = np.array([0.4, 0.6])
+
+    plot_min_delta_box_2d(w, d)
+    plt.show()
+
     # Animate boxes
-    # animate_boxes(TEST_BOXES, losses=TEST_LOSSES)
+    # animate_boxes(TEST_BOXES, losses=TEST_LOSSES, save=True)
     # plt.show()
-    animate_boxes_with_blitting(TEST_BOXES, losses=TEST_LOSSES)
+    # animate_boxes_with_blitting(TEST_BOXES, losses=TEST_LOSSES)
+    # animate_boxes_with_blitting(TEST_BOXES_MINDELTA, losses=TEST_LOSSES)

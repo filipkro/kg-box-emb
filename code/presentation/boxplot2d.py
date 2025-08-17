@@ -8,53 +8,47 @@ import numpy as np
 from pprint import pprint
 
 FPS = 25
-KEY_FRAME_INTERVAL = 75  # ms per key frame
+KEY_FRAME_INTERVAL = 40  # ms per key frame
 FRAME_LENGTH = KEY_FRAME_INTERVAL / FPS
 TEST_BOXES = {
-    "class_1": np.array([
+    "class_1": np.array(
         [
-            [0.5, 0.5],
-            [1.9, 1.9]
-        ],
+            [[0.5, 0.5], [1.9, 1.9]],
+            [[0.4, 0.4], [1.7, 1.7]],
+            [[0.3, 0.3], [1.5, 1.5]],
+            [[0.2, 0.2], [1.3, 1.3]],
+            [[0.1, 0.1], [1.1, 1.1]],
+        ]
+    ),
+    "class_2": np.array(
         [
-            [0.4, 0.4],
-            [1.7, 1.7]
-        ],
+            [[0.2, 0.2], [1.0, 1.0]],
+            [[0.2, 0.3], [1.0, 1.2]],
+            [[0.2, 0.4], [1.0, 1.4]],
+            [[0.2, 0.5], [1.0, 1.6]],
+            [[0.2, 0.6], [1.0, 1.8]],
+        ]
+    ),
+}
+TEST_BOXES_MINDELTA = {
+    "class_1": np.array(
         [
-            [0.3, 0.3],
-            [1.5, 1.5]
-        ],
+            [[0.5, 0.5], [1.9, 1.9]],
+            [[0.4, 0.4], [1.7, 1.7]],
+            [[0.3, 0.3], [1.5, 1.5]],
+            [[0.2, 0.2], [1.3, 1.3]],
+            [[0.1, 0.1], [1.1, 1.1]],
+        ]
+    ),
+    "class_2": np.array(
         [
-            [0.2, 0.2],
-            [1.3, 1.3]
-        ],
-        [
-            [0.1, 0.1],
-            [1.1, 1.1]
-        ],
-    ]),
-    "class_2": np.array([
-        [
-            [0.2, 0.2],
-            [1.0, 1.0]
-        ],
-        [
-            [0.2, 0.3],
-            [1.0, 1.2]
-        ],
-        [
-            [0.2, 0.4],
-            [1.0, 1.4]
-        ],
-        [
-            [0.2, 0.5],
-            [1.0, 1.6]
-        ],
-        [
-            [0.2, 0.6],
-            [1.0, 1.8]
-        ],
-    ]),
+            [[0.2, 0.2], [1.0, 1.0]],
+            [[0.2, 0.3], [1.0, 1.2]],
+            [[0.2, 0.4], [1.0, 1.4]],
+            [[0.2, 0.5], [1.0, 1.6]],
+            [[0.2, 0.6], [1.0, 1.8]],
+        ]
+    ),
 }
 # TEST_LOSSES = np.vstack([
 #     np.arange(TEST_BOXES["class_1"].shape[0]),
@@ -64,9 +58,9 @@ TEST_LOSSES = np.random.rand(TEST_BOXES["class_1"].shape[0], 4)
 
 
 def plot_box_2d(z, Z, fig=None, ax=None):
-    '''
+    """
     Plot a box given lower left and upper right corners.
-    '''
+    """
     if fig is None or ax is None:
         fig, ax = plt.subplots()
         returnFig = True
@@ -81,10 +75,10 @@ def plot_box_2d(z, Z, fig=None, ax=None):
     #     np.floor(z[1]-0.5),
     #     np.ceil(Z[1]+0.5)
     # )
-    ax.set_aspect('equal')
-    ax.set_title('2D Box Plot')
-    ax.set_xlabel('X-axis')
-    ax.set_ylabel('Y-axis')
+    ax.set_aspect("equal")
+    ax.set_title("2D Box Plot")
+    ax.set_xlabel("X-axis")
+    ax.set_ylabel("Y-axis")
     ax.grid(True)
     lower_left = z
     upper_right = Z
@@ -146,10 +140,7 @@ def interpolate_boxes(boxes, frames=10):
     ZXp = np.interp(zxp, np.arange(len(boxes)), boxes[:, 1, 0])
     ZYp = np.interp(zxp, np.arange(len(boxes)), boxes[:, 1, 1])
 
-    return np.array([
-        [zXp, ZXp],
-        [zYp, ZYp]
-    ]).T.reshape(-1, 2, 2)
+    return np.array([[zXp, ZXp], [zYp, ZYp]]).T.reshape(-1, 2, 2)
 
 
 def interpolate_losses(losses, frames=10):
@@ -182,24 +173,29 @@ def calculate_intersection(box1, box2):
     return np.array([[x1, y1], [x2, y2]])
 
 
-def animate_boxes(boxes, losses=None, save=False):
-    '''
+def animate_boxes(
+    boxes,
+    losses=None,
+    save=False,
+    fp="training.mp4",
+):
+    """
     Animate several series of boxes, each stored in a dictionary with a key.
     Smooth transitions between boxes.
     Each box is defined by its lower left and upper right corners.
-    '''
+    """
     if losses is not None:
         print(f"{next(iter(boxes.values())).shape[0]} ?= {len(losses)}")
         assert next(iter(boxes.values())).shape[0] == len(losses)
-    duration = next(iter(boxes.values())
-                    ).shape[0] * KEY_FRAME_INTERVAL / 1000.0  # in seconds
+    duration = (
+        next(iter(boxes.values())).shape[0] * KEY_FRAME_INTERVAL / 1000.0
+    )  # in seconds
     frames = int(duration * FPS) + 1
     print(f"Duration: {duration}")
     print(f"Frames:   {frames}")
 
     boxes_interpolated = {
-        key: interpolate_boxes(series, frames=frames)
-        for key, series in boxes.items()
+        key: interpolate_boxes(series, frames=frames) for key, series in boxes.items()
     }
 
     if losses is not None:
@@ -216,33 +212,41 @@ def animate_boxes(boxes, losses=None, save=False):
 
     # Set limits based on minimum and maximum values
     ax.set_xlim(
-        np.floor(np.min([np.min(series[:, 0, 0])
-                         for series in boxes_interpolated.values()])-0.5),
-        np.ceil(np.max([np.max(series[:, 1, 0])
-                        for series in boxes_interpolated.values()])+0.5)
+        np.floor(
+            np.min([np.min(series[:, 0, 0]) for series in boxes_interpolated.values()])
+            - 0.5
+        ),
+        np.ceil(
+            np.max([np.max(series[:, 1, 0]) for series in boxes_interpolated.values()])
+            + 0.5
+        ),
     )
     ax.set_ylim(
-        np.floor(np.min([np.min(series[:, 0, 1])
-                         for series in boxes_interpolated.values()])-0.5),
-        np.ceil(np.max([np.max(series[:, 1, 1])
-                        for series in boxes_interpolated.values()])+0.5)
+        np.floor(
+            np.min([np.min(series[:, 0, 1]) for series in boxes_interpolated.values()])
+            - 0.5
+        ),
+        np.ceil(
+            np.max([np.max(series[:, 1, 1]) for series in boxes_interpolated.values()])
+            + 0.5
+        ),
     )
-    ax.set_aspect('equal')
-    ax.set_title('Box embeddings during training')
-    ax.set_xlabel('Embed dim 1')
-    ax.set_ylabel('Embed dim 2')
+    ax.set_aspect("equal")
+    ax.set_title("Box embeddings during training")
+    ax.set_xlabel("Embed dim 1")
+    ax.set_ylabel("Embed dim 2")
     ax.set_xlim(-0.5, 0.5)
     ax.set_ylim(-0.5, 0.5)
     ax.grid(False)
 
-    ax2.axis('off')
-    epoch_text_label = ax2.text(0, 0.9,    f"EPOCH:")
-    loss_text_label = ax2.text(0, 0.8,     f"LOSS:")
+    ax2.axis("off")
+    epoch_text_label = ax2.text(0, 0.9, f"EPOCH:")
+    loss_text_label = ax2.text(0, 0.8, f"LOSS:")
     pos_loss_text_label = ax2.text(0, 0.7, f"POS RATIO:")
     neg_loss_text_label = ax2.text(0, 0.6, f"NEG RATIO:")
     reg_loss_text_label = ax2.text(0, 0.5, f"REG LOSS:")
-    epoch_text = ax2.text(0.5, 0.9,    f"")
-    loss_text = ax2.text(0.5, 0.8,     f"")
+    epoch_text = ax2.text(0.5, 0.9, f"")
+    loss_text = ax2.text(0.5, 0.8, f"")
     pos_loss_text = ax2.text(0.5, 0.7, f"")
     neg_loss_text = ax2.text(0.5, 0.6, f"")
     reg_loss_text = ax2.text(0.5, 0.5, f"")
@@ -251,19 +255,24 @@ def animate_boxes(boxes, losses=None, save=False):
     axloss.set_xlabel("Epoch")
     axloss.set_ylabel("Loss")
     axloss.set_xlim(0, np.max(losses_interpolated[:, 0]))
-    axloss.set_ylim(np.min(losses_interpolated[:1, 1:]), np.max(
-        losses_interpolated[:1, 1:]))
-    axloss.axhline(y=0, color='black', linewidth=1)
+    axloss.set_ylim(
+        np.min(losses_interpolated[:1, 1:]), np.max(losses_interpolated[:1, 1:])
+    )
+    axloss.axhline(y=0, color="black", linewidth=1)
     axloss.grid(True)
     if losses is not None:
         tot_loss = axloss.plot(
-            losses_interpolated[0, 0], losses_interpolated[0, 1], label='Total Loss')[0]
+            losses_interpolated[0, 0], losses_interpolated[0, 1], label="Total Loss"
+        )[0]
         pos_loss = axloss.plot(
-            losses_interpolated[0, 0], losses_interpolated[0, 2], label='Pos. Ratio')[0]
+            losses_interpolated[0, 0], losses_interpolated[0, 2], label="Pos. Ratio"
+        )[0]
         neg_loss = axloss.plot(
-            losses_interpolated[0, 0], losses_interpolated[0, 3], label='Neg. Ratio')[0]
+            losses_interpolated[0, 0], losses_interpolated[0, 3], label="Neg. Ratio"
+        )[0]
         reg_loss = axloss.plot(
-            losses_interpolated[0, 0], losses_interpolated[0, 4], label='Reg. Loss')[0]
+            losses_interpolated[0, 0], losses_interpolated[0, 4], label="Reg. Loss"
+        )[0]
         axloss.legend()
 
     rects = {}
@@ -271,9 +280,12 @@ def animate_boxes(boxes, losses=None, save=False):
     # Draw rectangles
     for i, key in enumerate(boxes_interpolated.keys()):
         rects[key] = Rectangle(
-            (0, 0), 0, 0, fill=None,
+            (0, 0),
+            0,
+            0,
+            fill=None,
             linewidth=2 if len(boxes_interpolated) < 20 else 0.4,
-            alpha=1 if len(boxes_interpolated) < 20 else 0.7
+            alpha=1 if len(boxes_interpolated) < 20 else 0.7,
         )
         ax.add_patch(rects[key])
 
@@ -332,13 +344,29 @@ def animate_boxes(boxes, losses=None, save=False):
             reg_loss.set_ydata(losses_interpolated[:frame, 4])
 
             if frame > 0:
-                axloss.set_ylim(np.min(losses_interpolated[:frame, 1:]), np.max(
-                    losses_interpolated[:frame, 1:]))
+                axloss.set_ylim(
+                    np.min(losses_interpolated[:frame, 1:]),
+                    np.max(losses_interpolated[:frame, 1:]),
+                )
 
-        return ax, rects.values(), epoch_text, loss_text, pos_loss_text, neg_loss_text, reg_loss_text, axloss, tot_loss, pos_loss, neg_loss, reg_loss
+        return (
+            ax,
+            rects.values(),
+            epoch_text,
+            loss_text,
+            pos_loss_text,
+            neg_loss_text,
+            reg_loss_text,
+            axloss,
+            tot_loss,
+            pos_loss,
+            neg_loss,
+            reg_loss,
+        )
 
-    ani = animation.FuncAnimation(fig, update, frames=frames,
-                                  interval=FRAME_LENGTH, repeat=True, blit=False)
+    ani = animation.FuncAnimation(
+        fig, update, frames=frames, interval=FRAME_LENGTH, repeat=True, blit=False
+    )
     fig.tight_layout()
     if save:
         ani.save("training.mp4", fps=FPS)
@@ -346,20 +374,31 @@ def animate_boxes(boxes, losses=None, save=False):
         plt.show()
 
 
-def animate_boxes_with_blitting(boxes, losses, save=False, fp='training.mp4', box_filter=lambda k: True, box_filter_type='omit', box_labels=None, box_label_filter=lambda k: True):
-    '''
+def animate_boxes_with_blitting(
+    boxes,
+    losses,
+    save=False,
+    fp="training.mp4",
+    box_filter=lambda k: True,
+    box_filter_type="omit",
+    box_labels=None,
+    box_label_filter=lambda k: True,
+):
+    """
     Animate several series of boxes, each stored in a dictionary with a key.
     Smooth transitions between boxes.
     Each box is defined by its lower left and upper right corners.
-    '''
+    """
     if box_labels is None:
         box_labels = {}
     else:
-        box_labels = {k: v.split(
-            "/")[-1].split("#")[-1] if box_label_filter(k) else "" for k, v in box_labels.items()}
+        box_labels = {
+            k: v.split("/")[-1].split("#")[-1] if box_label_filter(k) else ""
+            for k, v in box_labels.items()
+        }
 
     filtered_boxes = {k: v for k, v in boxes.items() if box_filter(k)}
-    if box_filter_type == 'omit':
+    if box_filter_type == "omit":
         boxes = filtered_boxes
         box_labels = {k: v for k, v in box_labels.items() if box_filter(k)}
 
@@ -368,60 +407,61 @@ def animate_boxes_with_blitting(boxes, losses, save=False, fp='training.mp4', bo
     if losses is not None:
         print(f"{next(iter(boxes.values())).shape[0]} ?= {len(losses)}")
         assert next(iter(boxes.values())).shape[0] == len(losses)
-    duration = next(iter(boxes.values())
-                    ).shape[0] * KEY_FRAME_INTERVAL / 1000.0  # in seconds
+    duration = (
+        next(iter(boxes.values())).shape[0] * KEY_FRAME_INTERVAL / 1000.0
+    )  # in seconds
     frames = int(duration * FPS) + 1
     print(f"Duration: {duration}")
     print(f"Frames:   {frames}")
 
     boxes_interpolated = {
-        key: interpolate_boxes(series, frames=frames)
-        for key, series in boxes.items()
+        key: interpolate_boxes(series, frames=frames) for key, series in boxes.items()
     }
 
     if losses is not None:
         losses_interpolated = interpolate_losses(losses, frames=frames)
         # print(losses_interpolated)
 
-    AnimationArtists = namedtuple("AnimationArtists", [
-        "epoch_text",
-        "total_loss_text",
-        "pos_loss_text",
-        "neg_loss_text",
-        "reg_loss_text",
-        "total_loss",
-        "pos_loss",
-        "neg_loss",
-        "reg_loss"
-    ] + [f"box_{key}" for key in boxes.keys()] + [f"box_{key}_label" for key in boxes.keys()])
+    AnimationArtists = namedtuple(
+        "AnimationArtists",
+        [
+            "epoch_text",
+            "total_loss_text",
+            "pos_loss_text",
+            "neg_loss_text",
+            "reg_loss_text",
+            "total_loss",
+            "pos_loss",
+            "neg_loss",
+            "reg_loss",
+        ]
+        + [f"box_{key}" for key in boxes.keys()]
+        + [f"box_{key}_label" for key in boxes.keys()],
+    )
     print(f"`boxes`s has {len(boxes.keys())} keys.")
     print(f"`boxes_interpolated` has {len(boxes_interpolated.keys())} keys.")
     print(f"`box_labels` has {len(box_labels.keys())} keys.")
 
-    FixedArtists = namedtuple("FixedArtists", (
-        "ax",
-        "ax2",
-        "ax_loss_total",
-        "ax_loss_pos",
-        "ax_loss_neg",
-        "ax_loss_reg"
-    ))
+    FixedArtists = namedtuple(
+        "FixedArtists",
+        ("ax", "ax2", "ax_loss_total", "ax_loss_pos", "ax_loss_neg", "ax_loss_reg"),
+    )
 
     def init_fig(fig, fixed_artists):
 
-        fixed_artists.ax.set_aspect('equal')
-        fixed_artists.ax.set_title('Box embeddings during training')
-        fixed_artists.ax.set_xlabel('Embed dim 1')
-        fixed_artists.ax.set_ylabel('Embed dim 2')
+        fixed_artists.ax.set_aspect("equal")
+        fixed_artists.ax.set_title("Box embeddings during training")
+        fixed_artists.ax.set_xlabel("Embed dim 1")
+        fixed_artists.ax.set_ylabel("Embed dim 2")
         fixed_artists.ax.set_xlim(-0.5, 0.5)
         fixed_artists.ax.set_ylim(-0.5, 0.5)
         fixed_artists.ax.grid(False)
         fixed_artists.ax.get_xaxis().set_visible(False)
         fixed_artists.ax.get_yaxis().set_visible(False)
 
-        fixed_artists.ax2.axis('off')
-        epoch_text_label = fixed_artists.ax2.text(-0.4, 0.9,    f"EPOCH:")
-        loss_text_label = fixed_artists.ax2.text(-0.4, 0.7,     f"LOSS:")
+        fixed_artists.ax2.axis("off")
+        epoch_text_label = fixed_artists.ax2.text(-0.4, 0.9, f"EPOCH:")
+        loss_text_label = fixed_artists.ax2.text(-0.4, 0.7, f"LOSS:")
         pos_loss_text_label = fixed_artists.ax2.text(-0.4, 0.5, f"POS RATIO:")
         neg_loss_text_label = fixed_artists.ax2.text(-0.4, 0.3, f"NEG RATIO:")
         reg_loss_text_label = fixed_artists.ax2.text(-0.4, 0.1, f"REG LOSS:")
@@ -439,42 +479,66 @@ def animate_boxes_with_blitting(boxes, losses, save=False, fp='training.mp4', bo
             #     f"Loss Minimum: {np.min(losses_interpolated[:1, i + 1])}\nLoss Maximum: {np.max(losses_interpolated[:1, i + 1])}")
             axis.set_ylim(
                 np.min([0, np.min(losses_interpolated[:, i + 1])]),
-                np.max([1, np.max(losses_interpolated[:, i + 1])])
+                np.max([1, np.max(losses_interpolated[:, i + 1])]),
             )
-            axis.axhline(y=0, color='black', linewidth=1)
+            axis.axhline(y=0, color="black", linewidth=1)
             axis.grid(True)
             if i < 3:
                 # axis.get_xaxis().set_visible(False)
                 axis.get_xaxis().set_tick_params(labelbottom=False)
 
         animation_artists = AnimationArtists(
-            fixed_artists.ax2.text(0.2, 0.9,    f''),
-            fixed_artists.ax2.text(0.2, 0.7,     f''),
-            fixed_artists.ax2.text(0.2, 0.5, f''),
-            fixed_artists.ax2.text(0.2, 0.3, f''),
-            fixed_artists.ax2.text(0.2, 0.1, f''),
+            fixed_artists.ax2.text(0.2, 0.9, f""),
+            fixed_artists.ax2.text(0.2, 0.7, f""),
+            fixed_artists.ax2.text(0.2, 0.5, f""),
+            fixed_artists.ax2.text(0.2, 0.3, f""),
+            fixed_artists.ax2.text(0.2, 0.1, f""),
             fixed_artists.ax_loss_total.plot(
-                losses_interpolated[0, 0], losses_interpolated[0, 1], label='Total Loss')[0],
+                losses_interpolated[0, 0], losses_interpolated[0, 1], label="Total Loss"
+            )[0],
             fixed_artists.ax_loss_pos.plot(
-                losses_interpolated[0, 0], losses_interpolated[0, 2], label='Pos. Ratio')[0],
+                losses_interpolated[0, 0], losses_interpolated[0, 2], label="Pos. Ratio"
+            )[0],
             fixed_artists.ax_loss_neg.plot(
-                losses_interpolated[0, 0], losses_interpolated[0, 3], label='Neg. Ratio')[0],
+                losses_interpolated[0, 0], losses_interpolated[0, 3], label="Neg. Ratio"
+            )[0],
             fixed_artists.ax_loss_reg.plot(
-                losses_interpolated[0, 0], losses_interpolated[0, 4], label='Reg. Loss')[0],
+                losses_interpolated[0, 0], losses_interpolated[0, 4], label="Reg. Loss"
+            )[0],
             *[
-                fixed_artists.ax.add_patch(Rectangle(
-                    (0, 0), 0, 0, fill=None,
-                    color='red' if (box_filter(
-                        key) and box_filter_type == 'bold') else 'black',
-                    linewidth=2 if (box_filter(key) and box_filter_type == 'bold') else 0.8 if len(
-                        boxes_interpolated) < 20 else 0.2,
-                    alpha=1 if len(boxes_interpolated) < 20 or (
-                        box_filter(key) and box_filter_type == 'bold') else 0.7,
-                    zorder=1.1 if box_filter(key) else 1
-                )) for key in boxes_interpolated.keys()
-            ] + [
-                fixed_artists.ax.text(0, 0, label, ha='center', va='center', fontsize=10, color='red') for label in box_labels.values()
+                fixed_artists.ax.add_patch(
+                    Rectangle(
+                        (0, 0),
+                        0,
+                        0,
+                        fill=None,
+                        color=(
+                            "red"
+                            if (box_filter(key) and box_filter_type == "bold")
+                            else "black"
+                        ),
+                        linewidth=(
+                            2
+                            if (box_filter(key) and box_filter_type == "bold")
+                            else 0.8 if len(boxes_interpolated) < 20 else 0.2
+                        ),
+                        alpha=(
+                            1
+                            if len(boxes_interpolated) < 20
+                            or (box_filter(key) and box_filter_type == "bold")
+                            else 0.7
+                        ),
+                        zorder=1.1 if box_filter(key) else 1,
+                    )
+                )
+                for key in boxes_interpolated.keys()
             ]
+            + [
+                fixed_artists.ax.text(
+                    0, 0, label, ha="center", va="center", fontsize=10, color="red"
+                )
+                for label in box_labels.values()
+            ],
         )
 
         return animation_artists
@@ -484,8 +548,8 @@ def animate_boxes_with_blitting(boxes, losses, save=False, fp='training.mp4', bo
     ):
         for key, rect, label in zip(
             boxes_interpolated.keys(),
-            animation_artists[9:9+len(boxes_interpolated.keys())],
-            animation_artists[9+len(boxes_interpolated.keys()):]
+            animation_artists[9 : 9 + len(boxes_interpolated.keys())],
+            animation_artists[9 + len(boxes_interpolated.keys()) :],
         ):
             boxes_series = boxes_interpolated[key]
             lower_left = boxes_series[frame][0]
@@ -518,48 +582,52 @@ def animate_boxes_with_blitting(boxes, losses, save=False, fp='training.mp4', bo
         XYMIN = min(XMIN, YMIN)
         XYMAX = max(XMAX, YMAX)
 
-        fixed_artists.ax.set_xlim(
-            XYMIN - 0.3 * abs(XYMIN), XYMAX + 0.3 * abs(XYMAX))
-        fixed_artists.ax.set_ylim(
-            XYMIN - 0.3 * abs(XYMIN), XYMAX + 0.3 * abs(XYMAX))
+        fixed_artists.ax.set_xlim(XYMIN - 0.3 * abs(XYMIN), XYMAX + 0.3 * abs(XYMAX))
+        fixed_artists.ax.set_ylim(XYMIN - 0.3 * abs(XYMIN), XYMAX + 0.3 * abs(XYMAX))
 
         del XMIN, XMAX, YMIN, YMAX, XYMIN, XYMAX
 
-        fixed_artists.ax.set_aspect('equal')
+        zoom_offset = 50
+        if frame > zoom_offset:
+            fixed_artists.ax_loss_pos.set_ylim(
+                0, max(losses_interpolated[max(0, frame - zoom_offset) : frame, 2])
+            )
+            fixed_artists.ax_loss_neg.set_ylim(
+                0, max(losses_interpolated[max(0, frame - zoom_offset) : frame, 3])
+            )
+
+        fixed_artists.ax.set_aspect("equal")
 
         # Update Text
         animation_artists.epoch_text.set_text(
-            f"{int(np.floor(losses_interpolated[frame, 0]))}")
+            f"{int(np.floor(losses_interpolated[frame, 0]))}"
+        )
         animation_artists.total_loss_text.set_text(
-            f"{losses_interpolated[frame, 1]:10.5f}")
+            f"{losses_interpolated[frame, 1]:10.5f}"
+        )
         animation_artists.pos_loss_text.set_text(
-            f"{losses_interpolated[frame, 2]:10.5f}")
+            f"{losses_interpolated[frame, 2]:10.5f}"
+        )
         animation_artists.neg_loss_text.set_text(
-            f"{losses_interpolated[frame, 3]:10.5f}")
+            f"{losses_interpolated[frame, 3]:10.5f}"
+        )
         animation_artists.reg_loss_text.set_text(
-            f"{losses_interpolated[frame, 4]:10.5f}")
+            f"{losses_interpolated[frame, 4]:10.5f}"
+        )
 
         if losses is not None:
             # Update losslines
-            animation_artists.total_loss.set_xdata(
-                losses_interpolated[:frame, 0])
-            animation_artists.total_loss.set_ydata(
-                losses_interpolated[:frame, 1])
+            animation_artists.total_loss.set_xdata(losses_interpolated[:frame, 0])
+            animation_artists.total_loss.set_ydata(losses_interpolated[:frame, 1])
 
-            animation_artists.pos_loss.set_xdata(
-                losses_interpolated[:frame, 0])
-            animation_artists.pos_loss.set_ydata(
-                losses_interpolated[:frame, 2])
+            animation_artists.pos_loss.set_xdata(losses_interpolated[:frame, 0])
+            animation_artists.pos_loss.set_ydata(losses_interpolated[:frame, 2])
 
-            animation_artists.neg_loss.set_xdata(
-                losses_interpolated[:frame, 0])
-            animation_artists.neg_loss.set_ydata(
-                losses_interpolated[:frame, 3])
+            animation_artists.neg_loss.set_xdata(losses_interpolated[:frame, 0])
+            animation_artists.neg_loss.set_ydata(losses_interpolated[:frame, 3])
 
-            animation_artists.reg_loss.set_xdata(
-                losses_interpolated[:frame, 0])
-            animation_artists.reg_loss.set_ydata(
-                losses_interpolated[:frame, 4])
+            animation_artists.reg_loss.set_xdata(losses_interpolated[:frame, 0])
+            animation_artists.reg_loss.set_ydata(losses_interpolated[:frame, 4])
 
             # if frame > 0:
             #     axloss.set_ylim(np.min(losses_interpolated[:frame, 1:]), np.max(
@@ -577,7 +645,7 @@ def animate_boxes_with_blitting(boxes, losses, save=False, fp='training.mp4', bo
         fig.add_subplot(gs[1, :2]),
         fig.add_subplot(gs[2, :2]),
         fig.add_subplot(gs[3, :2]),
-        fig.add_subplot(gs[4, :2])
+        fig.add_subplot(gs[4, :2]),
     )
 
     animation_artists = init_fig(fig, fixed_artists)
@@ -585,10 +653,12 @@ def animate_boxes_with_blitting(boxes, losses, save=False, fp='training.mp4', bo
     # 3. Apply the three plotting functions written above
     # init = partial(init_fig, fig=fig, fixed_artists=fixed_artists)
     # step = partial(frame_iter)
-    update = partial(update_artists,
-                     animation_artists=animation_artists,
-                     boxes_interpolated=boxes_interpolated,
-                     losses_interpolated=losses_interpolated)
+    update = partial(
+        update_artists,
+        animation_artists=animation_artists,
+        boxes_interpolated=boxes_interpolated,
+        losses_interpolated=losses_interpolated,
+    )
 
     # 4. Generate the animation
     anim = animation.FuncAnimation(
@@ -597,7 +667,7 @@ def animate_boxes_with_blitting(boxes, losses, save=False, fp='training.mp4', bo
         frames=frames,
         interval=FRAME_LENGTH,
         repeat=True,
-        blit=True
+        blit=True,
     )
     fig.tight_layout()
     # # 5. Save the animation

@@ -11,7 +11,7 @@ import torch.nn.functional as F
 from typing import Dict, List, Optional
 from torch_geometric.nn.conv import MessagePassing
 from torch_geometric.typing import EdgeType, NodeType
-from parameters import HEADS
+# from parameters import HEADS
 
 def group(xs: List[th.Tensor], aggr: Optional[str]) -> Optional[th.Tensor]:
     if len(xs) == 0:
@@ -639,11 +639,11 @@ class OntologyGNN(th.nn.Module):
         self.node_embeddings = self.node_embeddings = th.nn.ModuleDict(
                 [[k, th.nn.Embedding.from_pretrained(v.clone(), freeze=False)]
                  for k,v in embeddings.items()])
-        # self.gnn = OGGNN(channels, edge_types, embeddings, skip_last=False)
+        self.gnn = OGGNN(channels, edge_types, embeddings, skip_last=False) # <--- try this one
         # self.gnn = HeteroGNNSAGE(channels, edge_types, embeddings,
-        #                          aggr='attn', skip_last=False)
-        self.gnn = HeteroGNNTransformer(channels, edge_types, embeddings,
-                                 aggr='attn', skip_last=False, heads=4)
+        #                          aggr='max', skip_last=False)
+        # self.gnn = HeteroGNNTransformer(channels, edge_types, embeddings,
+        #                          aggr='attn', skip_last=False, heads=4)
         
         # self.gnn = HeteroGNNTransformer(channels, edge_types, embeddings)
 

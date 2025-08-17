@@ -20,10 +20,12 @@ from sklearn.model_selection import KFold
 from sklearn.utils import gen_batches
 from parameters import (LR_DECAY, SCHEDULE_RATE, TRAIN_EMBEDDING_EPOCH,
                         TRAIN_GENES, BOX_WEIGHT, REGULARIZATION, DATASET,
-                        MIN_NBR_EDGES, SEMANTIC_WEIGHT, NEG_WEIGHT)
+                        MIN_NBR_EDGES, SEMANTIC_WEIGHT, NEG_WEIGHT,
+                        SEMANTIC_MEASURE)
 
 import os, pickle
-seed_everything(42)
+seed_everything(0)
+th.manual_seed(0)
 BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from copy import deepcopy, copy
 
@@ -110,8 +112,8 @@ def cross_val(model_type, model_kwargs, data, epochs, loss_function, metric,
     data_splits = []
     for i, (t_idx, v_idx) in enumerate(kf.split(data_to_split)):
         print(f"Fold: {i}", flush=True)
-        #if i > 2:
-        #    break
+        if i > 2:
+            break
         train_data, val_data = split_data(data=data.clone(), t_idx=t_idx, v_idx=v_idx,
                                           split_transform=split_transform,
                                           device=device)
@@ -154,8 +156,12 @@ def box_loss(embeddings, gci0, loss_type='inclusion', box_transform='mindelta',
 def box_loss_inclusion(embeddings, gci0, box=MinDeltaBoxTensor, inter='gumbel',
              inter_temp=0.1, vol='bessel', vol_temp=0.1, neg=False,
              return_layer_loss=False, **kwargs):
-    if neg:
-        raise NotImplementedError("Negative loss not yet implemented for inclusion loss")
+    def neg_loss_func(A, B, volume, intersect):
+        return (1 - (volume(intersect(A, B)) /
+                     th.minimum(volume(A), volume(B)))).clamp(min=1e-9,
+                                                              max=1).log().sum()
+    # if neg:
+    #     raise NotImplementedError("Negative loss not yet implemented for inclusion loss")
     match inter:
         case 'gumbel':
             intersect = GumbelIntersection(intersection_temperature=inter_temp)
@@ -167,9 +173,11 @@ def box_loss_inclusion(embeddings, gci0, box=MinDeltaBoxTensor, inter='gumbel',
             volume = BesselApproxVolume(intersection_temperature=inter_temp,
                                         volume_temperature=vol_temp, log_scale=False)
     loss = 0
+    neg_loss = 0
     layer_losses = []
     for x_dict in embeddings:
         layer_loss = {}
+        neg_layer_loss = {}
         for k, emb in x_dict.items():
             
             if k == 'genes':
@@ -179,13 +187,41 @@ def box_loss_inclusion(embeddings, gci0, box=MinDeltaBoxTensor, inter='gumbel',
             subclasses = box_emb[gci0[k][:,0], ...]
             supclasses = box_emb[gci0[k][:,1], ...]
 
-            loss -= (volume(intersect(subclasses, supclasses)) / volume(subclasses)).clamp(min=1e-9, max=1).log().sum()
-            layer_loss[k] = -(volume(intersect(subclasses, supclasses)) / volume(subclasses)).clamp(min=1e-9, max=1).log().sum().detach().item()
+            l = -(volume(intersect(subclasses, supclasses)) / volume(subclasses)).clamp(min=1e-9, max=1).log().sum()
+            loss += l
+            layer_loss[k] = l.detach().item()
+
+            if neg:
+                max_i = len(emb)
+                rand_classes = th.randint(low=0, high=max_i,
+                                             size=(len(gci0[k]),),
+                                             device=gci0[k].device)
+                A = box_emb[rand_classes, ...]
+                nl = -neg_loss_func(A, supclasses, volume, intersect)
+                neg_loss += nl
+                neg_layer_loss[k] = nl.detach().item()
+
+                rand_classes = th.randint(low=0, high=max_i,
+                                             size=(len(gci0[k]),),
+                                             device=gci0[k].device)
+                A = box_emb[rand_classes, ...]
+                nl = -neg_loss_func(A, subclasses, volume, intersect)
+                neg_loss += nl
+                neg_layer_loss[k] += nl.detach().item()
+
+                rand_classes = th.randint(low=0, high=max_i,
+                                             size=(len(gci0[k]),2),
+                                             device=gci0[k].device)
+                A = box_emb[rand_classes[:,0], ...]
+                B = box_emb[rand_classes[:,1], ...]
+                nl = -neg_loss_func(A, B, volume, intersect)
+                neg_loss += nl
+                neg_layer_loss[k] += nl.detach().item()
             
-        layer_losses.append(layer_loss)
+        layer_losses.append({'pos': layer_loss, 'neg': neg_layer_loss})
     if return_layer_loss:
-        return loss, 0, layer_losses
-    return loss, 0
+        return loss, neg_loss, layer_losses
+    return loss, neg_loss
 
 
 def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0,
@@ -200,6 +236,7 @@ def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0,
     layer_losses = []
     for x_dict in embeddings:
         layer_loss = {}
+        neg_layer_loss = {}
         for k, emb in x_dict.items():
             if k == 'genes':
                 continue
@@ -210,11 +247,9 @@ def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0,
             supclasses = box_emb[gci0[k][:,1], ...]
             sup_c, sup_o = supclasses.centre, supclasses.Z - supclasses.centre
 
-            loss += dist_inclusion(sub_c, sub_o, sup_c, sup_o, neg=False)
-            layer_loss[k] = dist_inclusion(sub_c, sub_o, sup_c, sup_o, neg=False).detach().item()
-            
-            # th.relu(th.abs(sub_c - sup_c) + sub_o - sup_o -
-            #                 gamma).norm(dim=-1).sum()
+            l = dist_inclusion(sub_c, sub_o, sup_c, sup_o, neg=False)
+            loss += l
+            layer_loss[k] = l.detach().item()
             
             if neg:
                 max_i = len(emb)
@@ -222,25 +257,27 @@ def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0,
                 rand_classes = th.randint(low=0, high=max_i, size=(len(gci0[k]),), device=gci0[k].device)
                 nsub = box_emb[rand_classes, ...]
                 nsub_c, nsub_o = nsub.centre, nsub.Z - nsub.centre
-                neg_loss += dist_inclusion(nsub_c, nsub_o, sup_c, sup_o, neg=True)
+                nl = dist_inclusion(nsub_c, nsub_o, sup_c, sup_o, neg=True)
+                neg_loss += nl
+                neg_layer_loss[k] = nl.detach().item()
 
                 rand_classes = th.randint(low=0, high=max_i, size=(len(gci0[k]),), device=gci0[k].device)
                 nsup = box_emb[rand_classes, ...]
                 nsup_c, nsup_o = nsup.centre, nsup.Z - nsup.centre
-                neg_loss += dist_inclusion(sub_c, sub_o, nsup_c, nsup_o, neg=True)
+                nl = dist_inclusion(sub_c, sub_o, nsup_c, nsup_o, neg=True)
+                neg_loss += nl
+                neg_layer_loss[k] += nl.detach().item()
 
                 rand_classes = th.randint(low=0, high=max_i, size=(len(gci0[k]),2), device=gci0[k].device)
                 nsub = box_emb[rand_classes[:,0], ...]
                 nsub_c, nsub_o = nsub.centre, nsub.Z - nsub.centre
                 nsup = box_emb[rand_classes[:,1], ...]
                 nsup_c, nsup_o = nsup.centre, nsup.Z - nsup.centre
-                neg_loss += dist_inclusion(nsub_c, nsub_o, nsup_c, nsup_o, neg=True)
+                nl = dist_inclusion(nsub_c, nsub_o, nsup_c, nsup_o, neg=True)
+                neg_loss += nl
+                neg_layer_loss[k] += nl.detach().item()
 
-                
-
-
-            # loss -= (volume(intersect(subclasses, supclasses)) / volume(subclasses)).clamp(min=1e-9, max=1).log().sum()
-        layer_losses.append(layer_loss)
+        layer_losses.append({'pos': layer_loss, 'neg': neg_layer_loss})
 
     if return_layer_loss:
         return loss, neg_loss, layer_losses
@@ -306,7 +343,8 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
     #)
 
     metrics = {'train_losses': [], 'train_metrics': [], 'val_losses': [],
-               'val_metrics': [], 'box_losses': []}
+               'val_metrics': [], 'sem_losses': [], 'box_losses': [],
+               'neg_sem_losses': []}
     optimizer = th.optim.Adam([
             {'params': model.node_embeddings.parameters(), 'weight_decay': 0},
             {'params': model.gnn.parameters(), 'weight_decay': REGULARIZATION},
@@ -315,8 +353,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
     # scheduler = th.optim.lr_scheduler.MultiplicativeLR(optimizer,
     #                                                    lambda epoch: 0.1)
     # decreased = False
-    #print('inclusion')
-    print('distance')
+
     best_metric = -np.inf
     model.node_embeddings.requires_grad_(True)
     model.node_embeddings['genes'].requires_grad_(False)
@@ -354,6 +391,8 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         # for sampled_data in tqdm.tqdm(train_loader):
         all_targets = []
         all_preds = []
+        model.train()
+        epoc_sem_losses = []
         for s in gen_batches(num_data, num_data // num_batches):
             batch_indices = edge_indices[:, perm][:, s]
             batch_labels = edge_labels[perm][s]
@@ -361,10 +400,11 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
             optimizer.zero_grad()
             if gci0_data:
                 preds, x_dicts = model(td, return_embs=True)
-                sem_loss, neg_sem_loss, layer_losses = box_loss(x_dicts, gci0_data,
-                                                loss_type='distance', neg=False, return_layer_loss=True)
+                sem_loss, neg_sem_loss, layer_losses = box_loss(x_dicts,
+                            gci0_data, loss_type=SEMANTIC_MEASURE,
+                            neg=(NEG_WEIGHT > 0), return_layer_loss=True)
                 total_sem_loss += sem_loss.detach().item()
-                metrics['box_losses'].append(layer_losses)
+                epoc_sem_losses.append(layer_losses)
                 if isinstance(neg_sem_loss, th.Tensor):
                     total_neg_sem_loss += neg_sem_loss.detach().item()
                 
@@ -374,12 +414,13 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
             # loss = loss_function(preds, td['genes', 'interacts',
             #                                         'genes'].edge_label,
             #                     reduction='sum') 
-            loss = loss_function(preds, batch_labels,
-                                reduction='sum') 
+            loss = loss_function(preds, batch_labels, reduction='sum') 
             
             total_loss += loss.detach().item()
 
-            combined_loss = loss + SEMANTIC_WEIGHT * (sem_loss + NEG_WEIGHT * neg_sem_loss) / num_batches
+            combined_loss = loss + (SEMANTIC_WEIGHT *
+                                    (sem_loss + NEG_WEIGHT * neg_sem_loss) /
+                                    num_batches)
             combined_loss.backward()
             optimizer.step()
             
@@ -391,16 +432,17 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         # all_targets = np.array(all_targets).flatten()
         # all_preds = np.array(all_preds).flatten()
         tm = metric(all_targets, all_preds)
+        metrics['box_losses'].append(epoc_sem_losses)
         #if tm > -0.1:
         #    for param_group in optimizer.param_groups:
         #        param_group['lr'] = lr
                 
         print(f"Epoch: {epoch:04d}")
         print(f"train loss: {total_loss / total_examples}")
-        print(f"semantic loss: {sem_loss}")
-        print(f"neg semantic loss: {neg_sem_loss}")
+        print(f"semantic loss: {total_sem_loss / num_batches}")
+        print(f"neg semantic loss: {total_neg_sem_loss / num_batches}")
         print(f"train metric: {tm}")
-
+        model.eval()
         with th.no_grad():
             total_val_loss = val_examples = 0
         
@@ -424,6 +466,8 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
         metrics['train_metrics'].append(tm)
         metrics['val_losses'].append(total_val_loss / val_examples)
         metrics['val_metrics'].append(vm)
+        metrics['sem_losses'].append(total_sem_loss / num_batches)
+        metrics['neg_sem_losses'].append(total_neg_sem_loss / num_batches)
         #if gci0_data:
         #    for k,v in box_loss_epoch.items():
         #        metrics['box_losses'][k].append(np.mean(v).item())
@@ -446,8 +490,8 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
             for param_group in optimizer.param_groups:
                 param_group['lr'] = 10*lr
             increased_lr = True
-        if since_improved > 50:
-            print('Model has not improved in 20 epochs, stopping training...', flush=True)
+        if since_improved > 40:
+            print('Model has not improved in 40 epochs, stopping training...', flush=True)
             if best_metric < 0.20:
                 print("Restarting training for this fold", flush=True)
                 return train_loop(model_type=model_type, train_data=train_data,

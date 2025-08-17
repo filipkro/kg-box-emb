@@ -3,7 +3,7 @@ from sage_conv_mod import SAGEConvMod
 from torch_geometric.data import HeteroData
 import torch as th
 import torch.nn as nn
-from parameters import LINKS, BOX_EMBEDDINGS, ONLY_GENE_BOXES
+from parameters import LINKS, BOX_EMBEDDINGS, ONLY_GENE_BOXES, DROP_OUT
 from box_embeddings.modules.intersection import GumbelIntersection
 from box_embeddings.parameterizations import MinDeltaBoxTensor
 from torch_geometric.nn.aggr import MultiAggregation, SoftmaxAggregation, PowerMeanAggregation, MLPAggregation, AttentionalAggregation
@@ -193,7 +193,7 @@ class GNNBase(th.nn.Module):
             return self.forward_attention(x_dict, edge_index_dict,
                                           return_embs=return_embs)
         else:
-            embs = []
+            embs = [x_dict]
             for conv in self.layers:
                 x_dict = conv(x_dict, edge_index_dict)
                 if return_embs:
@@ -492,7 +492,7 @@ class OGGNNCustom(th.nn.Module):
             self.layers.append(conv)
 
     def forward(self, x_dict, edge_index_dict, return_embs=False):
-        embs = []
+        embs = [x_dict]
         for conv in self.layers:
             x_dict = conv(x_dict, edge_index_dict)
             if return_embs:
@@ -528,7 +528,7 @@ class OGGNN(th.nn.Module):
             self.layers.append(conv)
 
     def forward(self, x_dict, edge_index_dict, return_embs=False):
-        embs = []
+        embs = [x_dict]
         for conv in self.layers:
             x_dict = conv(x_dict, edge_index_dict)
             if return_embs:
@@ -552,7 +552,7 @@ class Model(th.nn.Module):
         self.gnn = OGGNNCustom(gnn_channels, edge_types, embeddings, skip_last=True)
         #self.gnn = HeteroGNNSAGECustom(gnn_channels, edge_types, embeddings,
         #                                aggr='max', skip_last=True)
-
+        self.dropout = th.nn.Dropout(DROP_OUT)
         if ONLY_GENE_BOXES:
             self.node_embeddings = th.nn.ModuleDict(
                 [[k, th.nn.Embedding(num_embeddings=v.shape[0],
@@ -616,6 +616,7 @@ class Model(th.nn.Module):
         if self.lin_layers:
            for i, l in enumerate(self.lin_layers):
                z = l(z).relu()
+               z = self.dropout(z)
         else:
            z = z.sum(dim=-1)
         

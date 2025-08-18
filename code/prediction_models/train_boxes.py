@@ -29,10 +29,12 @@ from boxplot2d import plot_box_2d, animate_boxes, animate_boxes_with_blitting
 device = "cuda" if torch.cuda.is_available() else "cpu"
 seed_everything(42)
 torch.manual_seed(42)
+# Enable detect anomaly mode
+torch.autograd.set_detect_anomaly(True)
 # %%
 
 # %%
-GNN_CHANNELS = [16, 2 * 2]
+GNN_CHANNELS = [2 * 2]
 LR = 5e-1
 LR_DECAY = 0.0001
 REGULARIZATION = 0
@@ -42,7 +44,7 @@ REGULARIZATION = 0
 BOX_REGULARIZATION = 0.001
 # BOX_REGULARIZATION = 1000
 EPOCHS = 251
-NEG_WEIGHT = 1000.0
+NEG_WEIGHT = 0.1
 LOSS_TYPE = "inclusion"
 SCALE_LOSSES = False
 
@@ -125,7 +127,25 @@ def box_loss_inclusion(
     neg_classes_to_skip=0,
     **kwargs,
 ):
-    def neg_loss_func(A, B, volume, intersect):
+    def neg_loss_func(A, B, volume, intersect, verbose=False):
+        if verbose:
+            print(
+                f"\tLog arg: {(1 - (volume(intersect(A, B)) / torch.minimum(volume(A), volume(B)))).sort()}"
+            )
+            print(
+                f"\tLog: {(1 - (volume(intersect(A, B)) / torch.minimum(volume(A), volume(B)))).log().sort()}"
+            )
+            print(
+                f"\tClamped: {(1 - (volume(intersect(A, B)) / torch.minimum(volume(A), volume(B)))).clamp(min=1e-9, max=1).sort()}"
+            )
+            print(
+                f"\tClamped log: {(1 - (volume(intersect(A, B)) / torch.minimum(volume(A), volume(B)))).clamp(min=1e-9, max=1).log().sort()}"
+            )
+
+            print("A:", volume(A).sort())
+            print("B:", volume(B).sort())
+
+        # Have division by zero here, need to fix this...
         return (
             (1 - (volume(intersect(A, B)) / torch.minimum(volume(A), volume(B))))
             .clamp(min=1e-9, max=1)
@@ -219,7 +239,8 @@ def box_loss_inclusion(
                 A = box_emb[neg_data[k][:, 0], ...]
                 B = box_emb[neg_data[k][:, 1], ...]
 
-                neg_loss -= neg_loss_func(A, B, volume, intersect)
+                neg_loss -= neg_loss_func(A, B, volume, intersect, verbose=False)
+                # print(f"Neg loss -= {neg_loss_func(A, B, volume, intersect)}")
 
     return loss, neg_loss
 
@@ -375,9 +396,9 @@ SCALE_LOSSES: {scale_losses}"""
         for epoch in range(epochs):
             optimizer.zero_grad()
 
-            x_dicts = model(graph, return_embs=True)
+            # x_dicts = model(graph, return_embs=True)
             # ^^^ List of dictionaries, one for each layer (inc. initial embeddings)
-            # x_dicts = [model(graph, return_embs=False)]
+            x_dicts = [model(graph, return_embs=False)]
 
             pos_loss, neg_loss = box_loss(
                 x_dicts,
@@ -410,11 +431,11 @@ SCALE_LOSSES: {scale_losses}"""
 
             if loss_type == "distance":
                 print(
-                    f"Epoch: {epoch}, total loss: {total_loss:.4f}, pos loss: {pos_loss_scaled:.6f}, neg loss: {neg_loss_scaled:.6f}, reg: {reg_loss:.3f}"
+                    f"Epoch: {epoch}, total loss: {total_loss:.4g}, pos loss: {pos_loss_scaled:.6g}, neg loss: {neg_loss_scaled:.6g}, reg: {reg_loss:.3g}"
                 )
             else:
                 print(
-                    f"Epoch: {epoch}, total loss: {total_loss:.4f}, pos ratio: {pos_ratio:.6f}, neg ratio: {neg_ratio:.6f}, reg: {reg_loss:.8f}"
+                    f"Epoch: {epoch}, total loss: {total_loss:.4g}, pos ratio: {pos_ratio:.6g}, neg ratio: {neg_ratio:.6g}, reg: {reg_loss:.8g}"
                 )
 
             # Backpropagate loss gradients
@@ -422,6 +443,7 @@ SCALE_LOSSES: {scale_losses}"""
             optimizer.step()
             #
             if epoch % 1 == 0:
+
                 if loss_type == "distance":
                     boxes.append(
                         (

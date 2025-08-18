@@ -634,9 +634,9 @@ def final_train_loop(model, train_loader, epochs, lr, loss_function, metric,
     return metrics, model
 
 
-def train_loop_final_sem(model_type, train_data, epochs, loss_function, metric,
+def train_loop_final_sem(model_type, data, epochs, loss_function, metric,
                device, model_kwargs, lr=0.001, gci0_data=None, num_batches=2):
-    
+    train_data = data
     skip_edge = [e for e in train_data.edge_types if
                  train_data[e].edge_index.shape[1] < MIN_NBR_EDGES]
     skip_edge.append(('genes', 'interacts', 'genes'))

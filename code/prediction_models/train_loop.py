@@ -13,15 +13,15 @@ from torch.nn.functional import mse_loss
 from sklearn.metrics import r2_score
 
 from box_embeddings.parameterizations import MinDeltaBoxTensor, SigmoidBoxTensor#TanhBoxTensor
-from box_embeddings.modules.intersection import GumbelIntersection
-from box_embeddings.modules.volume import BesselApproxVolume
+from box_embeddings.modules.intersection import GumbelIntersection, HardIntersection
+from box_embeddings.modules.volume import BesselApproxVolume, HardVolume
 
 from sklearn.model_selection import KFold
 from sklearn.utils import gen_batches
 from parameters import (LR_DECAY, SCHEDULE_RATE, TRAIN_EMBEDDING_EPOCH,
                         TRAIN_GENES, BOX_WEIGHT, REGULARIZATION, DATASET,
                         MIN_NBR_EDGES, SEMANTIC_WEIGHT, NEG_WEIGHT,
-                        SEMANTIC_MEASURE)
+                        SEMANTIC_MEASURE, INTER_TYPE, VOL_TYPE)
 
 import os, pickle
 seed_everything(0)
@@ -112,8 +112,8 @@ def cross_val(model_type, model_kwargs, data, epochs, loss_function, metric,
     data_splits = []
     for i, (t_idx, v_idx) in enumerate(kf.split(data_to_split)):
         print(f"Fold: {i}", flush=True)
-        if i > 2:
-            break
+        #if i > 2:
+        #    break
         train_data, val_data = split_data(data=data.clone(), t_idx=t_idx, v_idx=v_idx,
                                           split_transform=split_transform,
                                           device=device)
@@ -130,7 +130,6 @@ def cross_val(model_type, model_kwargs, data, epochs, loss_function, metric,
 
     print(f"Average best metric over folds: {np.mean(best_metrics)}")
     print(f"Std best metric over folds: {np.std(best_metrics)}")
-
     return metrics, best_models, data_splits
 
 def box_loss(embeddings, gci0, loss_type='inclusion', box_transform='mindelta',
@@ -165,6 +164,8 @@ def box_loss_inclusion(embeddings, gci0, box=MinDeltaBoxTensor, inter='gumbel',
     match inter:
         case 'gumbel':
             intersect = GumbelIntersection(intersection_temperature=inter_temp)
+        case 'hard':
+            intersect = HardIntersection()
         case _:
             raise NotImplementedError()
         
@@ -172,6 +173,8 @@ def box_loss_inclusion(embeddings, gci0, box=MinDeltaBoxTensor, inter='gumbel',
         case 'bessel':
             volume = BesselApproxVolume(intersection_temperature=inter_temp,
                                         volume_temperature=vol_temp, log_scale=False)
+        case 'hard':
+            volume = HardVolume()
     loss = 0
     neg_loss = 0
     layer_losses = []
@@ -347,7 +350,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
                'neg_sem_losses': []}
     optimizer = th.optim.Adam([
             {'params': model.node_embeddings.parameters(), 'weight_decay': 0},
-            {'params': model.gnn.parameters(), 'weight_decay': REGULARIZATION},
+            {'params': model.gnn.parameters(), 'weight_decay': 0.01*REGULARIZATION},
             {'params': chain(model.lin4.parameters(), model.lin_layers.parameters())}
                         ], lr=lr, weight_decay=REGULARIZATION)
     # scheduler = th.optim.lr_scheduler.MultiplicativeLR(optimizer,
@@ -371,6 +374,10 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
     #num_batches = 5
     increased_lr = False
     epoch_layer_losses = []
+    vol_temp = 0.7
+    int_temp = 0.1
+    print(f"inter temp: {int_temp}")
+    print(f"vol temp: {vol_temp}")
     print(f"Trainable parameters in model: {sum(p.numel() for p in model.parameters() if p.requires_grad)}")
     for epoch in range(1, epochs+1):
         # if epoch > TRAIN_EMBEDDING_EPOCH:
@@ -398,11 +405,13 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
             batch_labels = edge_labels[perm][s]
             td['genes', 'interacts', 'genes'].edge_label_index = batch_indices
             optimizer.zero_grad()
-            if gci0_data:
+            if gci0_data and SEMANTIC_WEIGHT > 0.0:
                 preds, x_dicts = model(td, return_embs=True)
                 sem_loss, neg_sem_loss, layer_losses = box_loss(x_dicts,
                             gci0_data, loss_type=SEMANTIC_MEASURE,
-                            neg=(NEG_WEIGHT > 0), return_layer_loss=True)
+                            neg=(NEG_WEIGHT > 0), return_layer_loss=True,
+                            inter=INTER_TYPE, vol=VOL_TYPE, vol_temp=vol_temp,
+                            inter_temp=int_temp)
                 total_sem_loss += sem_loss.detach().item()
                 epoc_sem_losses.append(layer_losses)
                 if isinstance(neg_sem_loss, th.Tensor):
@@ -485,12 +494,12 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
             best_model = deepcopy(model)
         else:
             since_improved += 1
-        if since_improved == 10:
+        if since_improved == 10 and False:
             print("increasing lr for one epoch")
             for param_group in optimizer.param_groups:
                 param_group['lr'] = 10*lr
             increased_lr = True
-        if since_improved > 40:
+        if since_improved > 20:
             print('Model has not improved in 40 epochs, stopping training...', flush=True)
             if best_metric < 0.20:
                 print("Restarting training for this fold", flush=True)

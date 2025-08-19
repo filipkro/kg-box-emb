@@ -350,7 +350,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
                'neg_sem_losses': []}
     optimizer = th.optim.Adam([
             {'params': model.node_embeddings.parameters(), 'weight_decay': 0},
-            {'params': model.gnn.parameters(), 'weight_decay': 0.01*REGULARIZATION},
+            {'params': model.gnn.parameters(), 'weight_decay': 0.1*REGULARIZATION},
             {'params': chain(model.lin4.parameters(), model.lin_layers.parameters())}
                         ], lr=lr, weight_decay=REGULARIZATION)
     # scheduler = th.optim.lr_scheduler.MultiplicativeLR(optimizer,
@@ -359,7 +359,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
 
     best_metric = -np.inf
     model.node_embeddings.requires_grad_(True)
-    model.node_embeddings['genes'].requires_grad_(False)
+    model.node_embeddings['genes'].requires_grad_(True)
     for e in edge_types:
         train_data[e].edge_index = sort_edge_index(train_data[e].edge_index, sort_by_row=False)
         val_data[e].edge_index = sort_edge_index(val_data[e].edge_index, sort_by_row=False)
@@ -374,7 +374,7 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
     #num_batches = 5
     increased_lr = False
     epoch_layer_losses = []
-    vol_temp = 0.7
+    vol_temp = 0.8
     int_temp = 0.1
     print(f"inter temp: {int_temp}")
     print(f"vol temp: {vol_temp}")
@@ -637,6 +637,7 @@ def final_train_loop(model, train_loader, epochs, lr, loss_function, metric,
 def train_loop_final_sem(model_type, data, epochs, loss_function, metric,
                device, model_kwargs, lr=0.001, gci0_data=None, num_batches=2):
     train_data = data
+    train_data['genes', 'interacts', 'genes'].edge_label_index = train_data['genes', 'interacts', 'genes'].edge_index
     skip_edge = [e for e in train_data.edge_types if
                  train_data[e].edge_index.shape[1] < MIN_NBR_EDGES]
     skip_edge.append(('genes', 'interacts', 'genes'))
@@ -707,7 +708,7 @@ def train_loop_final_sem(model_type, data, epochs, loss_function, metric,
 
     best_metric = -np.inf
     model.node_embeddings.requires_grad_(True)
-    model.node_embeddings['genes'].requires_grad_(False)
+    model.node_embeddings['genes'].requires_grad_(True)
     for e in edge_types:
         train_data[e].edge_index = sort_edge_index(train_data[e].edge_index, sort_by_row=False)
     train_data.to(device)
@@ -758,13 +759,14 @@ def train_loop_final_sem(model_type, data, epochs, loss_function, metric,
                     total_neg_sem_loss += neg_sem_loss.detach().item()
                 
             else:
+                assert False
                 preds = model(td)
 
             # loss = loss_function(preds, td['genes', 'interacts',
             #                                         'genes'].edge_label,
             #                     reduction='sum') 
             loss = loss_function(preds, batch_labels, reduction='sum') 
-            
+
             total_loss += loss.detach().item()
 
             combined_loss = loss + (SEMANTIC_WEIGHT *
@@ -790,8 +792,7 @@ def train_loop_final_sem(model_type, data, epochs, loss_function, metric,
         print(f"train loss: {total_loss / total_examples}")
         print(f"semantic loss: {total_sem_loss / num_batches}")
         print(f"neg semantic loss: {total_neg_sem_loss / num_batches}")
-        print(f"train metric: {tm}")
-        model.eval()
+        print(f"train metric: {tm}", flush=True)
        
 
         metrics['train_losses'].append(total_loss / total_examples)

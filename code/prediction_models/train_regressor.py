@@ -13,7 +13,8 @@ from parameters import (EPOCHS, LR, GNN_CHANNELS, NN_CHANNELS, REGULARIZATION,
                         TRAIN_EMBEDDING_EPOCH, TRAIN_GENES, BOX_WEIGHT,
                         DATASET, BOX_EMBEDDINGS, ONLY_GENE_BOXES, SPLIT,
                         SEMANTIC_WEIGHT, MIN_NBR_EDGES, NUM_BATCHES,
-                        SEMANTIC_MEASURE, DROP_OUT)
+                        SEMANTIC_MEASURE, DROP_OUT, NEG_WEIGHT,
+                        INTER_TYPE, VOL_TYPE)
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../embeddings')))
@@ -23,6 +24,7 @@ if is_available():
 else:
     device = 'cpu'
 print(device)
+assert device == 'cuda'
 BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 with open(os.path.join(BASE, f'datasets/split_datasets/{DATASET}.pkl'),
           'rb') as fi:
@@ -63,6 +65,10 @@ print(f"min nbr edges: {MIN_NBR_EDGES}")
 
 print(f"semantic measure: {SEMANTIC_MEASURE}")
 print(f"dropout: {DROP_OUT}")
+print(f"negative weight: {NEG_WEIGHT}")
+
+print(f"interaction type: {INTER_TYPE}")
+print(f"volume type: {VOL_TYPE}")
 
 model_kwargs = {'gnn_channels': GNN_CHANNELS, 'nn_channels': NN_CHANNELS,
                 'meta_data': data.metadata(), 'embeddings': data.x_dict}
@@ -89,10 +95,10 @@ metrics, models, data_splits = cross_val(model_type=Regressor,
                                          loss_function=mse_loss,
                                          metric=r2_score, device=device, lr=LR,
                                          gci0_data=gci0, folds=10, split=SPLIT, num_batches=NUM_BATCHES)
-#metrics, models = cross_val(model_type=DummyModel, model_kwargs=model_kwargs,
-#                            data=data, epochs=EPOCHS, loss_function=mse_loss,
-#                            metric=r2_score, device=device, lr=LR,
-#                            gci0_data=gci0, folds=10)
+metrics, models = cross_val(model_type=DummyModel, model_kwargs=model_kwargs,
+                            data=data, epochs=EPOCHS, loss_function=mse_loss,
+                            metric=r2_score, device=device, lr=LR,
+                            gci0_data=gci0, folds=10)
 
 
 # %%

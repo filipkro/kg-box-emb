@@ -257,11 +257,18 @@ def box_loss_distance(
 
     def dist_inclusion(sub_c, sub_o, sup_c, sup_o, neg=False):
         n = -1 if neg else 1
-        return (
-            torch.relu(n * (torch.abs(sub_c - sup_c) + sub_o - sup_o - gamma))
-            .norm(dim=-1)
-            .sum()
-        )
+        if neg:
+            return (
+                torch.relu(-(torch.abs(sub_c - sup_c) - sub_o - sup_o - gamma))
+                .norm(dim=-1)
+                .sum()
+            )
+        else:
+            return (
+                torch.relu(torch.abs(sub_c - sup_c) + sub_o - sup_o - gamma)
+                .norm(dim=-1)
+                .sum()
+            )
 
     loss = 0
     neg_loss = 0

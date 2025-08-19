@@ -111,8 +111,12 @@ def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0,
 
     def dist_inclusion(sub_c, sub_o, sup_c, sup_o, neg=False):
         n = -1 if neg else 1
-        return torch.relu(n*(torch.abs(sub_c - sup_c) + sub_o - sup_o -
+        if neg:
+            return torch.relu(-(torch.abs(sub_c - sup_c) - sub_o - sup_o -
                           gamma)).norm(dim=-1).sum()
+        else:
+            return torch.relu(torch.abs(sub_c - sup_c) + sub_o - sup_o -
+                          gamma).norm(dim=-1).sum()
     loss = 0
     neg_loss = 0
     for x_dict in embeddings:
@@ -233,7 +237,7 @@ for epoch in range(100*EPOCHS):
     if loss_type == 'distance':
         print(f"Epoch: {epoch}, total loss: {loss.detach().item():.4f}, pos loss: {pos_loss / len(gci['gci0']['classes']):.6f}, neg loss: {neg_loss  / (3*len(gci['gci0']['classes']) + len(gci['gci1_bot']['classes'])):.6f}, reg: {reg_loss:.3f}")
     else:
-        print(f"Epoch: {epoch}, total loss: {loss.detach().item():.4f}, pos ratio: {torch.exp(-pos_loss / len(gci['gci0']['classes'])):.6f}, neg ratio: {1-torch.exp(-neg_loss  / (3*len(gci['gci0']['classes']) + len(gci['gci1_bot']['classes']))):.6f}, reg: {reg_loss:.8f}")
+        print(f"Epoch: {epoch}, total loss: {loss.detach().item():.4f}, pos loss: {torch.exp(-pos_loss / len(gci['gci0']['classes'])):.6f}, neg loss: {1-torch.exp(-neg_loss  / (3*len(gci['gci0']['classes']) + len(gci['gci1_bot']['classes']))):.6f}, reg: {reg_loss:.8f}")
 # print(MinDeltaBoxTensor.from_vector(x_dicts[-1]['classes']).Z)
 # %%
 model.to('cpu')

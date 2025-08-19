@@ -231,9 +231,12 @@ def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0,
                       neg=False, return_layer_loss=False):
 
     def dist_inclusion(sub_c, sub_o, sup_c, sup_o, neg=False):
-        n = -1 if neg else 1
-        return th.relu(n*(th.abs(sub_c - sup_c) + sub_o - sup_o -
-                          gamma)).norm(dim=-1).sum()
+        if neg:
+            return th.relu(-th.abs(sub_c - sup_c) + sub_o + sup_o +
+                          gamma).norm(dim=-1).sum()
+        else:
+            return th.relu(th.abs(sub_c - sup_c) + sub_o - sup_o -
+                          gamma).norm(dim=-1).sum()
     loss = 0
     neg_loss = 0
     layer_losses = []

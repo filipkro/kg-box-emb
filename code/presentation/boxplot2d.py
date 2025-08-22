@@ -4,6 +4,7 @@ from collections import namedtuple
 from matplotlib import pyplot as plt
 from matplotlib import animation
 from matplotlib.patches import Rectangle
+import plotly.graph_objects as go
 import numpy as np
 from pprint import pprint
 
@@ -55,6 +56,10 @@ TEST_BOXES_MINDELTA = {
 #     np.random.rand(4, TEST_BOXES["class_1"].shape[0])
 # ]).T
 TEST_LOSSES = np.random.rand(TEST_BOXES["class_1"].shape[0], 4)
+
+
+def softplus(z):
+    return np.log(1 + np.exp(z))
 
 
 def plot_box_2d(z, Z, fig=None, ax=None):
@@ -117,7 +122,7 @@ def plot_min_delta_box_2d(w, d, fig=None, ax=None):
     ax.set_ylabel("Y-axis")
     ax.grid(True)
     lower_left = w
-    upper_right = w + d
+    upper_right = w + softplus(d)
     width = upper_right[0] - lower_left[0]
     height = upper_right[1] - lower_left[1]
     rect = Rectangle(
@@ -127,6 +132,165 @@ def plot_min_delta_box_2d(w, d, fig=None, ax=None):
 
     if returnFig:
         return fig, ax
+
+
+def plot_min_delta_boxes_2d_matplotlib(
+    w_list,
+    d_list,
+    colors=None,
+    alphas=None,
+    draw_labels=False,
+    labels=None,
+    fig=None,
+    ax=None,
+):
+    """
+    Plot multiple boxes given lists of lower left corners (w_list) and widths/heights (d_list) using matplotlib.
+    Optionally provide a list of labels to display at the box centers.
+    """
+    from matplotlib.patches import Rectangle
+
+    if fig is None or ax is None:
+        fig, ax = plt.subplots()
+
+    if labels is None:
+        labels = [None] * len(w_list)
+    if colors is None:
+        colors = [None] * len(w_list)
+    if alphas is None:
+        alphas = [1] * len(w_list)
+
+    for w, d, label, color, alpha in zip(w_list, d_list, labels, colors, alphas):
+        lower_left = w
+        upper_right = w + softplus(d)
+        width = upper_right[0] - lower_left[0]
+        height = upper_right[1] - lower_left[1]
+        if color is None:
+            color = "black"
+        rect = Rectangle(
+            lower_left,
+            width,
+            height,
+            fill=False,
+            edgecolor=color,
+            alpha=alpha,
+            linewidth=alpha * 2,
+            zorder=alpha * 10,
+        )
+        ax.add_patch(rect)
+        if draw_labels and label:
+            ax.text(
+                lower_left[0] + width / 2,
+                lower_left[1] + height / 2,
+                label,
+                ha="center",
+                va="center",
+                fontsize=7,
+                color=color,
+                zorder=alpha * 10,
+            )
+
+    ax.set_aspect("equal")
+    ax.set_title("2D Box Plot")
+    ax.set_xlabel("X-axis")
+    ax.set_ylabel("Y-axis")
+    ax.grid(True)
+
+    # Optionally, auto-scale axes to fit all boxes
+    all_x = [w[0] for w in w_list] + [
+        w[0] + softplus(d[0]) for w, d in zip(w_list, d_list)
+    ]
+    all_y = [w[1] for w in w_list] + [
+        w[1] + softplus(d[1]) for w, d in zip(w_list, d_list)
+    ]
+    ax.set_xlim(min(all_x) - 0.5, max(all_x) + 0.5)
+    ax.set_ylim(min(all_y) - 0.5, max(all_y) + 0.5)
+
+    return fig, ax
+
+
+def plot_min_delta_boxes_2d_plotly(
+    w_list,
+    d_list,
+    colors=None,
+    draw_labels=False,
+    labels=None,
+    fig=None,
+    edge_points=50,
+):
+    """
+    Plot multiple boxes given lists of lower left corners (w_list) and widths/heights (d_list) using Plotly.
+    Optionally provide a list of labels for hover.
+    """
+    if fig is None:
+        fig = go.Figure()
+    if labels is None:
+        labels = [None] * len(w_list)
+    if colors is None:
+        colors = [None] * len(w_list)
+
+    for w, d, label, color in zip(w_list, d_list, labels, colors):
+        lower_left = w
+        upper_right = w + softplus(d)
+        x0, y0 = lower_left
+        x1, y1 = upper_right
+
+        if color is None:
+            color = "black"
+
+        # Draw the rectangle as a shape
+        fig.add_shape(
+            type="rect",
+            x0=x0,
+            y0=y0,
+            x1=x1,
+            y1=y1,
+            line=dict(color=color, width=1),
+            fillcolor="rgba(0,0,0,0)",
+            name=label,
+        )
+
+        if draw_labels:
+            # Densely sample points along the perimeter
+            xs = []
+            ys = []
+            # Bottom edge
+            xs += list(np.linspace(x0, x1, edge_points))
+            ys += [y0] * edge_points
+            # Right edge
+            xs += [x1] * edge_points
+            ys += list(np.linspace(y0, y1, edge_points))
+            # Top edge
+            xs += list(np.linspace(x1, x0, edge_points))
+            ys += [y1] * edge_points
+            # Left edge
+            xs += [x0] * edge_points
+            ys += list(np.linspace(y1, y0, edge_points))
+
+            fig.add_trace(
+                go.Scatter(
+                    x=xs,
+                    y=ys,
+                    mode="markers",
+                    marker=dict(size=8, opacity=0),
+                    hoverinfo="text",
+                    text=[label] * len(xs) if label else ["" for _ in range(len(xs))],
+                    showlegend=False,
+                )
+            )
+
+    fig.update_layout(
+        title="2D Box Plot",
+        xaxis_title="X-axis",
+        yaxis_title="Y-axis",
+        xaxis=dict(scaleanchor="y", scaleratio=1),
+        yaxis=dict(),
+        template="plotly_white",
+    )
+    fig.update_xaxes(showgrid=True)
+    fig.update_yaxes(showgrid=True)
+
+    return fig
 
 
 def interpolate_boxes(boxes, frames=10):
@@ -294,7 +458,7 @@ def animate_boxes(
             boxes_series = boxes_interpolated[key]
             lower_left = boxes_series[frame][0]
             if mindelta:
-                upper_right = boxes_series[frame][0] + boxes_series[frame][1]
+                upper_right = boxes_series[frame][0] + softplus(boxes_series[frame][1])
             else:
                 upper_right = boxes_series[frame][1]
             width = upper_right[0] - lower_left[0]
@@ -554,7 +718,7 @@ def animate_boxes_with_blitting(
             boxes_series = boxes_interpolated[key]
             lower_left = boxes_series[frame][0]
             if mindelta:
-                upper_right = boxes_series[frame][0] + boxes_series[frame][1]
+                upper_right = boxes_series[frame][0] + softplus(boxes_series[frame][1])
             else:
                 upper_right = boxes_series[frame][1]
             width = upper_right[0] - lower_left[0]

@@ -80,6 +80,7 @@ def get_bots(gci1_bot, i2c, c2i, full_fp, merged_assertions=True):
                 for r in res:
                     bot_pair = tuple(sorted([c2i[str(r[0])], c2i[str(r[1])]]))
                     new_bots.add(bot_pair)
+        print(f"{i+1} of {len(gci1_bot)} completed...", end="\r")
 
     bot_class = gci1_bot[0, 2].item()
     tensor_bots = th.tensor(list(new_bots), dtype=th.int32)

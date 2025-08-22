@@ -112,8 +112,8 @@ def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0,
     def dist_inclusion(sub_c, sub_o, sup_c, sup_o, neg=False):
         n = -1 if neg else 1
         if neg:
-            return torch.relu(-(torch.abs(sub_c - sup_c) - sub_o - sup_o -
-                          gamma)).norm(dim=-1).sum()
+            return torch.relu(-torch.abs(sub_c - sup_c) + sub_o + sup_o +
+                          gamma).norm(dim=-1).sum()
         else:
             return torch.relu(torch.abs(sub_c - sup_c) + sub_o - sup_o -
                           gamma).norm(dim=-1).sum()
@@ -126,9 +126,9 @@ def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0,
             box_emb = box.from_vector(emb)
             
             subclasses = box_emb[gci0[k][:,0], ...]
-            sub_c, sub_o = subclasses.centre, subclasses.Z - subclasses.centre
+            sub_c, sub_o = subclasses.centre, subclasses.centre - subclasses.z
             supclasses = box_emb[gci0[k][:,1], ...]
-            sup_c, sup_o = supclasses.centre, supclasses.Z - supclasses.centre
+            sup_c, sup_o = supclasses.centre, supclasses.centre - supclasses.z
 
             loss += dist_inclusion(sub_c, sub_o, sup_c, sup_o, neg=False)
             
@@ -140,7 +140,7 @@ def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0,
                                              size=(len(gci0[k]),),
                                              device=gci0[k].device)
                 nsub = box_emb[rand_classes, ...]
-                nsub_c, nsub_o = nsub.centre, nsub.Z - nsub.centre
+                nsub_c, nsub_o = nsub.centre, nsub.centre - nsub.z
                 neg_loss += dist_inclusion(nsub_c, nsub_o, sup_c, sup_o,
                                            neg=True)
 
@@ -148,7 +148,7 @@ def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0,
                                              size=(len(gci0[k]),),
                                              device=gci0[k].device)
                 nsup = box_emb[rand_classes, ...]
-                nsup_c, nsup_o = nsup.centre, nsup.Z - nsup.centre
+                nsup_c, nsup_o = nsup.centre, nsup.centre - nsup.z
                 neg_loss += dist_inclusion(sub_c, sub_o, nsup_c, nsup_o,
                                            neg=True)
 
@@ -156,19 +156,19 @@ def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0,
                                              size=(len(gci0[k]),2),
                                              device=gci0[k].device)
                 nsub = box_emb[rand_classes[:,0], ...]
-                nsub_c, nsub_o = nsub.centre, nsub.Z - nsub.centre
+                nsub_c, nsub_o = nsub.centre, nsub.centre - nsub.z
                 nsup = box_emb[rand_classes[:,1], ...]
-                nsup_c, nsup_o = nsup.centre, nsup.Z - nsup.centre
+                nsup_c, nsup_o = nsup.centre, nsup.centre - nsup.z
                 neg_loss += dist_inclusion(nsub_c, nsub_o, nsup_c, nsup_o,
                                            neg=True)
                 
             if neg_data:
                 subclasses = box_emb[neg_data[k][:,0], ...]
                 sub_c = subclasses.centre
-                sub_o = subclasses.Z - subclasses.centre
+                sub_o = subclasses.centre - subclasses.z
                 supclasses = box_emb[neg_data[k][:,1], ...]
                 sup_c = supclasses.centre
-                sup_o = supclasses.Z - supclasses.centre
+                sup_o = supclasses.centre - supclasses.z
 
                 neg_loss += dist_inclusion(sub_c, sub_o, sup_c, sup_o, neg=True)
 

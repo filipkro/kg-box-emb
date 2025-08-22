@@ -38,8 +38,12 @@ for ri in gci2[:,1].unique():
 
 
 # %%
+top_classes = ['http://example.org/royals/Man', 'http://example.org/royals/Woman', 'http://example.org/royals/Person', 'http://example.org/royals/Country']
+top_indices = [c2i[c] for c in top_classes]
 data = HeteroData()
-data['classes'].x = torch.randn(len(i2c), 2*EMBED_DIMS)
+x = torch.randn(len(i2c), 2*EMBED_DIMS)
+x[top_indices, EMBED_DIMS:] = x[top_indices, EMBED_DIMS:].abs()
+data['classes'].x = x
 data['classes'].node_id = torch.arange(len(i2c))
 for r,v in rel_data.items():
     r = r.split('/')[-1].split('#')[-1]

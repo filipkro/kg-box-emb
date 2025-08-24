@@ -14,6 +14,9 @@ from model import HeteroGNNGAT, HeteroGNNSAGE, OntologyGNN
 import torch
 from torch_geometric import seed_everything
 
+import rdflib
+from rdflib.namespace import RDF
+
 import logging
 from time import time
 
@@ -23,7 +26,12 @@ from tqdm.auto import tqdm
 from box_forward import get_boxes_from_model_and_graph
 
 sys.path.append(os.path.join("/", "workspaces", "kg-box-emb", "code", "presentation"))
-from boxplot2d import plot_box_2d, animate_boxes, animate_boxes_with_blitting
+from boxplot2d import (
+    plot_box_2d,
+    plot_min_delta_boxes_2d_matplotlib,
+    animate_boxes,
+    animate_boxes_with_blitting,
+)
 
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -35,17 +43,18 @@ torch.autograd.set_detect_anomaly(True)
 
 # %%
 GNN_CHANNELS = [2 * 2]
-LR = 5e-1
-LR_DECAY = 0.0001
+LR = 0.05
+LR_DECAY = 0.001
 REGULARIZATION = 0
 # BOX_REGULARIZATION = 0
 # BOX_REGULARIZATION = 1e-7
 # BOX_REGULARIZATION = 1e-5
 BOX_REGULARIZATION = 0.001
 # BOX_REGULARIZATION = 1000
-EPOCHS = 251
-NEG_WEIGHT = 0.1
-LOSS_TYPE = "inclusion"
+EPOCHS = 501
+NEG_WEIGHT = 0.5
+NEG_RANDOM_WEIGHT = 0.1
+LOSS_TYPE = "distance"
 SCALE_LOSSES = False
 
 
@@ -78,6 +87,7 @@ def box_loss(
     gamma=0.0,
     neg_data=None,
     neg=False,
+    neg_random_weight=0.0,
     neg_classes_to_skip=0,
     **kwargs,
 ):
@@ -99,6 +109,7 @@ def box_loss(
             vol_temp=vol_temp,
             neg_data=neg_data,
             neg=neg,
+            neg_random_weight=neg_random_weight,
             neg_classes_to_skip=neg_classes_to_skip,
         )
     if loss_type == "distance":
@@ -109,6 +120,7 @@ def box_loss(
             gamma=gamma,
             neg_data=neg_data,
             neg=neg,
+            neg_random_weight=neg_random_weight,
             neg_classes_to_skip=neg_classes_to_skip,
         )
     pass
@@ -118,12 +130,13 @@ def box_loss_inclusion(
     embeddings,
     gci0,
     box=MinDeltaBoxTensor,
-    inter="hard",
+    inter="gumbel",
     inter_temp=0.1,
-    vol="hard",
+    vol="bessel",
     vol_temp=0.1,
     neg_data=None,
     neg=False,
+    neg_random_weight=0.0,
     neg_classes_to_skip=0,
     **kwargs,
 ):
@@ -252,6 +265,7 @@ def box_loss_distance(
     gamma=0.0,
     neg_data=None,
     neg=False,
+    neg_random_weight=0.0,
     neg_classes_to_skip=0,
 ):
 
@@ -259,7 +273,7 @@ def box_loss_distance(
         n = -1 if neg else 1
         if neg:
             return (
-                torch.relu(-(torch.abs(sub_c - sup_c) - sub_o - sup_o - gamma))
+                torch.relu(-torch.abs(sub_c - sup_c) + sub_o + sup_o + gamma)
                 .norm(dim=-1)
                 .sum()
             )
@@ -279,9 +293,9 @@ def box_loss_distance(
             box_emb = box.from_vector(emb)
 
             subclasses = box_emb[gci0[k][:, 0], ...]
-            sub_c, sub_o = subclasses.centre, subclasses.Z - subclasses.centre
+            sub_c, sub_o = subclasses.centre, subclasses.centre - subclasses.z
             supclasses = box_emb[gci0[k][:, 1], ...]
-            sup_c, sup_o = supclasses.centre, supclasses.Z - supclasses.centre
+            sup_c, sup_o = supclasses.centre, supclasses.centre - supclasses.z
 
             loss += dist_inclusion(sub_c, sub_o, sup_c, sup_o, neg=False)
 
@@ -295,8 +309,10 @@ def box_loss_distance(
                     device=gci0[k].device,
                 )
                 nsub = box_emb[rand_classes, ...]
-                nsub_c, nsub_o = nsub.centre, nsub.Z - nsub.centre
-                neg_loss += dist_inclusion(nsub_c, nsub_o, sup_c, sup_o, neg=True)
+                nsub_c, nsub_o = nsub.centre, nsub.centre - nsub.z
+                neg_loss += neg_random_weight * dist_inclusion(
+                    nsub_c, nsub_o, sup_c, sup_o, neg=True
+                )
 
                 rand_classes = torch.randint(
                     low=neg_classes_to_skip,
@@ -305,8 +321,10 @@ def box_loss_distance(
                     device=gci0[k].device,
                 )
                 nsup = box_emb[rand_classes, ...]
-                nsup_c, nsup_o = nsup.centre, nsup.Z - nsup.centre
-                neg_loss += dist_inclusion(sub_c, sub_o, nsup_c, nsup_o, neg=True)
+                nsup_c, nsup_o = nsup.centre, nsup.centre - nsup.z
+                neg_loss += neg_random_weight * dist_inclusion(
+                    sub_c, sub_o, nsup_c, nsup_o, neg=True
+                )
 
                 rand_classes = torch.randint(
                     low=neg_classes_to_skip,
@@ -315,18 +333,20 @@ def box_loss_distance(
                     device=gci0[k].device,
                 )
                 nsub = box_emb[rand_classes[:, 0], ...]
-                nsub_c, nsub_o = nsub.centre, nsub.Z - nsub.centre
+                nsub_c, nsub_o = nsub.centre, nsub.centre - nsub.z
                 nsup = box_emb[rand_classes[:, 1], ...]
-                nsup_c, nsup_o = nsup.centre, nsup.Z - nsup.centre
-                neg_loss += dist_inclusion(nsub_c, nsub_o, nsup_c, nsup_o, neg=True)
+                nsup_c, nsup_o = nsup.centre, nsup.centre - nsup.z
+                neg_loss += neg_random_weight * dist_inclusion(
+                    nsub_c, nsub_o, nsup_c, nsup_o, neg=True
+                )
 
             if neg_data:
                 subclasses = box_emb[neg_data[k][:, 0], ...]
                 sub_c = subclasses.centre
-                sub_o = subclasses.Z - subclasses.centre
+                sub_o = subclasses.centre - subclasses.z
                 supclasses = box_emb[neg_data[k][:, 1], ...]
                 sup_c = supclasses.centre
-                sup_o = supclasses.Z - supclasses.centre
+                sup_o = supclasses.centre - supclasses.z
 
                 neg_loss += dist_inclusion(sub_c, sub_o, sup_c, sup_o, neg=True)
 
@@ -369,6 +389,7 @@ def train_boxes_OntologyGNN(
     regularization=REGULARIZATION,
     box_regularization=BOX_REGULARIZATION,
     neg_weight=NEG_WEIGHT,
+    neg_random_weight=NEG_RANDOM_WEIGHT,
     scale_losses=SCALE_LOSSES,
     save_weights=False,
     neg_classes_to_skip=0,
@@ -395,6 +416,7 @@ SCALE_LOSSES: {scale_losses}"""
     print(sum(p.numel() for p in model.parameters() if p.requires_grad))
     # %%
     model.requires_grad_(True)
+    model.node_embeddings.requires_grad_(True)
 
     boxes = []
     weights = [] if save_weights else None
@@ -403,21 +425,25 @@ SCALE_LOSSES: {scale_losses}"""
         for epoch in range(epochs):
             optimizer.zero_grad()
 
-            # x_dicts = model(graph, return_embs=True)
+            x_dicts = model(graph, return_embs=True)
             # ^^^ List of dictionaries, one for each layer (inc. initial embeddings)
-            x_dicts = [model(graph, return_embs=False)]
+            # x_dicts = [model(graph, return_embs=False)]
 
             pos_loss, neg_loss = box_loss(
                 x_dicts,
                 gci["gci0"],
                 loss_type=loss_type,
-                inter="hard",
-                vol="hard",
+                inter="gumbel",
+                vol="bessel",
                 neg_data=gci["gci1_bot"],
                 neg=True,
+                neg_random_weight=neg_random_weight,
                 neg_classes_to_skip=neg_classes_to_skip,
             )
-            reg_loss = small_box_penalty(x_dicts)
+            if box_regularization > 0.0:
+                reg_loss = small_box_penalty(x_dicts)
+            else:
+                reg_loss = torch.tensor(0.0)
             pos_loss_scaled = pos_loss / len(gci["gci0"]["classes"])
             neg_loss_scaled = neg_loss / (
                 3 * len(gci["gci0"]["classes"]) + len(gci["gci1_bot"]["classes"])
@@ -438,7 +464,7 @@ SCALE_LOSSES: {scale_losses}"""
 
             if loss_type == "distance":
                 print(
-                    f"Epoch: {epoch}, total loss: {total_loss:.4g}, pos loss: {pos_loss_scaled:.6g}, neg loss: {neg_loss_scaled:.6g}, reg: {reg_loss:.3g}"
+                    f"Epoch: {epoch}, total loss: {total_loss:.4g}, pos loss: {pos_loss:.6g}, neg loss: {neg_loss:.6g}, reg: {reg_loss:.3g}"
                 )
             else:
                 print(
@@ -458,8 +484,8 @@ SCALE_LOSSES: {scale_losses}"""
                             .data.detach()
                             .numpy(),
                             total_loss,
-                            pos_loss_scaled.detach().item(),
-                            neg_loss_scaled.detach().item(),
+                            pos_loss.detach().item(),
+                            neg_loss.detach().item(),
                             reg_loss.detach().item(),
                         )
                     )
@@ -559,6 +585,7 @@ if __name__ == "__main__":
         fo.write(f"Regularization: {REGULARIZATION}\n")
         fo.write(f"Box regularization: {BOX_REGULARIZATION}\n")
         fo.write(f"Negative weight: {NEG_WEIGHT}\n")
+        fo.write(f"Negative (Random) weight: {NEG_RANDOM_WEIGHT}\n")
         fo.write(f"Losses scaled (pos. and neg.): {SCALE_LOSSES}\n")
         fo.write(f"Model channels: {GNN_CHANNELS}\n")
         fo.write(f"Training started at: {now.strftime('%Y-%m-%d %H:%M:%S')}\n")
@@ -610,6 +637,44 @@ if __name__ == "__main__":
             )
         )(rev_class_dict[c])
     )
+
+    # Plot last embeddings
+    plot_boxes = {k: v[-1] for k, v in be_dict.items()}
+    w_list = [t[0, :] for t in plot_boxes.values()]
+    d_list = [t[1, :] for t in plot_boxes.values()]
+
+    g = rdflib.Graph()
+    g.parse(os.path.join(BASE, data["source_ontology"]))
+    rev_superclass_dict = {}
+    for key, sub in rev_class_dict.items():
+        q = [
+            t
+            for t in g.triples((rdflib.URIRef(sub), RDF.type, None))
+            if t[2] != rdflib.URIRef("http://www.w3.org/2002/07/owl#NamedIndividual")
+        ]
+        if len(q) == 0:
+            rev_superclass_dict[key] = None
+        else:
+            rev_superclass_dict[key] = q[0][2]
+
+    color_dict = dict(
+        zip(
+            sorted(list(set(rev_superclass_dict.values()))),
+            [None, "green", "blue", "purple", "red"],
+        )
+    )
+    colors = [color_dict.get(v) for v in rev_superclass_dict.values()]
+    labels = [rev_class_dict.get(k) for k in plot_boxes.keys()]
+    fig, ax = plot_min_delta_boxes_2d_matplotlib(
+        w_list,
+        d_list,
+        colors,
+        alphas=[1.0 if i < 6 else 0.3 for i in range(len(colors))],
+        draw_labels=True,
+        labels=[l if i < 4 else None for i, l in enumerate(labels)],
+    )
+    fig.savefig(os.path.join(output_dir, "final_boxes.png"), dpi=300)
+    fig.savefig(os.path.join(output_dir, "final_boxes.pdf"))
 
     animate_boxes_with_blitting(
         be_dict,

@@ -13,6 +13,7 @@ from pprint import pprint
 from model import HeteroGNNGAT, HeteroGNNSAGE, OntologyGNN
 import torch
 from torch_geometric import seed_everything
+from matplotlib import pyplot as plt
 
 import rdflib
 from rdflib.namespace import RDF
@@ -23,7 +24,7 @@ from time import time
 from itertools import product
 from tqdm.auto import tqdm
 
-from box_forward import get_boxes_from_model_and_graph
+from box_forward import get_boxes_from_model_and_graph, get_initial_boxes_from_model
 
 sys.path.append(os.path.join("/", "workspaces", "kg-box-emb", "code", "presentation"))
 from boxplot2d import (

@@ -34,6 +34,7 @@ from boxplot2d import (
     animate_boxes,
     animate_boxes_with_blitting,
 )
+from boxplot3d import plot_min_delta_boxes_3d_matplotlib
 
 
 device = "cuda" if torch.cuda.is_available() else "cpu"

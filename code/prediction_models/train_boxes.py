@@ -654,6 +654,21 @@ SCALE_LOSSES: {SCALE_LOSSES}"""
 
     # %%
     BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    import datetime
+
+    now = datetime.datetime.now()
+    output_dir = os.path.join(
+        BASE,
+        "trained_models",
+        # "hyperparam_search",
+        f"{LOSS_TYPE}_loss__lr_{LR}_lr_dec_{LR_DECAY}_boxreg_{BOX_REGULARIZATION}_neg_{NEG_WEIGHT}_negrand_{NEG_RANDOM_WEIGHT}_scale_{SCALE_LOSSES}_{now.strftime('%Y%m%d_%H%M%S')}",
+    )
+    os.makedirs(output_dir, exist_ok=True)
+    orig_stdout = sys.stdout
+    f = open(os.path.join(output_dir, "log.txt"), "w")
+    sys.stdout = f
+
+    #
     with open(os.path.join(BASE, "datasets/box_graph.pkl"), "rb") as fi:
         data = pickle.load(fi)
     graph = data["graph"].to(device)
@@ -669,13 +684,6 @@ SCALE_LOSSES: {SCALE_LOSSES}"""
 
     # Create an output directory if it doesn't exist
     # with current date and time in the directory name
-    import datetime
-
-    now = datetime.datetime.now()
-    output_dir = os.path.join(
-        BASE, "trained_models", f"{LOSS_TYPE}_loss_{now.strftime('%Y%m%d_%H%M%S')}"
-    )
-    os.makedirs(output_dir, exist_ok=True)
 
     # Save the hyperparameters and training information to a text file
     with open(os.path.join(output_dir, "training_info.txt"), "w") as fo:

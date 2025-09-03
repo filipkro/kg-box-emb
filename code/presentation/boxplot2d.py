@@ -3,7 +3,7 @@ from functools import partial
 from collections import namedtuple
 from matplotlib import pyplot as plt
 from matplotlib import animation
-from matplotlib.patches import Rectangle
+from matplotlib.patches import Rectangle, Patch
 import plotly.graph_objects as go
 import numpy as np
 from pprint import pprint
@@ -128,7 +128,6 @@ def plot_min_delta_box_2d(w, d, fig=None, ax=None):
     rect = Rectangle(
         lower_left, width, height, fill=None, edgecolor="blue", linewidth=1
     )
-    ax.add_patch(rect)
 
     if returnFig:
         return fig, ax
@@ -138,9 +137,12 @@ def plot_min_delta_boxes_2d_matplotlib(
     w_list,
     d_list,
     colors=None,
+    color_legend=None,
     alphas=None,
+    linewidths=None,
     draw_labels=False,
     labels=None,
+    title="Box Embeddings",
     fig=None,
     ax=None,
 ):
@@ -159,8 +161,12 @@ def plot_min_delta_boxes_2d_matplotlib(
         colors = [None] * len(w_list)
     if alphas is None:
         alphas = [1] * len(w_list)
+    if linewidths is None:
+        linewidths = map(lambda a: 2 * a, alphas)
 
-    for w, d, label, color, alpha in zip(w_list, d_list, labels, colors, alphas):
+    for w, d, label, color, alpha, lw in zip(
+        w_list, d_list, labels, colors, alphas, linewidths
+    ):
         lower_left = w
         upper_right = w + softplus(d)
         width = upper_right[0] - lower_left[0]
@@ -174,26 +180,34 @@ def plot_min_delta_boxes_2d_matplotlib(
             fill=False,
             edgecolor=color,
             alpha=alpha,
-            linewidth=alpha * 2,
+            linewidth=lw,
             zorder=alpha * 10,
         )
         ax.add_patch(rect)
         if draw_labels and label:
+            label_x = upper_right[0] + 0.02 * (upper_right[0] - lower_left[0])
+            label_y = upper_right[1]
             ax.text(
-                lower_left[0] + width / 2,
-                lower_left[1] + height / 2,
+                label_x,
+                label_y,
                 label,
-                ha="center",
+                ha="left",
                 va="center",
-                fontsize=7,
-                color=color,
-                zorder=alpha * 10,
+                fontsize=10,
+                color="black",
+                bbox=dict(
+                    facecolor="white",
+                    edgecolor=color,
+                    boxstyle="round,pad=0.2",
+                    linewidth=1.5,
+                ),
+                zorder=11,
             )
 
     ax.set_aspect("equal")
-    ax.set_title("2D Box Plot")
-    ax.set_xlabel("X-axis")
-    ax.set_ylabel("Y-axis")
+    ax.set_title(title)
+    ax.set_xlabel("Dimension 1")
+    ax.set_ylabel("Dimension 2")
     ax.grid(True)
 
     # Optionally, auto-scale axes to fit all boxes
@@ -203,8 +217,24 @@ def plot_min_delta_boxes_2d_matplotlib(
     all_y = [w[1] for w in w_list] + [
         w[1] + softplus(d[1]) for w, d in zip(w_list, d_list)
     ]
-    ax.set_xlim(min(all_x) - 0.5, max(all_x) + 0.5)
-    ax.set_ylim(min(all_y) - 0.5, max(all_y) + 0.5)
+    ax.set_xlim(
+        min(all_x) - 0.10 * (max(all_x) - min(all_x)),
+        max(all_x) + 0.30 * (max(all_x) - min(all_x)),
+        # -1.5,
+        # 3.0,
+    )
+    ax.set_ylim(
+        min(all_y) - 0.10 * (max(all_y) - min(all_y)),
+        max(all_y) + 0.30 * (max(all_y) - min(all_y)),
+        # -1.8,
+        # 8.0,
+    )
+
+    if color_legend is not None:
+        plt.legend(
+            handles=[Patch(color=k, label=v) for k, v in color_legend.items()],
+            loc="upper right",
+        ).set_zorder(99)
 
     return fig, ax
 

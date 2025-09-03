@@ -57,6 +57,11 @@ NEG_RANDOM_WEIGHT = 0.1
 LOSS_TYPE = "distance"
 SCALE_LOSSES = False
 
+# Outputs
+PLOT_LAST_PRE_GNN = False
+PLOT_LAST = True
+ANIMATE = False
+
 
 class TrainingLogger:
     def __init__(self, log_interval=10):
@@ -516,6 +521,89 @@ SCALE_LOSSES: {scale_losses}"""
     return model, boxes, last_epoch, weights
 
 
+def plot_boxes_mpl(
+    data,
+    rev_class_dict,
+    plot_boxes,
+    base_fp,
+    fig=None,
+    ax=None,
+    loss_type=LOSS_TYPE,
+    plot_labels=True,
+):
+    w_list = [t[0, :] for t in plot_boxes.values()]
+    d_list = [t[1, :] for t in plot_boxes.values()]
+
+    g = rdflib.Graph()
+    g.parse(os.path.join(base_fp, data["source_ontology"]))
+    rev_superclass_dict = {}
+    for key, sub in rev_class_dict.items():
+        q = [
+            t
+            for t in g.triples((rdflib.URIRef(sub), RDF.type, None))
+            if t[2] != rdflib.URIRef("http://www.w3.org/2002/07/owl#NamedIndividual")
+        ]
+        if len(q) == 0:
+            rev_superclass_dict[key] = None
+        else:
+            rev_superclass_dict[key] = q[0][2]
+
+    color_dict = dict(
+        zip(
+            sorted(list(set(rev_superclass_dict.values()))),
+            [None, "green", "blue", "purple", "red"],
+        )
+    )
+    colors = [color_dict.get(v) for v in rev_superclass_dict.values()]
+    colors = ["black" if c == "red" else c for c in colors]
+    labels = [
+        rev_class_dict.get(k).split("/")[-1] if plot_labels else None
+        for k in plot_boxes.keys()
+    ]
+    if w_list[0].shape == (3,):
+        fig, ax = plot_min_delta_boxes_3d_matplotlib(
+            w_list,
+            d_list,
+            colors,
+            alphas=[
+                1.0 if i < 4 else 0.0 if i < 6 else 0.3 for i in range(len(colors))
+            ],
+            draw_labels=True,
+            labels=[l if i < 4 else None for i, l in enumerate(labels)],
+            linewidths=[
+                2.5 if i < 4 else 0.0 if i < 6 else 0.4 for i in range(len(colors))
+            ],
+            color_legend={"purple": "Women", "blue": "Men", "green": "Countries"},
+            title=f"Box Embeddings - {'Overlap' if loss_type == 'inclusion' else 'Distance'}",
+            fig=fig,
+            ax=ax,
+        )
+    elif w_list[0].shape == (2,):
+        fig, ax = plot_min_delta_boxes_2d_matplotlib(
+            w_list,
+            d_list,
+            colors,
+            alphas=[
+                1.0 if i < 4 else 0.0 if i < 6 else 0.3 for i in range(len(colors))
+            ],
+            draw_labels=True,
+            labels=[l if i < 4 else None for i, l in enumerate(labels)],
+            linewidths=[
+                2.5 if i < 4 else 0.0 if i < 6 else 0.4 for i in range(len(colors))
+            ],
+            color_legend={"purple": "Women", "blue": "Men", "green": "Countries"},
+            title=f"Box Embeddings - {'Overlap' if loss_type == 'inclusion' else 'Distance'}",
+            fig=fig,
+            ax=ax,
+        )
+    else:
+        raise NotImplementedError(
+            "Plots for dimensions other than 2 or 3 not implemented."
+        )
+
+    return fig, ax
+
+
 if __name__ == "__main__":
 
     #     # lrs = [1e-3, 1e-2, 1e-1]
@@ -639,53 +727,39 @@ if __name__ == "__main__":
     )
 
     # Plot last embeddings
-    plot_boxes = {k: v[-1] for k, v in be_dict.items()}
-    w_list = [t[0, :] for t in plot_boxes.values()]
-    d_list = [t[1, :] for t in plot_boxes.values()]
+    if PLOT_LAST_PRE_GNN:
+        first_boxes = get_initial_boxes_from_model(model, graph).data.detach().numpy()
+        plot_boxes_pre = {i: first_boxes[i, :, :] for i in range(boxes_epochs.shape[1])}
+        fig_pre, ax_pre = plot_boxes_mpl(data, rev_class_dict, plot_boxes_pre, BASE)
+        fig_pre.savefig(os.path.join(output_dir, "final_boxes_pre_gnn.png"), dpi=300)
+        fig_pre.savefig(os.path.join(output_dir, "final_boxes_pre_gnn.pdf"))
+        # plt.close("all")
 
-    g = rdflib.Graph()
-    g.parse(os.path.join(BASE, data["source_ontology"]))
-    rev_superclass_dict = {}
-    for key, sub in rev_class_dict.items():
-        q = [
-            t
-            for t in g.triples((rdflib.URIRef(sub), RDF.type, None))
-            if t[2] != rdflib.URIRef("http://www.w3.org/2002/07/owl#NamedIndividual")
-        ]
-        if len(q) == 0:
-            rev_superclass_dict[key] = None
-        else:
-            rev_superclass_dict[key] = q[0][2]
+    if PLOT_LAST:
+        plot_boxes = {k: v[-1] for k, v in be_dict.items()}
+        fig, ax = plot_boxes_mpl(data, rev_class_dict, plot_boxes, BASE)
+        fig.savefig(os.path.join(output_dir, "final_boxes.png"), dpi=300)
+        fig.savefig(os.path.join(output_dir, "final_boxes.pdf"))
+        # plt.close("all")
 
-    color_dict = dict(
-        zip(
-            sorted(list(set(rev_superclass_dict.values()))),
-            [None, "green", "blue", "purple", "red"],
+    if ANIMATE:
+        animate_boxes_with_blitting(
+            be_dict,
+            losses,
+            save=True,
+            fp=os.path.join(output_dir, "training.mp4"),
+            box_filter=lambda k: k in true_classes,
+            # box_filter=lambda k: k in plot_classes,
+            # box_filter=lambda k: True,
+            box_filter_type="bold",
+            box_labels=rev_class_dict,
+            box_label_filter=lambda k: k in true_classes,
+            # box_label_filter=lambda k: k in plot_classes
         )
-    )
-    colors = [color_dict.get(v) for v in rev_superclass_dict.values()]
-    labels = [rev_class_dict.get(k) for k in plot_boxes.keys()]
-    fig, ax = plot_min_delta_boxes_2d_matplotlib(
-        w_list,
-        d_list,
-        colors,
-        alphas=[1.0 if i < 6 else 0.3 for i in range(len(colors))],
-        draw_labels=True,
-        labels=[l if i < 4 else None for i, l in enumerate(labels)],
-    )
-    fig.savefig(os.path.join(output_dir, "final_boxes.png"), dpi=300)
-    fig.savefig(os.path.join(output_dir, "final_boxes.pdf"))
+        # except Exception as e:
+        #     print(traceback.format_exc(), file=sys.stderr)
+        # finally:
+        #     f.close()
+        #     sys.stdout = orig_stdout
 
-    animate_boxes_with_blitting(
-        be_dict,
-        losses,
-        save=True,
-        fp=os.path.join(output_dir, "training.mp4"),
-        box_filter=lambda k: k in true_classes,
-        # box_filter=lambda k: k in plot_classes,
-        # box_filter=lambda k: True,
-        box_filter_type="bold",
-        box_labels=rev_class_dict,
-        box_label_filter=lambda k: k in true_classes,
-        # box_label_filter=lambda k: k in plot_classes
-    )
+    # plt.close("all")

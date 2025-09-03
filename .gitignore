@@ -270,3 +270,7 @@ graphs/royals-extended-2.ttl
 graphs/royals-extended-3.ttl
 graphs/royals-extended-4.ttl
 graphs/royals-extended.ttl
+
+
+*.out
+*.log

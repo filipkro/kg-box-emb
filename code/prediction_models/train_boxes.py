@@ -19,6 +19,7 @@ import rdflib
 from rdflib.namespace import RDF
 
 import logging
+import traceback
 from time import time
 
 from itertools import product
@@ -607,37 +608,49 @@ def plot_boxes_mpl(
 
 if __name__ == "__main__":
 
-    #     # lrs = [1e-3, 1e-2, 1e-1]
-    #     lrs = [1e-1]
-    #     lr_decays = [0, 0.001]
-    #     # box_regs = [0, 1e-4, 1]
-    #     box_regs = [0]
-    #     # neg_weights = [1e-2, 1e-1, 1]
-    #     neg_weights = [10]
-    #     # scales = [True, False]
-    #     scales = [False]
-    #     gnns = [[2*2], [16, 2*2]]
+    lrs = [1e-2, 1e-1, 1e0]
+    # lrs = [1e-1]
+    lr_decays = [0, 0.001]
+    box_regs = [0, 1e-4, 1]
+    # box_regs = [0]
+    # neg_weights = [1e-2, 1e-1, 1]
+    neg_weights = [0.1, 1, 10]
+    neg_rand_weights = [0.01, 1]
+    scales = [True, False]
+    # scales = [False]
+    # gnns = [[2 * 2], [2 * 2, 2 * 2]]
+    gnns = [[2 * 2]]
 
-    #     for lr, dec, br, neg, scale, g in tqdm(product(lrs, lr_decays, box_regs, neg_weights, scales, gnns)):
-    #         LR = lr
-    #         LR_DECAY = dec
-    #         BOX_REGULARIZATION = br
-    #         NEG_WEIGHT = neg
-    #         SCALE_LOSSES = scale
-    #         GNN_CHANNELS = g
-
-    #         print(f"""
-
-    # GNN_CHANNELS: {GNN_CHANNELS}
-    # LR: {LR}
-    # LR_DECAY: {LR_DECAY}
-    # EPOCHS: {EPOCHS}
-    # LOSS_TYPE: {LOSS_TYPE}
-    # REGULARIZATION: {REGULARIZATION}
-    # BOX_REGULARIZATION: {BOX_REGULARIZATION}
-    # NEG_WEIGHT: {NEG_WEIGHT}
-    # SCALE_LOSSES: {SCALE_LOSSES}"""
+    # for i, (lr, dec, br, neg, neg_rand, scale, g) in tqdm(
+    #     enumerate(
+    #         product(
+    #             lrs, lr_decays, box_regs, neg_weights, neg_rand_weights, scales, gnns
     #         )
+    #     )
+    # ):
+    #     if i < 67:
+    #         continue
+    #     LR = lr
+    #     LR_DECAY = dec
+    #     BOX_REGULARIZATION = br
+    #     NEG_WEIGHT = neg
+    #     NEG_RANDOM_WEIGHT = neg_rand
+    #     SCALE_LOSSES = scale
+    #     GNN_CHANNELS = g
+
+    print(
+        f"""
+
+GNN_CHANNELS: {GNN_CHANNELS}
+LR: {LR}
+LR_DECAY: {LR_DECAY}
+EPOCHS: {EPOCHS}
+LOSS_TYPE: {LOSS_TYPE}
+REGULARIZATION: {REGULARIZATION}
+BOX_REGULARIZATION: {BOX_REGULARIZATION}
+NEG_WEIGHT: {NEG_WEIGHT}
+SCALE_LOSSES: {SCALE_LOSSES}"""
+    )
 
     # %%
     BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -679,14 +692,18 @@ if __name__ == "__main__":
         fo.write(f"Model channels: {GNN_CHANNELS}\n")
         fo.write(f"Training started at: {now.strftime('%Y-%m-%d %H:%M:%S')}\n")
 
+        # try:
     model, boxes, stop_epoch, weights = train_boxes_OntologyGNN(
         graph,
         gci,
         save_weights=True,
-        neg_classes_to_skip=len(true_classes) + 2,
+        # neg_classes_to_skip=len(true_classes) + 2,
+        # lr=lr,
+        # lr_decay=dec,
         # gnn_channels=g,
         # box_regularization=br,
         # neg_weight=neg,
+        # neg_random_weight=neg_rand,
         # scale_losses=scale,
     )
 
@@ -726,6 +743,7 @@ if __name__ == "__main__":
             )
         )(rev_class_dict[c])
     )
+    sys.stdout = sys.__stdout__
 
     # Plot last embeddings
     if PLOT_LAST_PRE_GNN:

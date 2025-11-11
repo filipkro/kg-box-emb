@@ -14,6 +14,8 @@ SGA_ExE.txt
 SGA_NxN.txt
 aao1729_data_s1.tsv
 
+
+
 interactions.pkl
 interactions_DMA30.pkl
 pyg_graph_c_DMA30_fitness.pkl
@@ -31,8 +33,39 @@ go-ext.ttl
 kg-nf-no-int.ttl
 kg-nf.ttl
 
+graphs/HYPO_DS_10000.ttl
+graphs/bc_reacts.ttl
+graphs/dummy_test.ttl
+graphs/fhkb.owl
+graphs/royals.ttl
+
 datasplit.pkl
 20250211-123659-reg.pkl
 20250202-102800-reg.pkl
 
 large_files*
+
+
+explanations/DMA30-InputXGradient-full_model-XX-10000-semloss-cleaned-top10000.tsv
+explanations/DMA30-InputXGradient-full_model-XX-10000-semloss-cleaned-top10000ind.tsv
+explanations/DMA30-InputXGradient-full_model-XX-10000-semloss-cleaned-top10000ind_min5.tsv
+explanations/DMA30-InputXGradient-full_model-XX-10000-semloss-cleaned.tsv
+explanations/DMA30-InputXGradient-full_model-XX-10000-semloss.tsv
+explanations/experiment_df.tsv
+
+data/chems_in_paths.json
+data/chems_in_reacts.json
+data/locs_in_reacts.json
+data/locs_in_reacts.pkl
+data/xrefs.json
+
+trained_models
+
+sem_weight_trained_models/
+
+datasets/split_datasets/pyg_graph_box_interactions.pkl
+datasets/box_graph.pkl
+
+datasels-old
+
+.DS_Store

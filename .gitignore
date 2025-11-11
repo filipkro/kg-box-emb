@@ -66,6 +66,6 @@ sem_weight_trained_models/
 datasets/split_datasets/pyg_graph_box_interactions.pkl
 datasets/box_graph.pkl
 
-datasels-old
+datasets-old
 
 .DS_Store

@@ -23,3 +23,4 @@ x_dict = model(graph.x_dict, graph.edge_index_dict)
 boxes = MinDeltaBoxTensor.from_vector(x_dict['classes'])
 print(boxes.Z)
 # %%
+boxes = MinDeltaBoxTensor.from_vector(graph.x_dict['classes'])

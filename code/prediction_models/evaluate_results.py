@@ -34,3 +34,5 @@ print(f"Shapiro-Wilk p-value: {shapiro_p}")
 t_stat, p_value = ttest_rel(r2_boxes, r2_wo_boxes, alternative='greater')
 print(f"Paired t-test statistic: {t_stat}")
 print(f"P-value: {p_value}")
+
+# %%

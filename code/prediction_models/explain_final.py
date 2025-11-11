@@ -130,7 +130,7 @@ def collaps_columns(row, combination='mult'):
 # %%
 class RegressorFromModel(Model):
     def __init__(self, model, node_ids):
-        super().__init__([1], [1], None, {k: v.weight for k,v in
+        super().__init__([], [], None, {k: v.weight for k,v in
                                           model.node_embeddings.items()},
                                           custom=False)
         self.lin_layers = model.lin_layers
@@ -140,6 +140,7 @@ class RegressorFromModel(Model):
         self.fp = model.fp
         self._neighbors_to_sample = model._neighbors_to_sample
         self.node_ids = node_ids
+        self.dropout = th.nn.Dropout(0.0)
 
     def forward(self, x_dict, edge_index_dict, edge_label_index):
         data = HeteroData()
@@ -156,7 +157,9 @@ class RegressorFromModel(Model):
 BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 device = 'cpu'
 # %%
-with open(os.path.join(BASE, 'large_files/20250221-165714-reg.pkl'),
+# with open(os.path.join(BASE, 'large_files/20250221-165714-reg.pkl'),
+#           'rb') as fi:
+with open(os.path.join(BASE, 'sem_weight_trained_models/20250819-134935-reg.pkl'),
           'rb') as fi:
     m = RenamingUnpickler(fi).load()['model']
 m.to(device)
@@ -214,8 +217,10 @@ with open(os.path.join(BASE, 'datasets/split_datasets/root.pkl'), 'rb') as fi:
 rev_root = {v: k for k,v in root_index.items()}
 rev_dicts['root'] = rev_root
 # %%
+# with open(os.path.join(BASE, 'datasets/split_datasets/'
+#                        'pyg_graph_c_DMA30_fitness.pkl'), 'rb') as fi:
 with open(os.path.join(BASE, 'datasets/split_datasets/'
-                       'pyg_graph_c_DMA30_fitness.pkl'), 'rb') as fi:
+                       'pyg_graph_box_interactions_DMA30.pkl'), 'rb') as fi:
     data = pickle.load(fi).contiguous()
 data.to(device)
 # %%
@@ -273,24 +278,24 @@ for k in quality_index.keys():
 print(data[('genes', 'RO_0002200', 'quality')]['edge_index'].shape)
 print(data[('quality', 'rev_RO_0002200', 'genes')]['edge_index'].shape)
 
-eb = data['mat_ent', 'encodedBy', 'genes']['edge_index']
-cb = data['reactions', 'catalyzedBy', 'mat_ent']['edge_index']
-cbg = []
-for r in cb.T:
-    if r[1] in eb[0,:]:
-        p = [r[0], eb[1,eb[0,:] == r[1]]]
-        cbg.append(p)
-cbgt = th.tensor(cbg).T
+# eb = data['mat_ent', 'encodedBy', 'genes']['edge_index']
+# cb = data['reactions', 'catalyzedBy', 'mat_ent']['edge_index']
+# cbg = []
+# for r in cb.T:
+#     if r[1] in eb[0,:]:
+#         p = [r[0], eb[1,eb[0,:] == r[1]]]
+#         cbg.append(p)
+# cbgt = th.tensor(cbg).T
 
-data['reactions','catalyzedByGene', 'genes'].edge_index = cbgt
-data['genes','rev_catalyzedByGene', 'reactions'].edge_index \
-            = cbgt.flip(dims=(0,))
+# data['reactions','catalyzedByGene', 'genes'].edge_index = cbgt
+# data['genes','rev_catalyzedByGene', 'reactions'].edge_index \
+#             = cbgt.flip(dims=(0,))
 
-print(data['reactions','catalyzedByGene', 'genes'])
-print(data['reactions','catalyzedByGene', 'genes'].edge_index.shape)
+# print(data['reactions','catalyzedByGene', 'genes'])
+# print(data['reactions','catalyzedByGene', 'genes'].edge_index.shape)
 
-print(data['genes','rev_catalyzedByGene', 'reactions'])
-print(data['genes','rev_catalyzedByGene', 'reactions'].edge_index.shape)
+# print(data['genes','rev_catalyzedByGene', 'reactions'])
+# print(data['genes','rev_catalyzedByGene', 'reactions'].edge_index.shape)
 
 data = data.contiguous()
 
@@ -403,6 +408,6 @@ df_pairs['class1'], df_pairs['rel1'], df_pairs['class2'], df_pairs['rel2'] \
 print(df_pairs.head(10))
 # %%
 
-df_pairs.to_csv(os.path.join(BASE, 'explanations/DMA30-InputXGradient-full_model-XX-10000.tsv'),
+df_pairs.to_csv(os.path.join(BASE, 'explanations/DMA30-InputXGradient-full_model-XX-10000-semloss.tsv'),
                 sep='\t')
 # %%

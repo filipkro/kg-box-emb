@@ -19,18 +19,23 @@ class RenamingUnpickler(pickle.Unpickler):
 BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 device = 'cpu'
 # %%
+# with open(os.path.join(BASE, 'datasets/split_datasets/'
+#                        'pyg_graph_c_DMA30_fitness.pkl'), 'rb') as fi:
 with open(os.path.join(BASE, 'datasets/split_datasets/'
-                       'pyg_graph_c_DMA30_fitness.pkl'), 'rb') as fi:
+                       'pyg_graph_box_interactions_DMA30.pkl'), 'rb') as fi:
     data = pickle.load(fi).contiguous()
 # %%
-with open(os.path.join(BASE, 'large_files/20250202-102800-reg.pkl'),
+# with open(os.path.join(BASE, 'large_files/20250202-102800-reg.pkl'),
+#           'rb') as fi:
+# with open(os.path.join(BASE, 'sem_weight_trained_models/20250814-214050-reg-fix.pkl'),
+with open(os.path.join(BASE, 'sem_weight_trained_models/20250819-142859-reg.pkl'),
           'rb') as fi:
     # l = pickle.load(fi)
     l = RenamingUnpickler(fi).load()
     models = l['models']
     results = l['metrics']
-
-with open(os.path.join(BASE, 'large_files/datasplit.pkl'),
+# %%
+with open(os.path.join(BASE, 'large_files/20250818-145946-reg.pkl'),
           'rb') as fi:
     d = RenamingUnpickler(fi).load()['data']
 
@@ -59,9 +64,10 @@ else:
 all_preds = []
 all_labels = []
 r2s = []
+# for i, ((_, val_data), model) in enumerate(zip(kf.split(data_to_split), models)):
 for i, ((_, val_data), model) in enumerate(zip(d, models)):
     print(f"Fold: {i}")
-    val_data = val_data.contiguous()
+    # val_data = val_data.contiguous()
     val_loader = LinkNeighborLoader(
         data=val_data,
         num_neighbors=model._neighbors_to_sample['neighbors'],
@@ -96,28 +102,32 @@ for i, ((_, val_data), model) in enumerate(zip(d, models)):
 print(f"{np.mean(r2s)} +- {np.std(r2s)}")
 # %%
 heatmap, xedges, yedges = np.histogram2d(all_labels, all_preds,
-                                         range=([0.05,1.25], [0.4,1.1]),
-                                         bins=(120,70))
+                                         range=([0.05,1.25], [0.05,1.1]),
+                                         bins=(100,100))
 extent = [xedges[0], xedges[-1], yedges[0], yedges[-1]]
 print(r2_score(all_labels, all_preds))
 plt.figure()
-cutoff = 700
+cutoff = 20
+c2 = 60
 heatmap[np.where(heatmap > cutoff)] = cutoff + \
-    (heatmap[np.where(heatmap > cutoff)] -cutoff) / 10
+    (heatmap[np.where(heatmap > cutoff)] -cutoff) / 40
+heatmap[np.where(heatmap > c2)] = c2 + \
+    (heatmap[np.where(heatmap > c2)] -c2) / 50
 cm = plt.cm.Blues
 cm.set_under('w')
 cm = cm.resampled(int(heatmap.max()))
 fig, ax = plt.subplots()
 ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
-plt.axline((0, 0), slope=1, linestyle='--', color='red')
+plt.axline( (0,0),slope=1,linestyle='--',color='red')
 im = ax.imshow(cm((heatmap.T+ (heatmap.T < 1) * (-2)).astype('int')),
                extent=extent, origin='lower', cmap=cm)
 plt.xlabel("Target fitness", size=13)
 plt.ylabel("Predicted fitness", size=13)
 plt.xticks(fontsize=11)
 plt.yticks(fontsize=11)
-# plt.savefig(os.path.join(BASE, 'paper/figs/double-parity.eps'),
-            # format='eps', bbox_inches='tight')
+plt.savefig(os.path.join(BASE, '../nai-manuscript/paper/figs/double-parity-sem.eps'),
+            format='eps', bbox_inches='tight')
+
 
 # %%

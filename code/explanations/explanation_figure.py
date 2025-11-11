@@ -6,7 +6,8 @@ import seaborn as sns
 # %%
 BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # %%
-df = pd.read_csv(os.path.join(BASE, 'explanations/prel_explanationsDMA30-InputXGradient-full_model-feb02-10000-cleaned-top10000.tsv'), sep = '\t', index_col = 0)
+# df = pd.read_csv(os.path.join(BASE, 'explanations/prel_explanationsDMA30-InputXGradient-full_model-feb02-10000-cleaned-top10000.tsv'), sep = '\t', index_col = 0)
+df = pd.read_csv(os.path.join(BASE, 'explanations/DMA30-InputXGradient-full_model-XX-10000-semloss-cleaned-top10000.tsv'), sep = '\t', index_col = 0)
 # %%
 filtered_df = df[
     df['class1'].str.contains("APO_0000096", na=False) | # General nutrient utilization

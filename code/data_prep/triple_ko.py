@@ -12,6 +12,7 @@ def extract_genes(row):
     g1, g2, g3 = sorted([ga, gb, gc])
     return g1, g2, g3
 # %%
+print('reading file...')
 df = pd.read_csv(os.path.join(BASE, 'data/interaction_data/aao1729_data_s1.tsv'),
                  sep='\t')
 # %%
@@ -21,10 +22,14 @@ df.drop(columns=['Query allele name', 'Combined mutant type',
                  'Array allele name', 'Query single/double mutant fitness',
                  'Array single mutant fitness'], inplace=True)
 # %%
+print('extracting genes...')
 df['g1'], df['g2'], df['g3'] = zip(*df.apply(extract_genes, axis=1))
 # %%
+print('removing duplicates...')
 df.sort_values(by='P-value', ascending=False, inplace=True)
 df = df[df.duplicated(['g1', 'g2', 'g3'], keep='last')]
 # %%
+print('saving...')
 df.to_csv(os.path.join(BASE, 'data/interaction_data/unique_triples.tsv'), sep='\t')
+print('done')
 # %%

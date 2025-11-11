@@ -89,6 +89,7 @@ def get_normalized_el_dataset(kg_fp, merge_assertions=False,
     el_dataset.load()
 
     gcis = {k: v.data for k,v in el_dataset.get_gci_datasets().items() if k in USED_GCI}
+    print(gcis['gci0'].shape)
     if merge_assertions:
         ind_index = {k.toString(): v for k, v in data.individual_to_id.items()}
         class_index = el_dataset.class_index_dict
@@ -125,7 +126,7 @@ def get_normalized_el_dataset(kg_fp, merge_assertions=False,
             gci0 = th.concat((gci0, gci_n))
 
         gcis['gci0'] = gci0.unique(dim=0)
-
+    print(gcis['gci0'].shape)
     return gcis, index_dict#, el_dataset
     # return el_dataset, data
 

@@ -114,6 +114,12 @@ def box_embeddings_from_model(model, G, box=MinDeltaBoxTensor, final_only=True):
         raise NotImplementedError
 
 
+def dist_inclusion(sub_c, sub_o, sup_c, sup_o, gamma=0.0):
+    return (
+        torch.relu(torch.abs(sub_c - sup_c) + sub_o - sup_o - gamma).norm(dim=-1).sum()
+    )
+
+
 def embedding_distance(
     emb1,
     emb2,
@@ -121,10 +127,9 @@ def embedding_distance(
 ):
     emb1_c, emb1_o = emb1.centre, emb1.Z - emb1.centre
     emb2_c, emb2_o = emb2.centre, emb2.Z - emb2.centre
-    return (
-        torch.abs((torch.abs(emb1_c - emb2_c) + emb1_o - emb2_o - gamma))
-        .norm(dim=-1)
-        .sum()
+    return 0.5 * (
+        dist_inclusion(emb1_c, emb1_o, emb2_c, emb2_o, gamma)
+        + dist_inclusion(emb2_c, emb2_o, emb1_c, emb1_o, gamma)
     )
 
 

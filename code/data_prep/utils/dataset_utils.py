@@ -119,7 +119,7 @@ def get_normalized_el_dataset(kg_fp, merge_assertions=False, bypass_classes=Fals
 
         # Access the class assertion and object property assertion data
         # (for translation into gci0 and gci2 axioms)
-        class_assert = th.flip(el_dataset.class_assertion_dataset.data, dims=(1,))
+        class_assert = el_dataset.class_assertion_dataset.data
         prop_assert = el_dataset.object_property_assertion_dataset.data
 
         # Change indices to match for gci0 and gci2 axioms

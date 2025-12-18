@@ -25,9 +25,7 @@ full_fp = os.path.join(BASE, ontology_path)
 LOAD_NORMALIZED_DATA = False
 
 # %%
-gci, index = get_normalized_el_dataset(
-    full_fp, merge_assertions=True, bypass_classes=True
-)
+gci, index = get_normalized_el_dataset(full_fp, merge_assertions=True, bypass_classes=False)
 
 # %%
 i2c = {v: k for k, v in index["class_index"].items()}

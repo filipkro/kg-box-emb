@@ -36,31 +36,43 @@ def node_split(data, split_transform, v_idx, t_idx=None, device='cpu'):
 BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 device = 'cpu'
 # %%
+# with open(os.path.join(BASE, 'datasets/split_datasets/'
+#                        'pyg_graph_c_DMA30_fitness.pkl'), 'rb') as fi:
 with open(os.path.join(BASE, 'datasets/split_datasets/'
-                       'pyg_graph_c_DMA30_fitness.pkl'), 'rb') as fi:
+                       'pyg_graph_box_interactions_DMA30.pkl'), 'rb') as fi:
     data = pickle.load(fi).contiguous()
 
-eb = data['mat_ent', 'encodedBy', 'genes']['edge_index']
-cb = data['reactions', 'catalyzedBy', 'mat_ent']['edge_index']
-cbg = []
-for r in cb.T:
-    if r[1] in eb[0,:]:
-        p = [r[0], eb[1,eb[0,:] == r[1]]]
-        cbg.append(p)
-cbgt = th.tensor(cbg).T
+# eb = data['mat_ent', 'encodedBy', 'genes']['edge_index']
+# cb = data['reactions', 'catalyzedBy', 'mat_ent']['edge_index']
+# cbg = []
+# for r in cb.T:
+#     if r[1] in eb[0,:]:
+#         p = [r[0], eb[1,eb[0,:] == r[1]]]
+#         cbg.append(p)
+# cbgt = th.tensor(cbg).T
 
-data['reactions','catalyzedByGene', 'genes'].edge_index = cbgt
-data['genes', 'rev_catalyzedByGene', 'reactions'].edge_index \
-                = cbgt.flip(dims=(0,))
+# data['reactions','catalyzedByGene', 'genes'].edge_index = cbgt
+# data['genes', 'rev_catalyzedByGene', 'reactions'].edge_index \
+#                 = cbgt.flip(dims=(0,))
 
-print(data['reactions','catalyzedByGene', 'genes'])
-print(data['reactions','catalyzedByGene', 'genes'].edge_index.shape)
+# print(data['reactions','catalyzedByGene', 'genes'])
+# print(data['reactions','catalyzedByGene', 'genes'].edge_index.shape)
 
-print(data['genes','rev_catalyzedByGene', 'reactions'])
-print(data['genes','rev_catalyzedByGene', 'reactions'].edge_index.shape)
+# print(data['genes','rev_catalyzedByGene', 'reactions'])
+# print(data['genes','rev_catalyzedByGene', 'reactions'].edge_index.shape)
 data = data.contiguous()
 # %%
-with open(os.path.join(BASE, 'large_files/20250221-165714-reg.pkl'),
+# with open(os.path.join(BASE, 'large_files/20250221-165714-reg.pkl'),
+#           'rb') as fi:
+# with open(os.path.join(BASE, 'sem_weight_trained_models/20250818-184041-reg.pkl'),
+# with open(os.path.join(BASE, 'sem_weight_trained_models/20250819-101028-reg.pkl'),
+# with open(os.path.join(BASE, 'sem_weight_trained_models/20250819-112512-reg.pkl'),
+# with open(os.path.join(BASE, 'sem_weight_trained_models/20250819-122541-reg.pkl'), #works very well
+# with open(os.path.join(BASE, 'sem_weight_trained_models/20250819-134935-reg.pkl'),
+# with open(os.path.join(BASE, 'sem_weight_trained_models/20250822-104731-reg.pkl'),
+# with open(os.path.join(BASE, 'sem_weight_trained_models/20250822-111050-reg.pkl'),
+# with open(os.path.join(BASE, 'sem_weight_trained_models/20250822-154232-reg.pkl'),
+with open(os.path.join(BASE, 'sem_weight_trained_models/20250822-113402-reg.pkl'),
           'rb') as fi:
     model = RenamingUnpickler(fi).load()['model']
 
@@ -100,10 +112,10 @@ def predict_from_embedding(self, emb):
 
     return self.lin4(emb).squeeze()
 # %%
-model._neighbors_to_sample['neighbors'][('reactions', 'catalyzedByGene',
-                                         'genes')] = [0, 0]
-model._neighbors_to_sample['neighbors'][('genes', 'rev_catalyzedByGene',
-                                         'reactions')] = [0, 0]
+# model._neighbors_to_sample['neighbors'][('reactions', 'catalyzedByGene',
+#                                          'genes')] = [0, 0]
+# model._neighbors_to_sample['neighbors'][('genes', 'rev_catalyzedByGene',
+#                                          'reactions')] = [0, 0]
 data_loader = LinkNeighborLoader(
         data=data,
         num_neighbors=model._neighbors_to_sample['neighbors'],
@@ -125,14 +137,16 @@ labels = df['Combined mutant fitness'].to_numpy()
 print(r2_score(labels, triple_fitness))
 
 # %%
-heatmap, xedges, yedges = np.histogram2d(labels, triple_fitness, bins=(120,70),
-                                         range=([0,1.2], [0.4,1.1]))
+# heatmap, xedges, yedges = np.histogram2d(labels, triple_fitness, bins=(120,70),
+#                                          range=([0,1.2], [0.4,1.1]))
+heatmap, xedges, yedges = np.histogram2d(labels, triple_fitness, bins=(100,100),
+                                         range=([0.05,1.25], [0.05,1.1]))
 extent = [xedges[0], xedges[-1], yedges[0], yedges[-1]]
 
 plt.figure()
-cutoff = 20
+cutoff = 7
 heatmap[np.where(heatmap > cutoff)] = cutoff + \
-    (heatmap[np.where(heatmap > cutoff)] -cutoff) / 5
+    (heatmap[np.where(heatmap > cutoff)] -cutoff) / 17
 
 cm = plt.cm.Blues
 cm.set_under('w')
@@ -147,8 +161,9 @@ plt.xlabel("Target fitness", size=13)
 plt.ylabel("Predicted fitness", size=13)
 plt.xticks(fontsize=11)
 plt.yticks(fontsize=11)
-# plt.savefig(os.path.join(BASE, 'paper/figs/triple-parity.eps'),
+# plt.savefig(os.path.join(BASE, '../nai-manuscript/paper/figs/triple-parity-sem.eps'),
 #             format='eps', bbox_inches='tight')
 plt.show()
+
 
 # %%

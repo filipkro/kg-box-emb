@@ -471,6 +471,54 @@ class GNNBaseSAGE(GNNBase):
     def init_edge_dicts(self, embeddings, edge_types):
         raise NotImplementedError()
 
+class HeteroGNNCustom(th.nn.Module):
+    def __init__(self, channels, edge_types, embeddings):
+        super().__init__()
+        self.layers = th.nn.ModuleList()
+        prev_c = 0
+        ed = {k: 0 for k in embeddings.keys()}
+        for e, v in edge_types.items():
+            ed[e[0]] += v
+            ed[e[2]] += v
+        self.es = {}
+        print(ed)
+        for k, v in ed.items():
+            if v / 500000 > 1:
+                self.es[k] = 2
+            elif v / 100000 > 1:
+                self.es[k] = 1
+            elif v / 10000 > 1:
+                self.es[k] = 0.5
+            else:
+                self.es[k] = 0.25
+        es = self.es
+        for i, c in enumerate(channels):
+            layer_sizes = {k: max(1, c // 2) if v / 1000 < 1 else c
+                           for k, v in edge_types.items()}
+            conv = HeteroConv({
+                    e: SAGEConv((int(i==0) * embeddings[e[0]].shape[1] +
+                                    int(i>0)*max((1,int(prev_c * es[e[0]]))),
+                                 int(i==0)*embeddings[e[2]].shape[1] +
+                                    int(i>0)*max((1,int(prev_c * es[e[2]])))),
+                                max((1,int(c * es[e[2]]))), normalize=True,
+                                root_weight=True, project=True, aggr='max')
+                               for e, _ in layer_sizes.items()} , aggr='mean')
+            prev_c = c
+            self.layers.append(conv)
+
+    def forward(self, x_dict, edge_index_dict):
+        for conv in self.layers:
+            x_dict = conv(x_dict, edge_index_dict)
+            x_dict = {key: x for key, x in x_dict.items()}
+        return x_dict
+    
+    def all_embeddings(self, x_dict, edge_index_dict):
+        ret_embs = []
+        for conv in self.layers:
+            x_dict = conv(x_dict, edge_index_dict)
+            x_dict = {key: x for key, x in x_dict.items()}
+            ret_embs.append(x_dict)
+        return ret_embs 
 
 class HeteroGNNSAGECustom(GNNBaseSAGE):
     def __init__(self, channels, edge_types, embeddings, aggr="attn", skip_last=True):
@@ -634,55 +682,38 @@ class Model(th.nn.Module):
         # if custom:
         # varying sizes of embeddings for different target domains
         # self.gnn = HeteroGNNGATCustom(gnn_channels, edge_types, embeddings, aggr=aggr)
-        # self.gnn = HeteroGNNTransformerCustom(gnn_channels, edge_types, embeddings, aggr=aggr, heads=HEADS, skip_last=True)
-        self.gnn = OGGNNCustom(gnn_channels, edge_types, embeddings, skip_last=True)
-        # self.gnn = HeteroGNNSAGECustom(gnn_channels, edge_types, embeddings,
-        #                                aggr='max', skip_last=True)
-        self.dropout = th.nn.Dropout(DROP_OUT)
-        if ONLY_GENE_BOXES:
-            self.node_embeddings = th.nn.ModuleDict(
-                [
-                    [
-                        k,
-                        th.nn.Embedding(
-                            num_embeddings=v.shape[0], embedding_dim=v.shape[1]
-                        ),
-                    ]
-                    for k, v in embeddings.items()
-                ]
-            )
-            self.node_embeddings["genes"] = th.nn.Embedding.from_pretrained(
-                embeddings["genes"].clone(), freeze=True
-            )
-        elif BOX_EMBEDDINGS:
-            self.node_embeddings = th.nn.ModuleDict(
-                [
-                    [k, th.nn.Embedding.from_pretrained(v.clone(), freeze=True)]
-                    for k, v in embeddings.items()
-                ]
-            )
-        else:
-            self.node_embeddings = th.nn.ModuleDict(
-                [
-                    [
-                        k,
-                        th.nn.Embedding(
-                            num_embeddings=v.shape[0], embedding_dim=v.shape[1]
-                        ),
-                    ]
-                    for k, v in embeddings.items()
-                ]
-            )
-        prev_width = max((1, int(gnn_channels[-1] * self.gnn.es["genes"])))
-        layers = []
-        if len(nn_channels) > 0:
-            for c in nn_channels:
-                layers.append(th.nn.Linear(prev_width, c, bias=True))
-                prev_width = c
-            self.lin_layers = th.nn.ModuleList(layers)
-        else:
-            self.lin_layers = None
-
+        #self.gnn = HeteroGNNTransformerCustom(gnn_channels, edge_types, embeddings, aggr=aggr, heads=HEADS, skip_last=True)
+        if len(gnn_channels) > 0:
+            self.gnn = OGGNNCustom(gnn_channels, edge_types, embeddings, skip_last=True)
+            #self.gnn = HeteroGNNSAGECustom(gnn_channels, edge_types, embeddings,
+            #                                aggr='max', skip_last=True)
+            self.dropout = th.nn.Dropout(DROP_OUT)
+            if ONLY_GENE_BOXES:
+                self.node_embeddings = th.nn.ModuleDict(
+                    [[k, th.nn.Embedding(num_embeddings=v.shape[0],
+                                        embedding_dim=v.shape[1])]
+                        for k,v in embeddings.items()])
+                self.node_embeddings['genes'] = th.nn.Embedding.from_pretrained(
+                    embeddings['genes'].clone(), freeze=True)
+            elif BOX_EMBEDDINGS:
+                self.node_embeddings = th.nn.ModuleDict(
+                    [[k, th.nn.Embedding.from_pretrained(v.clone(), freeze=True)]
+                    for k,v in embeddings.items()])
+            else:
+                self.node_embeddings = th.nn.ModuleDict([[k,
+                                    th.nn.Embedding(num_embeddings=v.shape[0],
+                                                    embedding_dim=v.shape[1])]
+                                                    for k,v in embeddings.items()])
+            prev_width = max((1, int(gnn_channels[-1] * self.gnn.es['genes'])))
+            layers = []
+            if len(nn_channels) > 0:
+                for c in nn_channels:
+                    layers.append(th.nn.Linear(prev_width, c, bias=True))
+                    prev_width = c
+                self.lin_layers = th.nn.ModuleList(layers)
+            else:
+                self.lin_layers = None
+            
         self.fp = save_path
         self._neighbors_to_sample = None
         self.intersect = GumbelIntersection(intersection_temperature=inter_temp)
@@ -747,20 +778,15 @@ class OntologyGNN(th.nn.Module):
         super().__init__()
 
         self.node_embeddings = th.nn.ModuleDict(
-            [
-                [k, th.nn.Embedding.from_pretrained(v.clone(), freeze=False)]
-                for k, v in embeddings.items()
-            ]
-        )
-        self.gnn = OGGNN(
-            channels, edge_types, embeddings, skip_last=False
-        )  # <--- try this one
-        # self.gnn = HeteroGNNSAGE(
-        #     channels, edge_types, embeddings, aggr="max", skip_last=False
-        # )
-        # self.gnn = HeteroGNNTransformer(
-        #     channels, edge_types, embeddings, aggr="attn", skip_last=False, heads=4
-        # )
+                [[k, th.nn.Embedding.from_pretrained(v.clone(), freeze=False)]
+                 for k,v in embeddings.items()])
+        self.gnn = OGGNN(channels, edge_types, embeddings, skip_last=False)
+        # self.gnn = HeteroGNNSAGE(channels, edge_types, embeddings,
+        #                          aggr='attn', skip_last=False)
+        # self.gnn = HeteroGNNTransformer(channels, edge_types, embeddings,
+        #                          aggr='attn', skip_last=False, heads=4)
+        
+        # self.gnn = HeteroGNNTransformer(channels, edge_types, embeddings)
 
         # self.gnn = HeteroGNNTransformer(channels, edge_types, embeddings)
 

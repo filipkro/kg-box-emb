@@ -353,11 +353,16 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
                'neg_sem_losses': []}
     reg_factor = 0.1
     print(f"gnn reg factor: {reg_factor}")
-    optimizer = th.optim.Adam([
+    if model.lin_layers:
+        optimizer = th.optim.Adam([
+                {'params': model.node_embeddings.parameters(), 'weight_decay': 0},
+                {'params': model.gnn.parameters(), 'weight_decay': reg_factor*REGULARIZATION},
+                {'params': chain(model.lin4.parameters(), model.lin_layers.parameters())}
+                            ], lr=lr, weight_decay=REGULARIZATION)
+    else:
+        optimizer = th.optim.Adam([
             {'params': model.node_embeddings.parameters(), 'weight_decay': 0},
-            {'params': model.gnn.parameters(), 'weight_decay': reg_factor*REGULARIZATION},
-            {'params': chain(model.lin4.parameters(), model.lin_layers.parameters())}
-                        ], lr=lr, weight_decay=REGULARIZATION)
+            {'params': model.gnn.parameters(), 'weight_decay': reg_factor*REGULARIZATION}], lr=lr, weight_decay=REGULARIZATION)
     # scheduler = th.optim.lr_scheduler.MultiplicativeLR(optimizer,
     #                                                    lambda epoch: 0.1)
     # decreased = False

@@ -17,6 +17,7 @@ with open(os.path.join(BASE, 'datasets/split_datasets/split_gci2.pkl'), 'rb') as
 # %%
 # set which dataset you want to create
 INTERACT_DATA = 'interactions_DMA30'
+# INTERACT_DATA = 'interactions'
 # zZ, c, box
 FEATURE_REPRESENTATION = 'box'
 

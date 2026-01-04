@@ -1,4 +1,5 @@
 import mowl
+
 mowl.init_jvm("12g")
 from mowl.datasets.el import ELDataset
 from mowl.datasets.base import PathDataset
@@ -11,36 +12,46 @@ import rdflib
 from rdflib.plugins.stores import sparqlstore
 from rdflib.namespace import OWL, RDF, RDFS
 
-USED_GCI = ['gci0', 'gci2', 'gci1_bot']
+USED_GCI = ["gci0", "gci2", "gci1_bot"]
 prefix = """PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
             PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
             SELECT DISTINCT ?a ?b
             WHERE """
 
+
 def get_queries(a, b, merged_assertions=True):
-    q = [prefix + f"""{{
+    q = [
+        prefix
+        + f"""{{
                     ?a rdfs:subClassOf* <{a}> .
                     ?b rdfs:subClassOf* <{b}> .
                     FILTER (!isBlank(?a)) .
                     FILTER (!isBlank(?b)) .
-                }} LIMIT 50000"""]
+                }} LIMIT 50000"""
+    ]
     if merged_assertions:
-        q.extend([
-                prefix + f"""{{
+        q.extend(
+            [
+                prefix
+                + f"""{{
                         ?aa rdfs:subClassOf* <{a}> .
                         ?b rdfs:subClassOf* <{b}> .
                         ?a rdf:type ?aa .
                         FILTER (!isBlank(?aa)) .
                         FILTER (!isBlank(?b)) .
                     }} LIMIT 50000""",
-                prefix + f"""{{
+                prefix
+                + f"""{{
                         ?a rdfs:subClassOf* <{a}> .
                         ?bb rdfs:subClassOf* <{b}> .
                         ?b rdf:type ?bb .
                         FILTER (!isBlank(?a)) .
                         FILTER (!isBlank(?bb)) .
-                    }} LIMIT 50000"""])
+                    }} LIMIT 50000""",
+            ]
+        )
     return q
+
 
 # prefix + f"""{{
 #                         ?aa rdfs:subClassOf* <{a}> .
@@ -51,83 +62,106 @@ def get_queries(a, b, merged_assertions=True):
 #                         FILTER (!isBlank(?bb)) .
 #                     }} LIMIT 50000""",
 
+
 def get_bots(gci1_bot, i2c, c2i, full_fp, merged_assertions=True):
     kg = rdflib.Graph()
     kg.parse(full_fp)
     new_bots = set()
-    for i, tensor_pair in enumerate(gci1_bot[:,:2]):
+    for i, tensor_pair in enumerate(gci1_bot[:, :2]):
         print(f"{i} of {len(gci1_bot)} completed...", end="\r")
         pair = tuple(sorted(tensor_pair.tolist()))
         if not pair in new_bots:
             a = i2c[pair[0]]
             b = i2c[pair[1]]
-            
-            queries = get_queries(a,b, merged_assertions=merged_assertions)
+
+            queries = get_queries(a, b, merged_assertions=merged_assertions)
             for q in queries:
                 res = kg.query(q)
                 for r in res:
                     bot_pair = tuple(sorted([c2i[str(r[0])], c2i[str(r[1])]]))
                     new_bots.add(bot_pair)
+        print(f"{i+1} of {len(gci1_bot)} completed...", end="\r")
 
-    bot_class = gci1_bot[0,2].item()
+    bot_class = gci1_bot[0, 2].item()
     tensor_bots = th.tensor(list(new_bots), dtype=th.int32)
-    new_dataset = th.empty((2*len(tensor_bots), 3), dtype=th.int32)
-    new_dataset[:len(tensor_bots), :2] = tensor_bots
-    new_dataset[len(tensor_bots):, 0] = tensor_bots[:,1]
-    new_dataset[len(tensor_bots):, 1] = tensor_bots[:,0]
-    new_dataset[:,2] = th.ones(new_dataset[:,2].shape, dtype=th.int32) * bot_class
+    new_dataset = th.empty((2 * len(tensor_bots), 3), dtype=th.int32)
+    new_dataset[: len(tensor_bots), :2] = tensor_bots
+    new_dataset[len(tensor_bots) :, 0] = tensor_bots[:, 1]
+    new_dataset[len(tensor_bots) :, 1] = tensor_bots[:, 0]
+    new_dataset[:, 2] = th.ones(new_dataset[:, 2].shape, dtype=th.int32) * bot_class
     print()
     return new_dataset
 
 
-def get_normalized_el_dataset(kg_fp, merge_assertions=False,
-                              bypass_classes=False):
+def get_normalized_el_dataset(kg_fp, merge_assertions=False, bypass_classes=False):
     if not merge_assertions:
-        USED_GCI.extend(['class_assertion', 'object_property_assertion'])
+        USED_GCI.extend(["class_assertion", "object_property_assertion"])
     data = PathDataset(kg_fp)
     el_dataset = ELDataset(data.ontology)
     el_dataset.load()
+    """
+    Merging assertions here means to "convert" individuals in the dataset to
+    classes, replace rdf:type relations with rdfs:subclass relations
+    """
 
-    gcis = {k: v.data for k,v in el_dataset.get_gci_datasets().items() if k in USED_GCI}
+    gcis = {
+        k: v.data for k, v in el_dataset.get_gci_datasets().items() if k in USED_GCI
+    }
+    index_dict = {}
     if merge_assertions:
+        # For each individual, create a map from id to individual
         ind_index = {k.toString(): v for k, v in data.individual_to_id.items()}
-        class_index = el_dataset.class_index_dict
-        class_assert = th.flip(el_dataset.class_assertion_dataset.data,
-                               dims=(1,))
-        prop_assert = el_dataset.object_property_assertion_dataset.data
-        t_box_classes = len(class_index)
-        class_assert[:,0] = class_assert[:,0] + t_box_classes
-        prop_assert[:,0] = prop_assert[:,0] + t_box_classes
-        prop_assert[:,2] = prop_assert[:,2] + t_box_classes
-        for k,v in ind_index.items():
-            class_index[k[1:-1]] = v + t_box_classes
 
-        gcis['gci0'] = th.cat((gcis['gci0'], class_assert), dim=0)
-        gcis['gci2'] = th.cat((gcis['gci2'], prop_assert), dim=0)
+        # Add individuals into the class index dictionary
+        t_box_classes = len(el_dataset.class_index_dict)
+        for k, v in ind_index.items():
+            el_dataset.class_index_dict[k[1:-1]] = v + t_box_classes
 
-        index_dict = {'class_index': class_index,
-                      'property_index': el_dataset.object_property_index_dict}
+        # Access the class assertion and object property assertion data
+        # (for translation into gci0 and gci2 axioms)
+        try:
+            class_assert = el_dataset.class_assertion_dataset.data
+        except AttributeError:
+            class_assert = th.empty((0, 2), dtype=th.int32)
+        try:
+            prop_assert = el_dataset.object_property_assertion_dataset.data
+        except AttributeError:
+            prop_assert = th.empty((0, 3), dtype=th.int32)
 
-        # new_ind_idx = {v: v+}
+        # Change indices to match for gci0 and gci2 axioms
+        class_assert[:, 0] = class_assert[:, 0] + t_box_classes
+        prop_assert[:, 0] = prop_assert[:, 0] + t_box_classes
+        prop_assert[:, 2] = prop_assert[:, 2] + t_box_classes
+
+        # Extend gci0 and gci2 axioms with class assertions and property assertions
+        gcis["gci0"] = th.cat((gcis["gci0"], class_assert), dim=0)
+        gcis["gci2"] = th.cat((gcis["gci2"], prop_assert), dim=0)
     else:
-        index_dict = {'class_index': el_dataset.class_index_dict,
-                      'class_assertion_index': {k.toString(): v for k, v in
-                                                data.individual_to_id.items()},
-                      'property_index': el_dataset.object_property_index_dict}
-    if bypass_classes:
-        classes = [1,3] #??
-        parent = 2  #??
+        index_dict["class_assertion_index"]: {
+            k.toString(): v for k, v in data.individual_to_id.items()
+        }
 
-        gci0 = gcis['gci0']
+    index_dict.update(
+        {
+            "class_index": el_dataset.class_index_dict,
+            "property_index": el_dataset.object_property_index_dict,
+        }
+    )
+    if bypass_classes:
+        classes = [1, 3]  # ??
+        parent = 2  # ??
+
+        gci0 = gcis["gci0"]
         for c in classes:
-            gci_n = gci0[gci0[:,1]==c]
-            gci_n[:,1] = parent
+            gci_n = gci0[gci0[:, 1] == c]
+            gci_n[:, 1] = parent
             gci0 = th.concat((gci0, gci_n))
 
-        gcis['gci0'] = gci0.unique(dim=0)
+        gcis["gci0"] = gci0.unique(dim=0)
 
-    return gcis, index_dict#, el_dataset
+    return gcis, index_dict  # , el_dataset
     # return el_dataset, data
+
 
 def get_normalized_dataset(kg_fp, role_fp=None):
     if role_fp == None:
@@ -143,10 +177,9 @@ def get_normalized_dataset(kg_fp, role_fp=None):
 
     sym_object_property_index_dict = {}
     object_property_index_dict = copy.deepcopy(el_dataset.object_property_index_dict)
-    id_to_name = {v: k for k,v in object_property_index_dict.items()}
-    
+    id_to_name = {v: k for k, v in object_property_index_dict.items()}
 
-    gci2 = gci_dict['gci2']
+    gci2 = gci_dict["gci2"]
     gci2_sym = []
     if role_properties[0]:
         sym = []
@@ -157,14 +190,20 @@ def get_normalized_dataset(kg_fp, role_fp=None):
 
         sym = th.tensor(sym)
 
-        object_property_index_dict = copy.deepcopy(el_dataset.object_property_index_dict)
+        object_property_index_dict = copy.deepcopy(
+            el_dataset.object_property_index_dict
+        )
         # split gci2
-        mask = th.isin(gci_dict['gci2'][:,1], sym)
-        gci2 = gci_dict['gci2'][~mask]
-        gci2_sym = gci_dict['gci2'][mask]
+        mask = th.isin(gci_dict["gci2"][:, 1], sym)
+        gci2 = gci_dict["gci2"][~mask]
+        gci2_sym = gci_dict["gci2"][mask]
 
         # rename sym roles in gci2_sym
-        map_to_sym_ids = {object_property_index_dict[k]: v for k,v in sym_object_property_index_dict.items() if k in object_property_index_dict}
+        map_to_sym_ids = {
+            object_property_index_dict[k]: v
+            for k, v in sym_object_property_index_dict.items()
+            if k in object_property_index_dict
+        }
         gci2_sym[:, 1].apply_(lambda x: map_to_sym_ids[x])
 
         # remove sym roles from dict, rehash, keep track of map
@@ -199,27 +238,42 @@ def get_normalized_dataset(kg_fp, role_fp=None):
 
     if role_properties[1]:
         for r in get_subproperties(role_fp):
-            if r[0] in sym_object_property_index_dict and \
-                    r[1] in sym_object_property_index_dict:
-                gci0_sym_role.append([sym_object_property_index_dict[r[0]],
-                                    sym_object_property_index_dict[r[1]]])
+            if (
+                r[0] in sym_object_property_index_dict
+                and r[1] in sym_object_property_index_dict
+            ):
+                gci0_sym_role.append(
+                    [
+                        sym_object_property_index_dict[r[0]],
+                        sym_object_property_index_dict[r[1]],
+                    ]
+                )
             elif r[0] in sym_object_property_index_dict:
                 if r[1] not in object_property_index_dict:
                     object_property_index_dict[r[1]] = len(object_property_index_dict)
-                gci0_sym_nonsym_role.append([sym_object_property_index_dict[r[0]],
-                                            object_property_index_dict[r[1]]])
+                gci0_sym_nonsym_role.append(
+                    [
+                        sym_object_property_index_dict[r[0]],
+                        object_property_index_dict[r[1]],
+                    ]
+                )
             elif r[1] in sym_object_property_index_dict:
                 if r[0] not in object_property_index_dict:
                     object_property_index_dict[r[0]] = len(object_property_index_dict)
-                gci0_nonsym_sym_role.append([object_property_index_dict[r[0]],
-                                            sym_object_property_index_dict[r[1]]])
+                gci0_nonsym_sym_role.append(
+                    [
+                        object_property_index_dict[r[0]],
+                        sym_object_property_index_dict[r[1]],
+                    ]
+                )
             else:
                 if r[0] not in object_property_index_dict:
                     object_property_index_dict[r[0]] = len(object_property_index_dict)
                 if r[1] not in object_property_index_dict:
                     object_property_index_dict[r[1]] = len(object_property_index_dict)
-                gci0_role.append([object_property_index_dict[r[0]],
-                                object_property_index_dict[r[1]]])
+                gci0_role.append(
+                    [object_property_index_dict[r[0]], object_property_index_dict[r[1]]]
+                )
 
     # disjoint
     # here only three datasets needed; both sym, one sym (flip so always the same),
@@ -231,28 +285,42 @@ def get_normalized_dataset(kg_fp, role_fp=None):
 
     if role_properties[2]:
         for r in get_disjoint_roles(role_fp):
-            if r[0] in sym_object_property_index_dict and \
-                    r[1] in sym_object_property_index_dict:
-                gci1_bot_sym_role.append([sym_object_property_index_dict[r[0]],
-                                        sym_object_property_index_dict[r[1]]])
+            if (
+                r[0] in sym_object_property_index_dict
+                and r[1] in sym_object_property_index_dict
+            ):
+                gci1_bot_sym_role.append(
+                    [
+                        sym_object_property_index_dict[r[0]],
+                        sym_object_property_index_dict[r[1]],
+                    ]
+                )
             elif r[0] in sym_object_property_index_dict:
                 if r[1] not in object_property_index_dict:
                     object_property_index_dict[r[1]] = len(object_property_index_dict)
-                gci1_bot_sym_nonsym_role.append([sym_object_property_index_dict[r[0]],
-                                                object_property_index_dict[r[1]]])
+                gci1_bot_sym_nonsym_role.append(
+                    [
+                        sym_object_property_index_dict[r[0]],
+                        object_property_index_dict[r[1]],
+                    ]
+                )
             elif r[1] in sym_object_property_index_dict:
                 if r[0] not in object_property_index_dict:
                     object_property_index_dict[r[0]] = len(object_property_index_dict)
-                gci1_bot_sym_nonsym_role.append([sym_object_property_index_dict[r[1]],
-                                                object_property_index_dict[r[0]]])
+                gci1_bot_sym_nonsym_role.append(
+                    [
+                        sym_object_property_index_dict[r[1]],
+                        object_property_index_dict[r[0]],
+                    ]
+                )
             else:
                 if r[0] not in object_property_index_dict:
                     object_property_index_dict[r[0]] = len(object_property_index_dict)
                 if r[1] not in object_property_index_dict:
                     object_property_index_dict[r[1]] = len(object_property_index_dict)
-                gci1_bot_role.append([object_property_index_dict[r[0]],
-                                    object_property_index_dict[r[1]]])
-
+                gci1_bot_role.append(
+                    [object_property_index_dict[r[0]], object_property_index_dict[r[1]]]
+                )
 
     for role in get_all_roles(role_fp):
         if role not in object_property_index_dict:
@@ -262,49 +330,68 @@ def get_normalized_dataset(kg_fp, role_fp=None):
     # merge sym gcis into gcis, save as pkl
     # one big index dict with the three different dicts and save as pkl
 
-    gci_dict['gci2'] = gci2 if isinstance(gci2, th.Tensor) else th.tensor(gci2)
-    gci_dict['gci2_sym'] = gci2_sym if isinstance(gci2_sym, th.Tensor) \
-        else th.tensor(gci2_sym)
+    gci_dict["gci2"] = gci2 if isinstance(gci2, th.Tensor) else th.tensor(gci2)
+    gci_dict["gci2_sym"] = (
+        gci2_sym if isinstance(gci2_sym, th.Tensor) else th.tensor(gci2_sym)
+    )
 
-    gci_dict['gci0_roles'] = gci0_role if isinstance(gci0_role, th.Tensor) \
-        else th.tensor(gci0_role)
-    gci_dict['gci0_sym_roles'] = gci0_sym_role if isinstance(gci0_sym_role,
-                                                             th.Tensor) \
+    gci_dict["gci0_roles"] = (
+        gci0_role if isinstance(gci0_role, th.Tensor) else th.tensor(gci0_role)
+    )
+    gci_dict["gci0_sym_roles"] = (
+        gci0_sym_role
+        if isinstance(gci0_sym_role, th.Tensor)
         else th.tensor(gci0_sym_role)
-    gci_dict['gci0_nonsym_sym_roles'] = gci0_nonsym_sym_role if \
-        isinstance(gci0_nonsym_sym_role, th.Tensor) \
-            else th.tensor(gci0_nonsym_sym_role)
-    gci_dict['gci0_sym_nonsym_roles'] = gci0_sym_nonsym_role if \
-        isinstance(gci0_sym_nonsym_role, th.Tensor) \
-            else th.tensor(gci0_sym_nonsym_role)
+    )
+    gci_dict["gci0_nonsym_sym_roles"] = (
+        gci0_nonsym_sym_role
+        if isinstance(gci0_nonsym_sym_role, th.Tensor)
+        else th.tensor(gci0_nonsym_sym_role)
+    )
+    gci_dict["gci0_sym_nonsym_roles"] = (
+        gci0_sym_nonsym_role
+        if isinstance(gci0_sym_nonsym_role, th.Tensor)
+        else th.tensor(gci0_sym_nonsym_role)
+    )
 
-    gci_dict['gci1_bot_roles'] = gci1_bot_role if isinstance(gci1_bot_role,
-                                                             th.Tensor) \
+    gci_dict["gci1_bot_roles"] = (
+        gci1_bot_role
+        if isinstance(gci1_bot_role, th.Tensor)
         else th.tensor(gci1_bot_role)
-    gci_dict['gci1_bot_sym_roles'] = gci1_bot_sym_role if \
-        isinstance(gci1_bot_sym_role, th.Tensor) \
-            else th.tensor(gci1_bot_sym_role)
-    gci_dict['gci1_bot_sym_nonsym_roles'] = gci1_bot_sym_nonsym_role if \
-        isinstance(gci1_bot_sym_nonsym_role, th.Tensor) \
-            else th.tensor(gci1_bot_sym_nonsym_role)
+    )
+    gci_dict["gci1_bot_sym_roles"] = (
+        gci1_bot_sym_role
+        if isinstance(gci1_bot_sym_role, th.Tensor)
+        else th.tensor(gci1_bot_sym_role)
+    )
+    gci_dict["gci1_bot_sym_nonsym_roles"] = (
+        gci1_bot_sym_nonsym_role
+        if isinstance(gci1_bot_sym_nonsym_role, th.Tensor)
+        else th.tensor(gci1_bot_sym_nonsym_role)
+    )
 
-    index_dict = {'class_index': el_dataset.class_index_dict,
-                'property_index': object_property_index_dict,
-                'sym_property_index': sym_object_property_index_dict}
-    
+    index_dict = {
+        "class_index": el_dataset.class_index_dict,
+        "property_index": object_property_index_dict,
+        "sym_property_index": sym_object_property_index_dict,
+    }
+
     return gci_dict, index_dict
-    
+
+
 def save_normalized_datasets(kg_fp, gci_fp, index_fp, role_fp=None):
     gci_dict, index_dict = get_normalized_dataset(kg_fp, role_fp)
-    
-    with open(gci_fp, 'wb') as fo:
+
+    with open(gci_fp, "wb") as fo:
         pickle.dump(gci_dict, fo)
-    with open(index_fp, 'wb') as fo:
+    with open(index_fp, "wb") as fo:
         pickle.dump(index_dict, fo)
+
 
 def remove_dataset(dataset, gci):
     dataset[gci] = th.tensor([])
     return dataset
+
 
 def get_symmetric_roles(fp):
     g = rdflib.Graph()
@@ -312,11 +399,13 @@ def get_symmetric_roles(fp):
 
     return [str(s) for s in g.subjects(RDF.type, OWL.SymmetricProperty)]
 
+
 def get_subproperties(fp):
     g = rdflib.Graph()
     g.parse(fp)
 
     return [(str(s), str(o)) for s, o in g.subject_objects(RDFS.subPropertyOf)]
+
 
 def get_disjoint_roles(fp):
     g = rdflib.Graph()
@@ -324,19 +413,24 @@ def get_disjoint_roles(fp):
 
     return [(str(s), str(o)) for s, o in g.subject_objects(OWL.propertyDisjointWith)]
 
+
 def get_all_roles(fp):
     g = rdflib.Graph()
     g.parse(fp)
 
     return [str(s) for s in g.subjects(RDF.type, OWL.ObjectProperty)]
 
+
 def role_properties_in_graph(fp):
     g = rdflib.Graph()
     g.parse(fp)
 
-    return [(None, RDF.type, OWL.SymmetricProperty) in g,
-            (None, RDFS.subPropertyOf, None) in g,
-            (None, OWL.propertyDisjointWith, None) in g]
+    return [
+        (None, RDF.type, OWL.SymmetricProperty) in g,
+        (None, RDFS.subPropertyOf, None) in g,
+        (None, OWL.propertyDisjointWith, None) in g,
+    ]
+
 
 def concat_datasets(data1, data2):
     assert data1.keys() == data2.keys()
@@ -344,32 +438,32 @@ def concat_datasets(data1, data2):
     for k in data1:
         return_data[k] = th.cat((data1[k], data2[k]), 0)
     return return_data
-    
 
 
-def reindex_dataset_gci2(data, from_index, to_index,
-                    consider_nfs=['gci2', 'gci2_sym']):
-    if consider_nfs != ['gci2', 'gci2_sym']:
+def reindex_dataset_gci2(data, from_index, to_index, consider_nfs=["gci2", "gci2_sym"]):
+    if consider_nfs != ["gci2", "gci2_sym"]:
         raise NotImplementedError("Evaluation only implemented for gci2")
     if consider_nfs:
         for k in data:
             if k not in consider_nfs:
                 data[k] = th.tensor([])
     class_map = {}
-    for x in from_index['class_index']:
-        class_map[from_index['class_index'][x]] = to_index['class_index'][x]
+    for x in from_index["class_index"]:
+        class_map[from_index["class_index"][x]] = to_index["class_index"][x]
     role_map = {}
-    for x in from_index['property_index']:
-        role_map[from_index['property_index'][x]] = to_index['property_index'][x]
+    for x in from_index["property_index"]:
+        role_map[from_index["property_index"][x]] = to_index["property_index"][x]
     sym_role_map = {}
-    for x in from_index['sym_property_index']:
-        sym_role_map[from_index['sym_property_index'][x]] = to_index['sym_property_index'][x]
+    for x in from_index["sym_property_index"]:
+        sym_role_map[from_index["sym_property_index"][x]] = to_index[
+            "sym_property_index"
+        ][x]
 
     for k in data:
         if len(data[k]) == 0:
             continue
         # currently only for gci2 and gci2_sym
-        r_map = role_map if k == 'gci2' else sym_role_map
+        r_map = role_map if k == "gci2" else sym_role_map
         gci2 = data[k]
         gci2[:, 0].apply_(lambda x: class_map[x])
         gci2[:, 2].apply_(lambda x: class_map[x])
@@ -378,42 +472,44 @@ def reindex_dataset_gci2(data, from_index, to_index,
 
     return data
 
+
 def reindex_dataset(data, from_index, to_index):
 
-    ignore_gcis = ['gci1', 'gci3', 'gci3_bot', 'gci0_bot']
+    ignore_gcis = ["gci1", "gci3", "gci3_bot", "gci0_bot"]
     class_map = {}
-    for x in from_index['class_index']:
-        class_map[from_index['class_index'][x]] = to_index['class_index'][x]
+    for x in from_index["class_index"]:
+        class_map[from_index["class_index"][x]] = to_index["class_index"][x]
     role_map = {}
-    for x in from_index['property_index']:
-        role_map[from_index['property_index'][x]] = to_index['property_index'][x]
+    for x in from_index["property_index"]:
+        role_map[from_index["property_index"][x]] = to_index["property_index"][x]
     sym_role_map = {}
-    for x in from_index['sym_property_index']:
-        sym_role_map[from_index['sym_property_index'][x]] = to_index['sym_property_index'][x]
+    for x in from_index["sym_property_index"]:
+        sym_role_map[from_index["sym_property_index"][x]] = to_index[
+            "sym_property_index"
+        ][x]
 
     for k in data:
         if len(data[k]) == 0 or k in ignore_gcis:
             continue
         # currently only for gci2 and gci2_sym
-        
-        if 'roles' in k:
-            s0 = ['gci0_sym_roles', 'gci1_bot_sym_roles',
-                  'gci0_sym_nonsym_roles']
-            ns1 = ['gci0_roles', 'gci1_bot_roles', 'gci0_sym_nonsym_roles']
+
+        if "roles" in k:
+            s0 = ["gci0_sym_roles", "gci1_bot_sym_roles", "gci0_sym_nonsym_roles"]
+            ns1 = ["gci0_roles", "gci1_bot_roles", "gci0_sym_nonsym_roles"]
             m0 = sym_role_map if k in s0 else role_map
             m1 = role_map if k in ns1 else sym_role_map
             gci = data[k]
             gci[:, 0].apply_(lambda x: m0[x])
             gci[:, 1].apply_(lambda x: m1[x])
             data[k] = gci
-        elif 'gci2' in k:
-            r_map = sym_role_map if 'sym' in k else role_map
+        elif "gci2" in k:
+            r_map = sym_role_map if "sym" in k else role_map
             gci2 = data[k]
             gci2[:, 0].apply_(lambda x: class_map[x])
             gci2[:, 2].apply_(lambda x: class_map[x])
             gci2[:, 1].apply_(lambda x: r_map[x])
             data[k] = gci2
-        elif k == 'gci0' or k == 'gci1_bot':
+        elif k == "gci0" or k == "gci1_bot":
             gci = data[k]
             gci[:, 0].apply_(lambda x: class_map[x])
             gci[:, 1].apply_(lambda x: class_map[x])
@@ -423,9 +519,8 @@ def reindex_dataset(data, from_index, to_index):
     return data
 
 
-def train_test_split(data, train_split=0.7, consider_nfs=['gci2', 'gci2_sym'],
-                     seed=0):
-    if consider_nfs != ['gci2', 'gci2_sym']:
+def train_test_split(data, train_split=0.7, consider_nfs=["gci2", "gci2_sym"], seed=0):
+    if consider_nfs != ["gci2", "gci2_sym"]:
         raise NotImplementedError("Evaluation only implemented for gci2")
     train_data = {}
     test_data = {}
@@ -435,15 +530,16 @@ def train_test_split(data, train_split=0.7, consider_nfs=['gci2', 'gci2_sym'],
             test_data[k] = th.tensor([])
             continue
 
-        train, test = sk_train_test_split(data[k], train_size=train_split,
-                                          random_state=seed)
+        train, test = sk_train_test_split(
+            data[k], train_size=train_split, random_state=seed
+        )
         train_data[k] = train
         test_data[k] = test
 
     return train_data, test_data
 
 
-def get_subClassOf(parent, kg_endpoint='http://localhost:3030/kg'):
+def get_subClassOf(parent, kg_endpoint="http://localhost:3030/kg"):
     sp_store = sparqlstore.SPARQLStore(kg_endpoint)
     kg = rdflib.Graph(store=sp_store)
     q = f"""
@@ -452,13 +548,14 @@ def get_subClassOf(parent, kg_endpoint='http://localhost:3030/kg'):
         WHERE {{
             ?a rdfs:subClassOf* <{parent}> .
             }}"""
-    
+
     res = kg.query(q)
 
     return list(res)
 
+
 class ParentDicts:
-    def __init__(self, index, data, kg_endpoint='http://localhost:3030/kg'):
+    def __init__(self, index, data, kg_endpoint="http://localhost:3030/kg"):
         sp_store = sparqlstore.SPARQLStore(kg_endpoint)
         self.kg = rdflib.Graph(store=sp_store)
         self.index = index
@@ -484,15 +581,17 @@ class ParentDicts:
         elif isinstance(top_parents, list) and len(top_parents) > 0:
             if len(top_parents) == 1:
                 return self.get_parent_query(top_parents[0])
-            qs = [f'{{?a rdfs:subClassOf* <{a}> }}' for a in top_parents]
-            return '\n' + ' UNION '.join(qs) + ' .'
+            qs = [f"{{?a rdfs:subClassOf* <{a}> }}" for a in top_parents]
+            return "\n" + " UNION ".join(qs) + " ."
         elif top_parents == None:
             return ""
         else:
-            raise ValueError("top_parent is expected to be a string, list of strings, or None")
+            raise ValueError(
+                "top_parent is expected to be a string, list of strings, or None"
+            )
 
     def find_all_class_parents(self, top_parent=None):
-        all_classes = self.data['gci0'].flatten()
+        all_classes = self.data["gci0"].flatten()
         print(f"Len gci0: {len(all_classes)}")
         par_q = self.get_parent_query(top_parent)
 
@@ -506,19 +605,21 @@ class ParentDicts:
     WHERE {{
         <{self.rev_index['class_index'][d.item()]}> rdfs:subClassOf* ?a .{par_q}
         }}"""
-                self._class_parents[d.item()] = {self.index['class_index'][str(e[0])]
-                                for e in self.kg.query(q)
-                                if type(e[0]) == rdflib.term.URIRef}
-                
+                self._class_parents[d.item()] = {
+                    self.index["class_index"][str(e[0])]
+                    for e in self.kg.query(q)
+                    if type(e[0]) == rdflib.term.URIRef
+                }
+
         self._parents_found = True
 
+
 class ExampleDicts(ParentDicts):
-    def __init__(self, r_fp, index, data,
-                 kg_endpoint='http://localhost:3030/kg'):
+    def __init__(self, r_fp, index, data, kg_endpoint="http://localhost:3030/kg"):
         super.__init__(index, data, kg_endpoint=kg_endpoint)
         self.roles = rdflib.Graph()
         self.roles.parse(r_fp)
-        self.role_parents = {'gci2': {}, 'gci2_sym': {}}
+        self.role_parents = {"gci2": {}, "gci2_sym": {}}
 
         self._roles_found = False
         self._positive_found = False
@@ -536,69 +637,80 @@ class ExampleDicts(ParentDicts):
     def set_positive_rev_examples(self, examples):
         self.positive_dict_rev = examples
         self._positive_found_rev = True
-                
+
     def find_all_role_parents(self):
-        
+
         print(f"len of nonsym gci2: {len(self.data['gci2'])}")
-        if len(self.data['gci2']) > 0:
-            for d in self.data['gci2'][:,1]:
-                if d.item() not in self.role_parents['gci2']:
+        if len(self.data["gci2"]) > 0:
+            for d in self.data["gci2"][:, 1]:
+                if d.item() not in self.role_parents["gci2"]:
                     q = f"""
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                 SELECT ?a
                 WHERE {{
                     <{self.rev_index['property_index'][d.item()]}> rdfs:subPropertyOf* ?a .
                     }}"""
-                    self.role_parents['gci2'][d.item()] = set()
+                    self.role_parents["gci2"][d.item()] = set()
                     for e in self.roles.query(q):
                         if type(e[0]) == rdflib.term.URIRef:
                             if (e[0], RDF.type, OWL.SymmetricProperty) in self.roles:
-                                self.role_parents['gci2'][d.item()].add((self.index['sym_property_index'][str(e[0])], True))
+                                self.role_parents["gci2"][d.item()].add(
+                                    (self.index["sym_property_index"][str(e[0])], True)
+                                )
                             else:
-                                self.role_parents['gci2'][d.item()].add((self.index['property_index'][str(e[0])], False))
+                                self.role_parents["gci2"][d.item()].add(
+                                    (self.index["property_index"][str(e[0])], False)
+                                )
 
         print(f"len of sym gci2: {len(self.data['gci2_sym'])}")
-        if len(self.data['gci2_sym']) > 0:
-            for d in self.data['gci2_sym'][:,1]:
-                if d.item() not in self.role_parents['gci2_sym']:
+        if len(self.data["gci2_sym"]) > 0:
+            for d in self.data["gci2_sym"][:, 1]:
+                if d.item() not in self.role_parents["gci2_sym"]:
                     q = f"""
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                 SELECT ?a
                 WHERE {{
                     <{self.rev_index['sym_property_index'][d.item()]}> rdfs:subPropertyOf* ?a .
                     }}"""
-                    self.role_parents['gci2_sym'][d.item()] = set()
+                    self.role_parents["gci2_sym"][d.item()] = set()
                     for e in self.roles.query(q):
                         if type(e[0]) == rdflib.term.URIRef:
                             if (e[0], RDF.type, OWL.SymmetricProperty) in self.roles:
-                                self.role_parents['gci2_sym'][d.item()].add((self.index['sym_property_index'][str(e[0])], True))
+                                self.role_parents["gci2_sym"][d.item()].add(
+                                    (self.index["sym_property_index"][str(e[0])], True)
+                                )
                             else:
-                                self.role_parents['gci2_sym'][d.item()].add((self.index['property_index'][str(e[0])], False))
+                                self.role_parents["gci2_sym"][d.item()].add(
+                                    (self.index["property_index"][str(e[0])], False)
+                                )
 
         self._roles_found = True
-
 
     def find_positive_examples_rev(self):
         if not self._parents_found:
             self.find_all_class_parents()
         if not self._roles_found:
             self.find_all_role_parents()
-        return_dict = {'gci2': {}, 'gci2_sym': {}, 'gci2_focus': {},
-                       'gci2_sym_focus': {}}
-        
+        return_dict = {
+            "gci2": {},
+            "gci2_sym": {},
+            "gci2_focus": {},
+            "gci2_sym_focus": {},
+        }
+
         for k in return_dict:
-            print(f'\n{k}')
+            print(f"\n{k}")
             if k not in self.data:
                 continue
             for i, row in enumerate(self.data[k]):
                 if i % 10000:
-                    print(f"{i / len(self.data[k])} done", end='\r')
+                    print(f"{i / len(self.data[k])} done", end="\r")
                 class_parents = copy.deepcopy(self._class_parents[row[0].item()])
-                role_type = 'gci2_sym' if 'sym' in k else 'gci2'
+                role_type = "gci2_sym" if "sym" in k else "gci2"
                 for p, sym in self.role_parents[role_type][row[1].item()]:
-                    c = 'gci2_sym' if sym else 'gci2'
-                    if 'focus' in k:
-                        c = c + '_focus'
+                    c = "gci2_sym" if sym else "gci2"
+                    if "focus" in k:
+                        c = c + "_focus"
                     if (row[2].item(), p) in return_dict[c]:
                         return_dict[c][(row[2].item(), p)].update(class_parents)
                     else:
@@ -607,27 +719,30 @@ class ExampleDicts(ParentDicts):
         self.positive_dict_rev = return_dict
         self._positive_found_rev = True
 
-
     def find_positive_examples(self):
         if not self._parents_found:
             self.find_all_class_parents()
         if not self._roles_found:
             self.find_all_role_parents()
-        return_dict = {'gci2': {}, 'gci2_sym': {}, 'gci2_focus': {},
-                       'gci2_sym_focus': {}}
+        return_dict = {
+            "gci2": {},
+            "gci2_sym": {},
+            "gci2_focus": {},
+            "gci2_sym_focus": {},
+        }
         for k in return_dict:
-            print(f'\n{k}')
+            print(f"\n{k}")
             if k not in self.data:
                 continue
             for i, row in enumerate(self.data[k]):
                 if i % 10000:
-                    print(f"{i / len(self.data[k])} done", end='\r')
+                    print(f"{i / len(self.data[k])} done", end="\r")
                 class_parents = copy.deepcopy(self._class_parents[row[2].item()])
-                role_type = 'gci2_sym' if 'sym' in k else 'gci2'
+                role_type = "gci2_sym" if "sym" in k else "gci2"
                 for p, sym in self.role_parents[role_type][row[1].item()]:
-                    c = 'gci2_sym' if sym else 'gci2'
-                    if 'focus' in k:
-                        c = c + '_focus'
+                    c = "gci2_sym" if sym else "gci2"
+                    if "focus" in k:
+                        c = c + "_focus"
                     if (row[0].item(), p) in return_dict[c]:
                         return_dict[c][(row[0].item(), p)].update(class_parents)
                     else:
@@ -641,7 +756,7 @@ class ExampleDicts(ParentDicts):
             self.find_positive_examples()
 
         return self.positive_dict
-    
+
     def get_positive_rev_examples(self):
         if not self._positive_found_rev:
             self.find_positive_examples_rev()
@@ -651,13 +766,13 @@ class ExampleDicts(ParentDicts):
     def find_negative_examples(self):
         if not self._positive_found:
             self.find_positive_examples()
-        neg_examples = {'gci2': {}, 'gci2_sym': {}}
-        all_classes = self.index['class_index'].values()
+        neg_examples = {"gci2": {}, "gci2_sym": {}}
+        all_classes = self.index["class_index"].values()
         for gci in neg_examples:
-            print('\n' + gci)
+            print("\n" + gci)
             full_len = len(self.positive_dict[gci])
             for i, (k, pos) in enumerate(self.positive_dict[gci].items()):
-                print(f"{i / full_len} done", end='\r')
+                print(f"{i / full_len} done", end="\r")
                 neg_examples[gci][k] = [a for a in all_classes if not a in pos]
 
         self.negative_dict = neg_examples

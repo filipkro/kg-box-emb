@@ -27,9 +27,9 @@ HEADS = 2
 INTER_TYPE = 'gumbel'
 VOL_TYPE = 'bessel'
 
-RANDOM_INIT_EMBS = False
+RANDOM_INIT_EMBS = True
 EMBEDDING_DIMS = {
-    'genes': 16,
+    'genes': 8,
     'mat_ent': 20,
     'quality': 10,
     'reactions': 10,

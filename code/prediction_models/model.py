@@ -860,13 +860,17 @@ class Regressor(Model):
             # return z, x_dicts
         else:
             z = self._forward(data)
-            return self.lin4(z).squeeze()
+            if self.lin_layers:
+                return self.lin4(z).squeeze()
+            else:
+                return z.squeeze()
             # return z
 
     def predict_from_embedding(self, emb):
         if self.lin_layers:
             for l in self.lin_layers:
                 z = l(emb).relu()
+            
         else:
             z = emb.sum(dim=-1)
 

@@ -26,3 +26,15 @@ SEMANTIC_MEASURE = 'distance'
 HEADS = 2
 INTER_TYPE = 'gumbel'
 VOL_TYPE = 'bessel'
+
+RANDOM_INIT_EMBS = False
+EMBEDDING_DIMS = {
+    'genes': 16,
+    'mat_ent': 20,
+    'quality': 10,
+    'reactions': 10,
+    'cell_comp': 10,
+    'reguls': 10,
+    'mol_func': 10,
+    'bio_proc': 10
+}

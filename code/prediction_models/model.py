@@ -3,7 +3,7 @@ from sage_conv_mod import SAGEConvMod
 from torch_geometric.data import HeteroData
 import torch as th
 import torch.nn as nn
-from parameters import LINKS, BOX_EMBEDDINGS, ONLY_GENE_BOXES, DROP_OUT
+from parameters import LINKS, BOX_EMBEDDINGS, ONLY_GENE_BOXES, DROP_OUT, RANDOM_INIT_EMBS, EMBEDDING_DIMS
 from box_embeddings.modules.intersection import GumbelIntersection
 from box_embeddings.parameterizations import MinDeltaBoxTensor
 from torch_geometric.nn.aggr import MultiAggregation, SoftmaxAggregation, PowerMeanAggregation, MLPAggregation, AttentionalAggregation
@@ -133,8 +133,8 @@ class HeteroConvHeads(HeteroConv):
             out_dict[key] = group(value, self.aggr)
 
         return out_dict
-
     
+
 class GNNBase(th.nn.Module):
     def __init__(self, embeddings, edge_types, aggr='attn'):
         super().__init__()
@@ -602,7 +602,12 @@ class Model(th.nn.Module):
             #self.gnn = HeteroGNNSAGECustom(gnn_channels, edge_types, embeddings,
             #                                aggr='max', skip_last=True)
             self.dropout = th.nn.Dropout(DROP_OUT)
-            if ONLY_GENE_BOXES:
+            if RANDOM_INIT_EMBS:
+                self.node_embeddings = th.nn.ModuleDict([[k,
+                                    th.nn.Embedding(num_embeddings=v.shape[0],
+                                                    embedding_dim=EMBEDDING_DIMS[k])]
+                                                    for k,v in embeddings.items()])
+            elif ONLY_GENE_BOXES:
                 self.node_embeddings = th.nn.ModuleDict(
                     [[k, th.nn.Embedding(num_embeddings=v.shape[0],
                                         embedding_dim=v.shape[1])]

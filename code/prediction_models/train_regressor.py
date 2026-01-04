@@ -14,7 +14,7 @@ from parameters import (EPOCHS, LR, GNN_CHANNELS, NN_CHANNELS, REGULARIZATION,
                         DATASET, BOX_EMBEDDINGS, ONLY_GENE_BOXES, SPLIT,
                         SEMANTIC_WEIGHT, MIN_NBR_EDGES, NUM_BATCHES,
                         SEMANTIC_MEASURE, DROP_OUT, NEG_WEIGHT,
-                        INTER_TYPE, VOL_TYPE)
+                        INTER_TYPE, VOL_TYPE, RANDOM_INIT_EMBS, EMBEDDING_DIMS)
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../embeddings')))
@@ -69,6 +69,9 @@ print(f"negative weight: {NEG_WEIGHT}")
 
 print(f"interaction type: {INTER_TYPE}")
 print(f"volume type: {VOL_TYPE}")
+
+print(f"random init embs: {RANDOM_INIT_EMBS}")
+print(f"random embedding dims: {EMBEDDING_DIMS}")
 
 model_kwargs = {'gnn_channels': GNN_CHANNELS, 'nn_channels': NN_CHANNELS,
                 'meta_data': data.metadata(), 'embeddings': data.x_dict}

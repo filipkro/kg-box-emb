@@ -100,7 +100,8 @@ model_kwargs = {'gnn_channels': GNN_CHANNELS, 'nn_channels': NN_CHANNELS,
 metric, model = train_loop_final_sem(model_type=Regressor,
                                     model_kwargs=model_kwargs, data=data,
                                     epochs=EPOCHS, loss_function=mse_loss,
-                                    metric=r2_score, device=device, lr=LR)
+                                    metric=r2_score, device=device, lr=LR,
+                                    num_batches=NUM_BATCHES, gci0_data=gci0)
 # else:
 #     with open(os.path.join(BASE, args.model_file), 'rb') as fi:
 #         model = pickle.load(fi)['model']

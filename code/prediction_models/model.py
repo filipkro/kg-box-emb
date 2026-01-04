@@ -584,6 +584,19 @@ class OGGNNCustom(th.nn.Module):
             for e in edge_types:
                 if skip_last and (i == len(channels) - 1 and e[2] != "genes"):
                     continue
+<<<<<<< HEAD
+                source_channels = int(i==0) * embeddings[e[0]].shape[1] + \
+                    int(i>0)*max((1,int(prev_c * es[e[0]])))
+                target_channels = int(i==0)*embeddings[e[2]].shape[1] + \
+                    int(i>0)*max((1,int(prev_c * es[e[2]])))
+                out_channels = max((1,int(c * es[e[2]])))
+                root_weight = bool(i) or e[2] != 'genes'
+                #root_weight = True
+                conv_dict[e] = SAGEConv((source_channels, target_channels),
+                                        out_channels, normalize=True,
+                                        root_weight=root_weight, project=True, #aggr='lstm')
+                                        aggr='max')
+=======
                 source_channels = int(i == 0) * embeddings[e[0]].shape[1] + int(
                     i > 0
                 ) * max((1, int(prev_c * es[e[0]])))
@@ -601,6 +614,7 @@ class OGGNNCustom(th.nn.Module):
                     project=True,  # aggr='lstm')
                     aggr="max",
                 )
+>>>>>>> 0fe6a0b9f9facf149f83cd449e4829a525f7b464
             # layer_sizes = {k: max(1, c // 2) if v / 1000 < 1 else c
             #                for k, v in edge_types.items() if (i != len(channels) - 1) or (e[2] == 'genes')}
             conv = HeteroConv(conv_dict, aggr="mean")
@@ -753,9 +767,12 @@ class Model(th.nn.Module):
             MinDeltaBoxTensor.from_vector(embs[LINKS[2]][links_to_pred[1]]),
         )
         intersects = self.intersect(gene_boxes[0], gene_boxes[1])
-        z = th.cat([intersects.z, intersects.Z], dim=-1)
-
-        z = embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]]
+        g1 = embs[LINKS[0]][links_to_pred[0]]
+        g2 = embs[LINKS[2]][links_to_pred[1]]
+        #z = th.cat([intersects.z, intersects.Z], dim=-1)
+        
+        #z = embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]] 
+        z = g1 * self.W(g2) + g2 * self.W(g1) 
         if self.lin_layers:
             for i, l in enumerate(self.lin_layers):
                 z = l(z).relu()

@@ -3,7 +3,7 @@ from sage_conv_mod import SAGEConvMod
 from torch_geometric.data import HeteroData
 import torch as th
 import torch.nn as nn
-from parameters import LINKS, BOX_EMBEDDINGS, ONLY_GENE_BOXES, DROP_OUT, RANDOM_INIT_EMBS, EMBEDDING_DIMS
+from parameters import LINKS, BOX_EMBEDDINGS, ONLY_GENE_BOXES, DROP_OUT, RANDOM_INIT_EMBS, EMBEDDING_DIMS, ONLY_BILINEAR
 from box_embeddings.modules.intersection import GumbelIntersection
 from box_embeddings.parameterizations import MinDeltaBoxTensor
 from torch_geometric.nn.aggr import (
@@ -714,6 +714,10 @@ class Model(th.nn.Module):
             self.gnn = OGGNNCustom(gnn_channels, edge_types, emb_dims, skip_last=True)
             prev_width = max((1, int(gnn_channels[-1] * self.gnn.es['genes'])))
             self.W = th.nn.Linear(prev_width, prev_width, bias=False)
+            self.A = nn.Parameter(th.randn(prev_width, prev_width))
+            self.u = nn.Parameter(th.zeros(prev_width))
+            self.b = nn.Parameter(th.zeros(1))
+
             layers = []
             if len(nn_channels) > 0:
                 for c in nn_channels:
@@ -763,13 +767,20 @@ class Model(th.nn.Module):
         #z = th.cat([intersects.z, intersects.Z], dim=-1)
         
         #z = embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]] 
-        z = g1 * self.W(g2) + g2 * self.W(g1) 
+        z = g1 * self.W(g2) + g2 * self.W(g1)
+
         if self.lin_layers:
             for i, l in enumerate(self.lin_layers):
                 z = l(z).relu()
                 z = self.dropout(z)
         else:
-            z = z.sum(dim=-1)
+            if ONLY_BILINEAR:
+                linear = 0
+            else:
+                linear = (g1 @ self.u) + (g2 @ self.u)
+            W = 0.5 * (self.A + self.A.t())
+            bilinear = th.sum(g1 * (g2 @ W), dim=-1)
+            z = bilinear + linear + self.b
 
         if return_embs:
             return z, x_dict

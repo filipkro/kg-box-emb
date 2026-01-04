@@ -38,3 +38,5 @@ EMBEDDING_DIMS = {
     'mol_func': 10,
     'bio_proc': 10
 }
+
+ONLY_BILINEAR = True

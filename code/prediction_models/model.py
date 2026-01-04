@@ -856,7 +856,10 @@ class Regressor(Model):
 
         if return_embs:
             z, x_dicts = self._forward(data, return_embs=return_embs)
-            return self.lin4(z).squeeze(), x_dicts
+            if self.lin_layers:
+                return self.lin4(z).squeeze(), x_dicts
+            else:
+                return z.squeeze(), x_dicts
             # return z, x_dicts
         else:
             z = self._forward(data)

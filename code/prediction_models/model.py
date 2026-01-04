@@ -713,6 +713,7 @@ class Model(th.nn.Module):
                                                     for k,v in embeddings.items()])
             self.gnn = OGGNNCustom(gnn_channels, edge_types, emb_dims, skip_last=True)
             prev_width = max((1, int(gnn_channels[-1] * self.gnn.es['genes'])))
+            self.W = th.nn.Linear(prev_width, prev_width, bias=False)
             layers = []
             if len(nn_channels) > 0:
                 for c in nn_channels:

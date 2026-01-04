@@ -1,4 +1,3 @@
-from openai import embeddings
 from torch_geometric.nn import SAGEConv, HeteroConv, GATv2Conv, TransformerConv
 from sage_conv_mod import SAGEConvMod
 from torch_geometric.data import HeteroData

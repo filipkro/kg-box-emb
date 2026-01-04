@@ -95,10 +95,6 @@ metrics, models, data_splits = cross_val(model_type=Regressor,
                                          loss_function=mse_loss,
                                          metric=r2_score, device=device, lr=LR,
                                          gci0_data=gci0, folds=10, split=SPLIT, num_batches=NUM_BATCHES)
-metrics, models = cross_val(model_type=DummyModel, model_kwargs=model_kwargs,
-                            data=data, epochs=EPOCHS, loss_function=mse_loss,
-                            metric=r2_score, device=device, lr=LR,
-                            gci0_data=gci0, folds=10)
 
 
 # %%

@@ -25,7 +25,7 @@ from parameters import (LR_DECAY, SCHEDULE_RATE, TRAIN_EMBEDDING_EPOCH,
 
 import os, pickle
 seed_everything(0)
-th.manual_seed(0)
+#th.manual_seed(0)
 BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from copy import deepcopy, copy
 
@@ -351,9 +351,11 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
     metrics = {'train_losses': [], 'train_metrics': [], 'val_losses': [],
                'val_metrics': [], 'sem_losses': [], 'box_losses': [],
                'neg_sem_losses': []}
+    reg_factor = 0.1
+    print(f"gnn reg factor: {reg_factor}")
     optimizer = th.optim.Adam([
             {'params': model.node_embeddings.parameters(), 'weight_decay': 0},
-            {'params': model.gnn.parameters(), 'weight_decay': 0.1*REGULARIZATION},
+            {'params': model.gnn.parameters(), 'weight_decay': reg_factor*REGULARIZATION},
             {'params': chain(model.lin4.parameters(), model.lin_layers.parameters())}
                         ], lr=lr, weight_decay=REGULARIZATION)
     # scheduler = th.optim.lr_scheduler.MultiplicativeLR(optimizer,
@@ -362,7 +364,9 @@ def train_loop(model_type, train_data, val_data, epochs, loss_function, metric,
 
     best_metric = -np.inf
     model.node_embeddings.requires_grad_(True)
-    model.node_embeddings['genes'].requires_grad_(True)
+    train_gene_embs = False
+    print(f"train gene embs: {train_gene_embs}")
+    model.node_embeddings['genes'].requires_grad_(train_gene_embs)
     for e in edge_types:
         train_data[e].edge_index = sort_edge_index(train_data[e].edge_index, sort_by_row=False)
         val_data[e].edge_index = sort_edge_index(val_data[e].edge_index, sort_by_row=False)
@@ -787,7 +791,8 @@ def train_loop_final_sem(model_type, data, epochs, loss_function, metric,
         # all_preds = np.array(all_preds).flatten()
         tm = metric(all_targets, all_preds)
         metrics['box_losses'].append(epoc_sem_losses)
-        #if tm > -0.1:
+        #if tm > 0.5:
+        #    break
         #    for param_group in optimizer.param_groups:
         #        param_group['lr'] = lr
                 
@@ -805,7 +810,8 @@ def train_loop_final_sem(model_type, data, epochs, loss_function, metric,
         #if gci0_data:
         #    for k,v in box_loss_epoch.items():
         #        metrics['box_losses'][k].append(np.mean(v).item())
-
+        if tm > 0.55:
+            break
         # if vm > 0 and not decreased:
         #     scheduler.step()
         #     decreased = True

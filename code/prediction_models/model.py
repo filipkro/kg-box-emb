@@ -480,7 +480,7 @@ class OGGNNCustom(th.nn.Module):
                     int(i>0)*max((1,int(prev_c * es[e[2]])))
                 out_channels = max((1,int(c * es[e[2]])))
                 root_weight = bool(i) or e[2] != 'genes'
-
+                #root_weight = True
                 conv_dict[e] = SAGEConv((source_channels, target_channels),
                                         out_channels, normalize=True,
                                         root_weight=root_weight, project=True, #aggr='lstm')
@@ -570,6 +570,7 @@ class Model(th.nn.Module):
                                                 embedding_dim=v.shape[1])]
                                                 for k,v in embeddings.items()])
         prev_width = max((1, int(gnn_channels[-1] * self.gnn.es['genes'])))
+        self.W = th.nn.Linear(prev_width, prev_width, bias=False)
         layers = []
         if len(nn_channels) > 0:
             for c in nn_channels:
@@ -610,9 +611,12 @@ class Model(th.nn.Module):
         gene_boxes = (MinDeltaBoxTensor.from_vector(embs[LINKS[0]][links_to_pred[0]]),
                       MinDeltaBoxTensor.from_vector(embs[LINKS[2]][links_to_pred[1]]))
         intersects = self.intersect(gene_boxes[0], gene_boxes[1])
-        z = th.cat([intersects.z, intersects.Z], dim=-1)
+        g1 = embs[LINKS[0]][links_to_pred[0]]
+        g2 = embs[LINKS[2]][links_to_pred[1]]
+        #z = th.cat([intersects.z, intersects.Z], dim=-1)
         
-        z = embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]] 
+        #z = embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]] 
+        z = g1 * self.W(g2) + g2 * self.W(g1) 
         if self.lin_layers:
            for i, l in enumerate(self.lin_layers):
                z = l(z).relu()

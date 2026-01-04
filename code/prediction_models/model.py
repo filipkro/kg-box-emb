@@ -1,3 +1,4 @@
+from openai import embeddings
 from torch_geometric.nn import SAGEConv, HeteroConv, GATv2Conv, TransformerConv
 from sage_conv_mod import SAGEConvMod
 from torch_geometric.data import HeteroData
@@ -558,12 +559,12 @@ class HeteroGNNSAGE(GNNBaseSAGE):
 
 
 class OGGNNCustom(th.nn.Module):
-    def __init__(self, channels, edge_types, embeddings, skip_last=True):
+    def __init__(self, channels, edge_types, embedding_dims, skip_last=True):
         print("OGGNNCustom")
         super().__init__()
         self.layers = th.nn.ModuleList()
         prev_c = 0
-        ed = {k: 0 for k in embeddings.keys()}
+        ed = {k: 0 for k in embedding_dims.keys()}
         for e, v in edge_types.items():
             ed[e[0]] += v
             ed[e[2]] += v
@@ -585,10 +586,10 @@ class OGGNNCustom(th.nn.Module):
                 if skip_last and (i == len(channels) - 1 and e[2] != "genes"):
                     continue
 
-                source_channels = int(i == 0) * embeddings[e[0]].shape[1] + int(
+                source_channels = int(i == 0) * embedding_dims[e[0]] + int(
                     i > 0
                 ) * max((1, int(prev_c * es[e[0]])))
-                target_channels = int(i == 0) * embeddings[e[2]].shape[1] + int(
+                target_channels = int(i == 0) * embedding_dims[e[2]] + int(
                     i > 0
                 ) * max((1, int(prev_c * es[e[2]])))
                 out_channels = max((1, int(c * es[e[2]])))
@@ -620,20 +621,20 @@ class OGGNNCustom(th.nn.Module):
 
 
 class OGGNN(th.nn.Module):
-    def __init__(self, channels, edge_types, embeddings, skip_last=False):
+    def __init__(self, channels, edge_types, embedding_dims, skip_last=False):
         super().__init__()
         self.layers = th.nn.ModuleList()
         prev_c = 0
-        es = {k: 1 for k in embeddings.keys()}
+        es = {k: 1 for k in embedding_dims.keys()}
         for i, c in enumerate(channels):
             conv_dict = {}
             for e in edge_types:
                 if skip_last and (i == len(channels) - 1 and e[2] != "genes"):
                     continue
-                source_channels = int(i == 0) * embeddings[e[0]].shape[1] + int(
+                source_channels = int(i == 0) * embedding_dims[e[0]] + int(
                     i > 0
                 ) * max((1, int(prev_c * es[e[0]])))
-                target_channels = int(i == 0) * embeddings[e[2]].shape[1] + int(
+                target_channels = int(i == 0) * embedding_dims[e[2]] + int(
                     i > 0
                 ) * max((1, int(prev_c * es[e[2]])))
                 out_channels = max((1, int(c * es[e[2]])))
@@ -684,11 +685,13 @@ class Model(th.nn.Module):
         # self.gnn = HeteroGNNGATCustom(gnn_channels, edge_types, embeddings, aggr=aggr)
         #self.gnn = HeteroGNNTransformerCustom(gnn_channels, edge_types, embeddings, aggr=aggr, heads=HEADS, skip_last=True)
         if len(gnn_channels) > 0:
-            self.gnn = OGGNNCustom(gnn_channels, edge_types, embeddings, skip_last=True)
+            
             #self.gnn = HeteroGNNSAGECustom(gnn_channels, edge_types, embeddings,
             #                                aggr='max', skip_last=True)
             self.dropout = th.nn.Dropout(DROP_OUT)
+            emb_dims = {k: v.shape[1] for k,v in embeddings.items()}
             if RANDOM_INIT_EMBS:
+                emb_dims = EMBEDDING_DIMS
                 self.node_embeddings = th.nn.ModuleDict([[k,
                                     th.nn.Embedding(num_embeddings=v.shape[0],
                                                     embedding_dim=EMBEDDING_DIMS[k])]
@@ -709,6 +712,7 @@ class Model(th.nn.Module):
                                     th.nn.Embedding(num_embeddings=v.shape[0],
                                                     embedding_dim=v.shape[1])]
                                                     for k,v in embeddings.items()])
+            self.gnn = OGGNNCustom(gnn_channels, edge_types, emb_dims, skip_last=True)
             prev_width = max((1, int(gnn_channels[-1] * self.gnn.es['genes'])))
             layers = []
             if len(nn_channels) > 0:

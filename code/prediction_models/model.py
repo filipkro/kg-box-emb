@@ -766,8 +766,8 @@ class Model(th.nn.Module):
         g2 = embs[LINKS[2]][links_to_pred[1]]
         #z = th.cat([intersects.z, intersects.Z], dim=-1)
         
-        #z = embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]] 
-        z = g1 * self.W(g2) + g2 * self.W(g1)
+        z = embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]] 
+        #z = g1 * self.W(g2) + g2 * self.W(g1)
 
         if self.lin_layers:
             for i, l in enumerate(self.lin_layers):

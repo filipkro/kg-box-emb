@@ -4,6 +4,7 @@ NEIGHBOR_SAMPLE_SIZE = 20
 GNN_CHANNELS = [64, 64]
 #NN_CHANNELS = [64, 8]
 NN_CHANNELS = [64]
+#NN_CHANNELS = []
 LR_DECAY = 1
 SCHEDULE_RATE = 10
 TRAIN_EMBEDDING_EPOCH = 10000#900*int(EPOCHS / 4)
@@ -18,7 +19,7 @@ DATASET = 'pyg_graph_box_interactions_DMA30'
 LINKS = ('genes', 'interacts', 'genes')
 SPLIT = 'nodes'
 MIN_NBR_EDGES = 1000
-SEMANTIC_WEIGHT = 5e-1
+SEMANTIC_WEIGHT = 1e-1
 NUM_BATCHES = 10
 NEG_WEIGHT = 5e-2
 DROP_OUT = 0.0
@@ -27,7 +28,7 @@ HEADS = 2
 INTER_TYPE = 'gumbel'
 VOL_TYPE = 'bessel'
 
-RANDOM_INIT_EMBS = True
+RANDOM_INIT_EMBS = False
 EMBEDDING_DIMS = {
     'genes': 8,
     'mat_ent': 20,
@@ -39,4 +40,4 @@ EMBEDDING_DIMS = {
     'bio_proc': 10
 }
 
-ONLY_BILINEAR = True
+ONLY_BILINEAR = False

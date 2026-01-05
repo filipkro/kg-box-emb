@@ -40,3 +40,4 @@ EMBEDDING_DIMS = {
 }
 
 ONLY_BILINEAR = True
+GENE_COMBINE = 'product'  # product, bilinear, concat, intersection

@@ -713,6 +713,8 @@ class Model(th.nn.Module):
                                                     for k,v in embeddings.items()])
             self.gnn = OGGNNCustom(gnn_channels, edge_types, emb_dims, skip_last=True)
             prev_width = max((1, int(gnn_channels[-1] * self.gnn.es['genes'])))
+            if GENE_COMBINE in ['concat', 'intersection']:
+                prev_width = prev_width * 2
             self.W = th.nn.Linear(prev_width, prev_width, bias=False)
             self.A = nn.Parameter(th.randn(prev_width, prev_width))
             self.u = nn.Parameter(th.zeros(prev_width))
@@ -769,8 +771,8 @@ class Model(th.nn.Module):
             z = g1 * g2
         elif GENE_COMBINE == 'intersection':
             gene_boxes = (
-                MinDeltaBoxTensor.from_vector(embs[LINKS[0]][links_to_pred[0]]),
-                MinDeltaBoxTensor.from_vector(embs[LINKS[2]][links_to_pred[1]]),
+                MinDeltaBoxTensor.from_vector(g1),
+                MinDeltaBoxTensor.from_vector(g2),
             )
             intersects = self.intersect(gene_boxes[0], gene_boxes[1])
             g1 = intersects.z
@@ -781,7 +783,7 @@ class Model(th.nn.Module):
         
 
         if self.lin_layers:
-            for i, l in enumerate(self.lin_layers):
+            for l in self.lin_layers:
                 z = l(z).relu()
                 z = self.dropout(z)
         else:
@@ -814,7 +816,7 @@ class OntologyGNN(th.nn.Module):
         self.node_embeddings = th.nn.ModuleDict(
                 [[k, th.nn.Embedding.from_pretrained(v.clone(), freeze=False)]
                  for k,v in embeddings.items()])
-        self.gnn = OGGNN(channels, edge_types, embeddings, skip_last=False)
+        self.gnn = OGGNN(channels, edge_types, {k: v.shape for k,v in embeddings.items()}, skip_last=False)
         # self.gnn = HeteroGNNSAGE(channels, edge_types, embeddings,
         #                          aggr='attn', skip_last=False)
         # self.gnn = HeteroGNNTransformer(channels, edge_types, embeddings,

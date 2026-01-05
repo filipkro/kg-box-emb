@@ -3,7 +3,7 @@ from sage_conv_mod import SAGEConvMod
 from torch_geometric.data import HeteroData
 import torch as th
 import torch.nn as nn
-from parameters import LINKS, BOX_EMBEDDINGS, ONLY_GENE_BOXES, DROP_OUT, RANDOM_INIT_EMBS, EMBEDDING_DIMS, ONLY_BILINEAR
+from parameters import LINKS, BOX_EMBEDDINGS, ONLY_GENE_BOXES, DROP_OUT, RANDOM_INIT_EMBS, EMBEDDING_DIMS, ONLY_BILINEAR, GENE_COMBINE
 from box_embeddings.modules.intersection import GumbelIntersection
 from box_embeddings.parameterizations import MinDeltaBoxTensor
 from torch_geometric.nn.aggr import (
@@ -757,17 +757,28 @@ class Model(th.nn.Module):
         x_dict = self.gnn(x_dict, data.edge_index_dict, return_embs=return_embs)
         embs = x_dict[-1] if return_embs else x_dict
 
-        gene_boxes = (
-            MinDeltaBoxTensor.from_vector(embs[LINKS[0]][links_to_pred[0]]),
-            MinDeltaBoxTensor.from_vector(embs[LINKS[2]][links_to_pred[1]]),
-        )
-        intersects = self.intersect(gene_boxes[0], gene_boxes[1])
         g1 = embs[LINKS[0]][links_to_pred[0]]
         g2 = embs[LINKS[2]][links_to_pred[1]]
-        #z = th.cat([intersects.z, intersects.Z], dim=-1)
         
-        z = embs[LINKS[0]][links_to_pred[0]] * embs[LINKS[2]][links_to_pred[1]] 
-        #z = g1 * self.W(g2) + g2 * self.W(g1)
+
+        if GENE_COMBINE == 'bilinear':
+            z = g1 * self.W(g2) + g2 * self.W(g1)
+        elif GENE_COMBINE == 'concat':
+            z = th.cat([g1, g2], dim=-1)
+        elif GENE_COMBINE == 'product':
+            z = g1 * g2
+        elif GENE_COMBINE == 'intersection':
+            gene_boxes = (
+                MinDeltaBoxTensor.from_vector(embs[LINKS[0]][links_to_pred[0]]),
+                MinDeltaBoxTensor.from_vector(embs[LINKS[2]][links_to_pred[1]]),
+            )
+            intersects = self.intersect(gene_boxes[0], gene_boxes[1])
+            g1 = intersects.z
+            g2 = intersects.z
+            z = th.cat([intersects.z, intersects.Z], dim=-1)
+        else:
+            raise ValueError(f"Unknown gene combine method: {GENE_COMBINE}")
+        
 
         if self.lin_layers:
             for i, l in enumerate(self.lin_layers):

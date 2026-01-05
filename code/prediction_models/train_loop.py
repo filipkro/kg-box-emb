@@ -232,16 +232,16 @@ def box_loss_distance(embeddings, gci0, box=MinDeltaBoxTensor, gamma=0.0,
 
     def dist_inclusion(sub_c, sub_o, sup_c, sup_o, neg=False):
         if neg:
-            print(f'sub c: {sub_c.shape}', flush=True)
-            print(f'sup c: {sup_c.shape}', flush=True)
-            print(f'sub o: {sub_o.shape}', flush=True)
-            print(f'sup o: {sup_o.shape}', flush=True)
+            # print(f'sub c: {sub_c.shape}', flush=True)
+            # print(f'sup c: {sup_c.shape}', flush=True)
+            # print(f'sub o: {sub_o.shape}', flush=True)
+            # print(f'sup o: {sup_o.shape}', flush=True)
             v = th.relu(-th.abs(sub_c - sup_c) + sub_o + sup_o + gamma)
-            print(f'v: {v.shape}', flush=True)
+            # print(f'v: {v.shape}', flush=True)
             delta = (v > 0).all(dim=-1).float()
-            print(f'delta: {delta.shape}', flush=True)
-            print(f'v norm: {v.norm(dim=-1).shape}', flush=True)
-            return delta * v.norm(dim=-1).sum()
+            # print(f'delta: {delta.shape}', flush=True)
+            # print(f'v norm: {v.norm(dim=-1).shape}', flush=True)
+            return (delta * v.norm(dim=-1)).sum()
         else:
             return th.relu(th.abs(sub_c - sup_c) + sub_o - sup_o -
                           gamma).norm(dim=-1).sum()

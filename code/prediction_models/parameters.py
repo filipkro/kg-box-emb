@@ -40,9 +40,5 @@ EMBEDDING_DIMS = {
     'bio_proc': 10
 }
 
-<<<<<<< HEAD
-ONLY_BILINEAR = False
-=======
 ONLY_BILINEAR = True
 GENE_COMBINE = 'product'  # product, bilinear, concat, intersection
->>>>>>> e9f8d97ac29ab38c7b1ef678219a3c85f75f502f

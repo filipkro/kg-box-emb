@@ -816,7 +816,7 @@ class OntologyGNN(th.nn.Module):
         self.node_embeddings = th.nn.ModuleDict(
                 [[k, th.nn.Embedding.from_pretrained(v.clone(), freeze=False)]
                  for k,v in embeddings.items()])
-        self.gnn = OGGNN(channels, edge_types, {k: v.shape for k,v in embeddings.items()}, skip_last=False)
+        self.gnn = OGGNN(channels, edge_types, {k: v.shape[1] for k,v in embeddings.items()}, skip_last=False)
         # self.gnn = HeteroGNNSAGE(channels, edge_types, embeddings,
         #                          aggr='attn', skip_last=False)
         # self.gnn = HeteroGNNTransformer(channels, edge_types, embeddings,

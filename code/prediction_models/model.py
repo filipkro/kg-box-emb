@@ -3,7 +3,7 @@ from sage_conv_mod import SAGEConvMod
 from torch_geometric.data import HeteroData
 import torch as th
 import torch.nn as nn
-from parameters import LINKS, BOX_EMBEDDINGS, ONLY_GENE_BOXES, DROP_OUT, RANDOM_INIT_EMBS, EMBEDDING_DIMS, ONLY_BILINEAR, GENE_COMBINE
+from parameters import LINKS, BOX_EMBEDDINGS, ONLY_GENE_BOXES, DROP_OUT, RANDOM_INIT_EMBS, EMBEDDING_DIMS, ONLY_BILINEAR, GENE_COMBINE, CUSTOM_OGGNN
 from box_embeddings.modules.intersection import GumbelIntersection
 from box_embeddings.parameterizations import MinDeltaBoxTensor
 from torch_geometric.nn.aggr import (
@@ -557,7 +557,7 @@ class HeteroGNNSAGE(GNNBaseSAGE):
         self.es = {k: 1 for k in embeddings.keys()}
 
 class OGGNNBase(th.nn.Module):
-    def __init__(self, channels, edge_types, embedding_dims, skip_last=True):
+    def __init__(self):
         print("OGGNNBase")
         super().__init__()
         self.layers = th.nn.ModuleList()
@@ -656,8 +656,6 @@ class OGGNNCustom(OGGNNBase):
         #     prev_c = c
         #     self.layers.append(conv)
 
-    
-
 
 class OGGNN(th.nn.Module):
     def __init__(self, channels, edge_types, embedding_dims, skip_last=False):
@@ -753,7 +751,10 @@ class Model(th.nn.Module):
                                     th.nn.Embedding(num_embeddings=v.shape[0],
                                                     embedding_dim=v.shape[1])]
                                                     for k,v in embeddings.items()])
-            self.gnn = OGGNNCustom(gnn_channels, edge_types, emb_dims, skip_last=True)
+            if CUSTOM_OGGNN:
+                self.gnn = OGGNNCustom(gnn_channels, edge_types, emb_dims, skip_last=True)
+            else:
+                self.gnn = OGGNN(gnn_channels, edge_types, emb_dims, skip_last=True)
             prev_width = max((1, int(gnn_channels[-1] * self.gnn.es['genes'])))
             if GENE_COMBINE in ['concat', 'intersection']:
                 prev_width = prev_width * 2

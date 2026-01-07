@@ -607,8 +607,6 @@ class OGGNNCustom(OGGNNBase):
     def __init__(self, channels, edge_types, embedding_dims, skip_last=True):
         print("OGGNNCustom")
         super().__init__()
-        # self.layers = th.nn.ModuleList()
-        # prev_c = 0
         ed = {k: 0 for k in embedding_dims.keys()}
         for e, v in edge_types.items():
             ed[e[0]] += v
@@ -626,35 +624,6 @@ class OGGNNCustom(OGGNNBase):
                 self.es[k] = 0.25
 
         self.init_gnn(channels, embedding_dims, edge_types, self.es, skip_last=skip_last)
-        # es = self.es
-        # for i, c in enumerate(channels):
-        #     conv_dict = {}
-        #     for e in edge_types:
-        #         if skip_last and (i == len(channels) - 1 and e[2] != "genes"):
-        #             continue
-
-        #         source_channels = int(i == 0) * embedding_dims[e[0]] + int(
-        #             i > 0
-        #         ) * max((1, int(prev_c * es[e[0]])))
-        #         target_channels = int(i == 0) * embedding_dims[e[2]] + int(
-        #             i > 0
-        #         ) * max((1, int(prev_c * es[e[2]])))
-        #         out_channels = max((1, int(c * es[e[2]])))
-        #         root_weight = bool(i) or e[2] != "genes"
-
-        #         conv_dict[e] = SAGEConv(
-        #             (source_channels, target_channels),
-        #             out_channels,
-        #             normalize=True,
-        #             root_weight=root_weight,
-        #             project=True,  # aggr='lstm')
-        #             aggr="max",
-        #         )
-        #     # layer_sizes = {k: max(1, c // 2) if v / 1000 < 1 else c
-        #     #                for k, v in edge_types.items() if (i != len(channels) - 1) or (e[2] == 'genes')}
-        #     conv = HeteroConv(conv_dict, aggr="mean")
-        #     prev_c = c
-        #     self.layers.append(conv)
 
 
 class OGGNN(OGGNNBase):
@@ -662,44 +631,8 @@ class OGGNN(OGGNNBase):
         print("OGGNN")
         super().__init__()
         self.layers = th.nn.ModuleList()
-        # prev_c = 0
         self.es = {k: 1 for k in embedding_dims.keys()}
         self.init_gnn(channels, embedding_dims, edge_types, self.es, skip_last=skip_last)
-        # for i, c in enumerate(channels):
-        #     conv_dict = {}
-        #     for e in edge_types:
-        #         if skip_last and (i == len(channels) - 1 and e[2] != "genes"):
-        #             continue
-        #         source_channels = int(i == 0) * embedding_dims[e[0]] + int(
-        #             i > 0
-        #         ) * max((1, int(prev_c * es[e[0]])))
-        #         target_channels = int(i == 0) * embedding_dims[e[2]] + int(
-        #             i > 0
-        #         ) * max((1, int(prev_c * es[e[2]])))
-        #         out_channels = max((1, int(c * es[e[2]])))
-        #         root_weight = bool(i) or e[2] != "genes"
-
-        #         conv_dict[e] = SAGEConv(
-        #             (source_channels, target_channels),
-        #             out_channels,
-        #             normalize=True,
-        #             root_weight=root_weight,
-        #             project=True,
-        #             aggr="max",
-        #         )
-        #     conv = HeteroConv(conv_dict, aggr="mean")
-        #     prev_c = c
-        #     self.layers.append(conv)
-
-    # def forward(self, x_dict, edge_index_dict, return_embs=False):
-    #     embs = [x_dict]
-    #     for conv in self.layers:
-    #         x_dict = conv(x_dict, edge_index_dict)
-    #         if return_embs:
-    #             embs.append(x_dict)
-    #     if return_embs:
-    #         return embs
-    #     return x_dict
 
 
 class Model(th.nn.Module):

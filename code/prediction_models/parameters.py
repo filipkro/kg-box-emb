@@ -18,7 +18,7 @@ DATASET = 'pyg_graph_box_interactions_DMA30'
 #DATASET = 'pyg_graph_box_interactions'
 LINKS = ('genes', 'interacts', 'genes')
 SPLIT = 'nodes'
-MIN_NBR_EDGES = 100
+MIN_NBR_EDGES = 1000
 SEMANTIC_WEIGHT = 1e-1
 NUM_BATCHES = 10
 NEG_WEIGHT = 5e-2
@@ -42,3 +42,6 @@ EMBEDDING_DIMS = {
 
 ONLY_BILINEAR = True
 GENE_COMBINE = 'bilinear'  # product, bilinear, concat, intersection
+#GENE_COMBINE = 'product'  # product, bilinear, concat, intersection
+
+CUSTOM_OGGNN = False

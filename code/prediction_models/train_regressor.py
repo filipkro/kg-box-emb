@@ -14,7 +14,7 @@ from parameters import (EPOCHS, LR, GNN_CHANNELS, NN_CHANNELS, REGULARIZATION,
                         DATASET, BOX_EMBEDDINGS, ONLY_GENE_BOXES, SPLIT,
                         SEMANTIC_WEIGHT, MIN_NBR_EDGES, NUM_BATCHES,
                         SEMANTIC_MEASURE, DROP_OUT, NEG_WEIGHT,
-                        INTER_TYPE, VOL_TYPE, RANDOM_INIT_EMBS, EMBEDDING_DIMS, ONLY_BILINEAR, GENE_COMBINE)
+                        INTER_TYPE, VOL_TYPE, RANDOM_INIT_EMBS, EMBEDDING_DIMS, ONLY_BILINEAR, GENE_COMBINE, CUSTOM_OGGNN)
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../embeddings')))
@@ -76,6 +76,8 @@ print(f"random embedding dims: {EMBEDDING_DIMS}")
 print(f"only bilinear: {ONLY_BILINEAR}")
 
 print(f"gene combination method: {GENE_COMBINE}")
+
+print(f"Custom OGGNN: {CUSTOM_OGGNN}")
 
 model_kwargs = {'gnn_channels': GNN_CHANNELS, 'nn_channels': NN_CHANNELS,
                 'meta_data': data.metadata(), 'embeddings': data.x_dict}

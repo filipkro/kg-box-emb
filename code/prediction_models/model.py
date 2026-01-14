@@ -3,7 +3,7 @@ from sage_conv_mod import SAGEConvMod
 from torch_geometric.data import HeteroData
 import torch as th
 import torch.nn as nn
-from parameters import LINKS, BOX_EMBEDDINGS, ONLY_GENE_BOXES, DROP_OUT, RANDOM_INIT_EMBS, EMBEDDING_DIMS, ONLY_BILINEAR, GENE_COMBINE, CUSTOM_OGGNN
+from parameters import LINKS, BOX_EMBEDDINGS, ONLY_GENE_BOXES, DROP_OUT, RANDOM_INIT_EMBS, EMBEDDING_DIMS, ONLY_BILINEAR, GENE_COMBINE, CUSTOM_OGGNN, TRANSFORMER
 from box_embeddings.modules.intersection import GumbelIntersection
 from box_embeddings.parameterizations import MinDeltaBoxTensor
 from torch_geometric.nn.aggr import (
@@ -685,7 +685,13 @@ class Model(th.nn.Module):
                                     th.nn.Embedding(num_embeddings=v.shape[0],
                                                     embedding_dim=v.shape[1])]
                                                     for k,v in embeddings.items()])
-            if CUSTOM_OGGNN:
+            if TRANSFORMER:
+                self.gnn = HeteroGNNTransformer(gnn_channels, edge_types,
+                                                {k: v.shape[1] for k,v in
+                                                 embeddings.items()},
+                                                 aggr='attn', skip_last=True,
+                                                 heads=4)
+            elif CUSTOM_OGGNN:
                 self.gnn = OGGNNCustom(gnn_channels, edge_types, emb_dims, skip_last=True)
             else:
                 self.gnn = OGGNN(gnn_channels, edge_types, emb_dims, skip_last=True)
@@ -752,8 +758,6 @@ class Model(th.nn.Module):
                 MinDeltaBoxTensor.from_vector(g2),
             )
             intersects = self.intersect(gene_boxes[0], gene_boxes[1])
-            g1 = intersects.z
-            g2 = intersects.z
             z = th.cat([intersects.z, intersects.Z], dim=-1)
         else:
             raise ValueError(f"Unknown gene combine method: {GENE_COMBINE}")

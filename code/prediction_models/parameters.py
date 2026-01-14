@@ -45,3 +45,4 @@ GENE_COMBINE = 'bilinear'  # product, bilinear, concat, intersection
 #GENE_COMBINE = 'product'  # product, bilinear, concat, intersection
 
 CUSTOM_OGGNN = False
+TRANSFORMER = True

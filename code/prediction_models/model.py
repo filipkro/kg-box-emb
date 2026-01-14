@@ -696,7 +696,7 @@ class Model(th.nn.Module):
             else:
                 self.gnn = OGGNN(gnn_channels, edge_types, emb_dims, skip_last=True)
             prev_width = max((1, int(gnn_channels[-1] * self.gnn.es['genes'])))
-            if GENE_COMBINE in ['concat', 'intersection']:
+            if GENE_COMBINE in ['concat']:
                 prev_width = prev_width * 2
             self.W = th.nn.Linear(prev_width, prev_width, bias=False)
             self.A = nn.Parameter(th.randn(prev_width, prev_width))

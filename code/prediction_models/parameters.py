@@ -1,7 +1,7 @@
 EPOCHS = 300
 LR = 1e-4
 NEIGHBOR_SAMPLE_SIZE = 20
-GNN_CHANNELS = [64, 32]
+GNN_CHANNELS = [64, 64]
 #NN_CHANNELS = [64, 8]
 NN_CHANNELS = [64]
 #NN_CHANNELS = []
@@ -30,17 +30,18 @@ VOL_TYPE = 'bessel'
 
 RANDOM_INIT_EMBS = False
 EMBEDDING_DIMS = {
-    'genes': 8,
+    'genes': 20,
     'mat_ent': 20,
-    'quality': 10,
-    'reactions': 10,
-    'cell_comp': 10,
-    'reguls': 10,
-    'mol_func': 10,
-    'bio_proc': 10
+    'quality': 20,
+    'reactions': 20,
+    'cell_comp': 20,
+    'reguls': 20,
+    'mol_func': 20,
+    'bio_proc': 20
 }
 
 ONLY_BILINEAR = True
+#GENE_COMBINE = 'intersection'  # product, bilinear, concat, intersection
 GENE_COMBINE = 'bilinear'  # product, bilinear, concat, intersection
 #GENE_COMBINE = 'product'  # product, bilinear, concat, intersection
 

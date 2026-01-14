@@ -146,18 +146,18 @@ class HeteroConvHeads(HeteroConv):
         return out_dict
 
 class GNNBase(th.nn.Module):
-    def __init__(self, embeddings, edge_types, aggr="attn"):
+    def __init__(self, embedding_dims, edge_types, aggr="attn"):
         super().__init__()
         self.heads = 1
         self.layers = nn.ModuleList()
-        self.init_edge_dicts(embeddings, edge_types)
+        self.init_edge_dicts(embedding_dims, edge_types)
         # es = self.es
         assert aggr in ["attn", "mean", "max"], aggr
         self.aggr = aggr
         if self.aggr == "attn":
             self.hetero_aggrs = nn.ModuleList()
 
-    def init_edge_dicts(self, embeddings, edge_types):
+    def init_edge_dicts(self, embedding_dims, edge_types):
         raise NotImplementedError()
 
     def forward_head_attention(self, x_dict, edge_index_dict, return_embs=False):
@@ -217,9 +217,9 @@ class GNNBase(th.nn.Module):
 
 class GNNBaseTransfromer(GNNBase):
     def __init__(
-        self, channels, edge_types, embeddings, aggr="attn", heads=4, skip_last=True
+        self, channels, edge_types, embedding_dims, aggr="attn", heads=4, skip_last=False
     ):
-        super().__init__(embeddings=embeddings, edge_types=edge_types, aggr=aggr)
+        super().__init__(embedding_dims=embedding_dims, edge_types=edge_types, aggr=aggr)
         self.heads = heads
         print(f"number of heads: {heads}")
         es = self.es
@@ -232,10 +232,10 @@ class GNNBaseTransfromer(GNNBase):
             for e in edge_types:
                 if skip_last and (i == len(channels) - 1 and e[2] != "genes"):
                     continue
-                source_channels = int(i == 0) * embeddings[e[0]].shape[1] + int(
+                source_channels = int(i == 0) * embedding_dims[e[0]] + int(
                     i > 0
                 ) * max((1, int(prev_c * es[e[0]])))
-                target_channels = int(i == 0) * embeddings[e[2]].shape[1] + int(
+                target_channels = int(i == 0) * embedding_dims[e[2]] + int(
                     i > 0
                 ) * max((1, int(prev_c * es[e[2]])))
                 out_channels = max((1, int(c * es[e[2]])))
@@ -283,26 +283,26 @@ class GNNBaseTransfromer(GNNBase):
             prev_c = c
             self.layers.append(conv)
 
-    def init_edge_dicts(self, embeddings, edge_types):
+    def init_edge_dicts(self, embedding_dims, edge_types):
         raise NotImplementedError()
 
 
 class HeteroGNNTransformerCustom(GNNBaseTransfromer):
     def __init__(
-        self, channels, edge_types, embeddings, aggr="attn", heads=4, skip_last=True
+        self, channels, edge_types, embedding_dims, aggr="attn", heads=4, skip_last=True
     ):
         print("HeteroGNNTransformerCustom")
         super().__init__(
             channels,
             edge_types,
-            embeddings,
+            embedding_dims,
             aggr=aggr,
             heads=heads,
             skip_last=skip_last,
         )
 
-    def init_edge_dicts(self, embeddings, edge_types):
-        ed = {k: 0 for k in embeddings.keys()}
+    def init_edge_dicts(self, embedding_dims, edge_types):
+        ed = {k: 0 for k in embedding_dims.keys()}
         for e, v in edge_types.items():
             ed[e[0]] += v
             ed[e[2]] += v
@@ -319,35 +319,35 @@ class HeteroGNNTransformerCustom(GNNBaseTransfromer):
 
 class HeteroGNNTransformer(GNNBaseTransfromer):
     def __init__(
-        self, channels, edge_types, embeddings, aggr="attn", heads=4, skip_last=False
+        self, channels, edge_types, embedding_dims, aggr="attn", heads=4, skip_last=False
     ):
         print("HeteroGNNTransformer")
         super().__init__(
             channels,
             edge_types,
-            embeddings,
+            embedding_dims,
             aggr=aggr,
             heads=heads,
             skip_last=skip_last,
         )
 
-    def init_edge_dicts(self, embeddings, edge_types):
-        self.es = {k: 1 for k in embeddings.keys()}
+    def init_edge_dicts(self, embedding_dims, edge_types):
+        self.es = {k: 1 for k in embedding_dims.keys()}
 
 
 class GNNBaseGAT(GNNBase):
-    def __init__(self, channels, edge_types, embeddings, aggr="attn"):
-        super().__init__(embeddings=embeddings, edge_types=edge_types, aggr=aggr)
+    def __init__(self, channels, edge_types, embedding_dims, aggr="attn"):
+        super().__init__(embedding_dims=embedding_dims, edge_types=edge_types, aggr=aggr)
         es = self.es
         prev_c = 0
         for i, c in enumerate(channels):
             conv_dict = {}
             aggr_dict = th.nn.ModuleDict()
             for e in edge_types:
-                source_channels = int(i == 0) * embeddings[e[0]].shape[1] + int(
+                source_channels = int(i == 0) * embedding_dims[e[2]] + int(
                     i > 0
                 ) * max((1, int(prev_c * es[e[0]])))
-                target_channels = int(i == 0) * embeddings[e[2]].shape[1] + int(
+                target_channels = int(i == 0) * embedding_dims[e[2]] + int(
                     i > 0
                 ) * max((1, int(prev_c * es[e[2]])))
                 out_channels = max((1, int(c * es[e[2]])))
@@ -377,26 +377,26 @@ class GNNBaseGAT(GNNBase):
             prev_c = c
             self.layers.append(conv)
 
-    def init_edge_dicts(self, embeddings, edge_types):
+    def init_edge_dicts(self, embedding_dims, edge_types):
         raise NotImplementedError()
 
 
 class HeteroGNNGAT(GNNBaseGAT):
-    def __init__(self, channels, edge_types, embeddings, aggr="attn"):
+    def __init__(self, channels, edge_types, embedding_dims, aggr="attn"):
         print("HeteroGNNGAT")
-        super().__init__(channels, edge_types, embeddings, aggr=aggr)
+        super().__init__(channels, edge_types, embedding_dims, aggr=aggr)
 
-    def init_edge_dicts(self, embeddings, edge_types):
-        self.es = {k: 1 for k in embeddings.keys()}
+    def init_edge_dicts(self, embedding_dims, edge_types):
+        self.es = {k: 1 for k in embedding_dims.keys()}
 
 
 class HeteroGNNGATCustom(GNNBaseGAT):
-    def __init__(self, channels, edge_types, embeddings, aggr="attn"):
+    def __init__(self, channels, edge_types, embedding_dims, aggr="attn"):
         print("HeteroGNNGATCustom")
-        super().__init__(channels, edge_types, embeddings, aggr=aggr)
+        super().__init__(channels, edge_types, embedding_dims, aggr=aggr)
 
-    def init_edge_dicts(self, embeddings, edge_types):
-        ed = {k: 0 for k in embeddings.keys()}
+    def init_edge_dicts(self, embedding_dims, edge_types):
+        ed = {k: 0 for k in embedding_dims.keys()}
         for e, v in edge_types.items():
             ed[e[0]] += v
             ed[e[2]] += v
@@ -412,8 +412,8 @@ class HeteroGNNGATCustom(GNNBaseGAT):
 
 
 class GNNBaseSAGE(GNNBase):
-    def __init__(self, channels, edge_types, embeddings, aggr="attn", skip_last=True):
-        super().__init__(embeddings=embeddings, edge_types=edge_types, aggr=aggr)
+    def __init__(self, channels, edge_types, embedding_dims, aggr="attn", skip_last=True):
+        super().__init__(embedding_dims=embedding_dims, edge_types=edge_types, aggr=aggr)
         es = self.es
         prev_c = 0
         for i, c in enumerate(channels):
@@ -422,10 +422,10 @@ class GNNBaseSAGE(GNNBase):
             for e in edge_types:
                 if skip_last and (i == len(channels) - 1 and e[2] != "genes"):
                     continue
-                source_channels = int(i == 0) * embeddings[e[0]].shape[1] + int(
+                source_channels = int(i == 0) * embedding_dims[e[2]] + int(
                     i > 0
                 ) * max((1, int(prev_c * es[e[0]])))
-                target_channels = int(i == 0) * embeddings[e[2]].shape[1] + int(
+                target_channels = int(i == 0) * embedding_dims[e[2]] + int(
                     i > 0
                 ) * max((1, int(prev_c * es[e[2]])))
                 out_channels = max((1, int(c * es[e[2]])))
@@ -471,11 +471,11 @@ class GNNBaseSAGE(GNNBase):
         raise NotImplementedError()
 
 class HeteroGNNCustom(th.nn.Module):
-    def __init__(self, channels, edge_types, embeddings):
+    def __init__(self, channels, edge_types, embedding_dims):
         super().__init__()
         self.layers = th.nn.ModuleList()
         prev_c = 0
-        ed = {k: 0 for k in embeddings.keys()}
+        ed = {k: 0 for k in embedding_dims.keys()}
         for e, v in edge_types.items():
             ed[e[0]] += v
             ed[e[2]] += v
@@ -495,11 +495,12 @@ class HeteroGNNCustom(th.nn.Module):
             layer_sizes = {k: max(1, c // 2) if v / 1000 < 1 else c
                            for k, v in edge_types.items()}
             conv = HeteroConv({
-                    e: SAGEConv((int(i==0) * embeddings[e[0]].shape[1] +
-                                    int(i>0)*max((1,int(prev_c * es[e[0]]))),
-                                 int(i==0)*embeddings[e[2]].shape[1] +
-                                    int(i>0)*max((1,int(prev_c * es[e[2]])))),
-                                max((1,int(c * es[e[2]]))), normalize=True,
+                    e: SAGEConv((int(i==0) * embedding_dims[e[2]] +
+                                    int(i>0) * max((1, int(prev_c * es[e[0]]))),
+                                 int(i==0) * embedding_dims[e[2]] +
+                                    int(i>0) * max((1, int(prev_c * es[e[2]])))
+                                ),
+                                max((1, int(c * es[e[2]]))), normalize=True,
                                 root_weight=True, project=True, aggr='max')
                                for e, _ in layer_sizes.items()} , aggr='mean')
             prev_c = c
@@ -520,14 +521,14 @@ class HeteroGNNCustom(th.nn.Module):
         return ret_embs 
 
 class HeteroGNNSAGECustom(GNNBaseSAGE):
-    def __init__(self, channels, edge_types, embeddings, aggr="attn", skip_last=True):
+    def __init__(self, channels, edge_types, embedding_dims, aggr="attn", skip_last=True):
         print("HeteroGNNCustom")
         super().__init__(
-            channels, edge_types, embeddings, aggr=aggr, skip_last=skip_last
+            channels, edge_types, embedding_dims, aggr=aggr, skip_last=skip_last
         )
 
-    def init_edge_dicts(self, embeddings, edge_types):
-        ed = {k: 0 for k in embeddings.keys()}
+    def init_edge_dicts(self, embedding_dims, edge_types):
+        ed = {k: 0 for k in embedding_dims.keys()}
         for e, v in edge_types.items():
             ed[e[0]] += v
             ed[e[2]] += v
@@ -547,14 +548,14 @@ class HeteroGNNSAGECustom(GNNBaseSAGE):
 
 
 class HeteroGNNSAGE(GNNBaseSAGE):
-    def __init__(self, channels, edge_types, embeddings, aggr="attn", skip_last=False):
+    def __init__(self, channels, edge_types, embedding_dims, aggr="attn", skip_last=False):
         print("HeteroGNN")
         super().__init__(
-            channels, edge_types, embeddings, aggr=aggr, skip_last=skip_last
+            channels, edge_types, embedding_dims, aggr=aggr, skip_last=skip_last
         )
 
-    def init_edge_dicts(self, embeddings, edge_types):
-        self.es = {k: 1 for k in embeddings.keys()}
+    def init_edge_dicts(self, embedding_dims, edge_types):
+        self.es = {k: 1 for k in embedding_dims.keys()}
 
 class OGGNNBase(th.nn.Module):
     def __init__(self):
@@ -792,11 +793,11 @@ class OntologyGNN(th.nn.Module):
         self.node_embeddings = th.nn.ModuleDict(
                 [[k, th.nn.Embedding.from_pretrained(v.clone(), freeze=False)]
                  for k,v in embeddings.items()])
-        self.gnn = OGGNN(channels, edge_types, {k: v.shape[1] for k,v in embeddings.items()}, skip_last=False)
+        # self.gnn = OGGNN(channels, edge_types, {k: v.shape[1] for k,v in embeddings.items()}, skip_last=False)
         # self.gnn = HeteroGNNSAGE(channels, edge_types, embeddings,
         #                          aggr='attn', skip_last=False)
-        # self.gnn = HeteroGNNTransformer(channels, edge_types, embeddings,
-        #                          aggr='attn', skip_last=False, heads=4)
+        self.gnn = HeteroGNNTransformer(channels, edge_types, {k: v.shape[1] for k,v in embeddings.items()},
+                                 aggr='attn', skip_last=False, heads=4)
         
         # self.gnn = HeteroGNNTransformer(channels, edge_types, embeddings)
 
